@@ -7,13 +7,12 @@ EduCore — це повнофункціональна Fullstack-платформ
 ## 🧑‍💻 Stack
 
 - **Frontend**: Vue 3, Pinia, Vue Router, Tailwind CSS, Axios
-- **Backend**: Laravel 11, Sanctum, REST API
+- **Backend**: Laravel 12, Sanctum, REST API
 - **Database**: MySQL 8
-- **Auth**: JWT via Sanctum
+- **Auth**: Sanctum
 - **Email**: Laravel Mail
 - **Telegram Bot**: PHP Telegram Bot API (нагадування)
 - **PDF**: Laravel DOMPDF (сертифікати)
-- **DevOps**: Docker, Docker Compose
 - **CI/CD**: (optional) GitHub Actions
 
 ---
@@ -83,9 +82,6 @@ GET	/api/certificates	Список сертифікатів
 
 🧾 Laravel Backend
 ```bash
-# Перейти до backend
-cd backend
-
 # Встановити залежності
 composer install
 
@@ -98,13 +94,6 @@ php artisan migrate --seed
 
 # Запустити сервер
 php artisan serve
-
-```
-
-🌐 Vue Frontend
-```bash
-# Перейти до frontend
-cd frontend
 
 # Встановити залежності
 npm install

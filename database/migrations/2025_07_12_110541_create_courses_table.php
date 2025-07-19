@@ -18,6 +18,8 @@ return new class extends Migration
             $table->text('description');
             $table->string('preview_image_path')->nullable();
             $table->string('thumbnail')->nullable();
+            $table->boolean('is_approved')->default(false);
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
     }

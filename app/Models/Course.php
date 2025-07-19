@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
-    protected $fillable = ['title', 'description', 'thumbnail', 'instructor_id'];
+    protected $fillable = ['title', 'description', 'thumbnail', 'instructor_id', 'is_approved', 'is_published'];
 
     public function instructor(): BelongsTo
     {
@@ -23,5 +23,10 @@ class Course extends Model
     public function certificates(): HasMany
     {
         return $this->hasMany(Certificate::class);
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(RateCourse::class);
     }
 }

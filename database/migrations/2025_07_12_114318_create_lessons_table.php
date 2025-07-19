@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('section_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('description');
+            $table->text('content');
+            $table->string('preview_image_path')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->boolean('is_published')->default(false);
             $table->string('video_url')->nullable();
             $table->timestamps();
         });
