@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Lesson;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class LessonPolicy
 {
@@ -15,21 +13,16 @@ class LessonPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasRole('admin', 'instructor');
-    }
-
-    public function show(User $user): bool
-    {
-        return $user->hasRole('admin', 'instructor');
+        return $user->hasRole('instructor');
     }
 
     public function update(User $user): bool
     {
-        return $user->hasRole('admin', 'instructor');
+        return $user->hasRole('instructor');
     }
 
     public function delete(User $user): bool
     {
-        return $user->hasRole('admin', 'instructor');
+        return $user->hasRole('admin');
     }
 }
