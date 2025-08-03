@@ -8,6 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @method static where(string $string, $email)
+ * @method static updateOrCreate(array $array, array $array1)
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, Notifiable;

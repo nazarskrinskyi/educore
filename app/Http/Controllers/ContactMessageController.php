@@ -7,10 +7,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ContactMessageRequest;
 use App\Models\ContactMessage;
 use Illuminate\Http\JsonResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ContactMessageController extends Controller
 {
-    public function __invoke(ContactMessageRequest $request): JsonResponse
+    public function index(): Response
+    {
+        return Inertia::render('Contact');
+    }
+
+    public function store(ContactMessageRequest $request): JsonResponse
     {
         ContactMessage::create($request->validated());
 

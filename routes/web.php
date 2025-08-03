@@ -1,28 +1,31 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\CertificateAdminController;
 use App\Http\Controllers\Admin\CommentAdminController;
 use App\Http\Controllers\Admin\ContactMessageAdminController;
 use App\Http\Controllers\Admin\CourseAdminController;
 use App\Http\Controllers\Admin\TestAdminController;
 use App\Http\Controllers\Admin\UserAdminController;
+use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    if (auth()->check()) {
-        return Inertia::render('Dashboard');
-    }
+Route::get('/', HomeController::class)->name('dashboard');
 
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('dashboard');
+Route::get('/about', AboutController::class)->name('about');
+
+Route::get('/services', [ServiceController::class, 'index'])->name('services');
+
+Route::get('/contact', [ContactMessageController::class, 'index'])->name('contact');
+
+Route::get('/modules', [ServiceController::class, 'index'])->name('modules');
+
+Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

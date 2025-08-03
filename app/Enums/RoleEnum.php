@@ -9,21 +9,17 @@ enum RoleEnum: string
     case ADMIN = 'admin';
     case MODERATOR = 'moderator';
 
-    public static function getValues(): array
-    {
-        return [
-            self::STUDENT,
-            self::INSTRUCTOR,
-            self::ADMIN,
-            self::MODERATOR
-        ];
-    }
     /**
      * @return string
      */
     public function getValue(): string
     {
         return $this->value;
+    }
+
+    public static function getValues(): array
+    {
+        return array_map(fn($role) => $role->value, self::cases());
     }
 }
 

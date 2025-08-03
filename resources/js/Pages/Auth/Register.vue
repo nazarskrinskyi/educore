@@ -5,6 +5,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const form = useForm({
     name: '',
@@ -24,7 +25,7 @@ const submit = () => {
     <GuestLayout>
         <Head title="Register" />
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="w-auto">
             <div>
                 <InputLabel for="name" value="Name" />
 
@@ -95,10 +96,18 @@ const submit = () => {
             <div class="mt-4 flex items-center justify-end">
                 <Link
                     :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="rounded-md mr-4 text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                     Already registered?
                 </Link>
+
+                <a
+                    :href="route('auth.google.redirect')"
+                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                    <SecondaryButton><img src="../../assets/google-icon-logo-svgrepo-com.svg" alt="Google Logo" class="w-5 mr-2" />Register with Google</SecondaryButton>
+                </a>
+
 
                 <PrimaryButton
                     class="ms-4"

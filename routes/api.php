@@ -8,5 +8,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/contact', ContactMessageController::class);
-
+Route::post('/contact', [ContactMessageController::class, 'store']);

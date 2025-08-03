@@ -18,13 +18,13 @@ const showingNavigationDropdown = ref(false);
             >
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="flex h-16 justify-between">
+                    <div class="flex h-20 justify-between">
                         <div class="flex">
                             <!-- Logo -->
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
                                     <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
+                                        class="block h-18 w-auto fill-current text-gray-800"
                                     />
                                 </Link>
                             </div>
@@ -37,7 +37,64 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
-                                    Dashboard
+                                    Home
+                                </NavLink>
+                                <NavLink
+                                    :href="route('about')"
+                                    :active="route().current('about')"
+                                >
+                                    About
+                                </NavLink>
+                                <Dropdown align="center" width="48" class="mt-6">
+                                    <template #trigger>
+                                        <span class="inline-flex rounded-md">
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                            >
+                                                Services
+                                                <svg
+                                                    class="-me-0.5 ms-2 h-4 w-4"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clip-rule="evenodd"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('profile.edit')"
+                                        >
+                                            Overall Info
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('logout')"
+                                            method="post"
+                                            as="button"
+                                        >
+                                            School Info
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
+                                <NavLink
+                                    :href="route('modules')"
+                                    :active="route().current('modules')"
+                                >
+                                    Modules
+                                </NavLink>
+                                <NavLink
+                                    :href="route('contact')"
+                                    :active="route().current('contact')"
+                                >
+                                    Contact
                                 </NavLink>
                             </div>
                         </div>
@@ -130,53 +187,6 @@ const showingNavigationDropdown = ref(false);
                         </div>
                     </div>
                 </div>
-
-                <!-- Responsive Navigation Menu -->
-                <div
-                    :class="{
-                        block: showingNavigationDropdown,
-                        hidden: !showingNavigationDropdown,
-                    }"
-                    class="sm:hidden"
-                >
-                    <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <!-- Responsive Settings Options -->
-                    <div
-                        class="border-t border-gray-200 pb-1 pt-4"
-                    >
-                        <div class="px-4">
-                            <div
-                                class="text-base font-medium text-gray-800"
-                            >
-                                {{ $page.props.auth.user.name }}
-                            </div>
-                            <div class="text-sm font-medium text-gray-500">
-                                {{ $page.props.auth.user.email }}
-                            </div>
-                        </div>
-
-                        <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')">
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                :href="route('logout')"
-                                method="post"
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
             </nav>
 
             <!-- Page Heading -->
@@ -193,6 +203,12 @@ const showingNavigationDropdown = ref(false);
             <main>
                 <slot />
             </main>
+
+            <footer class="bg-white shadow">
+                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <slot name="footer" />
+                </div>
+            </footer>
         </div>
     </div>
 </template>

@@ -40,16 +40,17 @@
     36 => 'Laravel\\Pail\\PailServiceProvider',
     37 => 'Laravel\\Sail\\SailServiceProvider',
     38 => 'Laravel\\Sanctum\\SanctumServiceProvider',
-    39 => 'Laravel\\Tinker\\TinkerServiceProvider',
-    40 => 'Livewire\\LivewireServiceProvider',
-    41 => 'Carbon\\Laravel\\ServiceProvider',
-    42 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    43 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    44 => 'Pest\\Laravel\\PestServiceProvider',
-    45 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
-    46 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
-    47 => 'App\\Providers\\AppServiceProvider',
-    48 => 'App\\Providers\\Filament\\AdminPanelProvider',
+    39 => 'Laravel\\Socialite\\SocialiteServiceProvider',
+    40 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    41 => 'Livewire\\LivewireServiceProvider',
+    42 => 'Carbon\\Laravel\\ServiceProvider',
+    43 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    44 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    45 => 'Pest\\Laravel\\PestServiceProvider',
+    46 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
+    47 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    48 => 'App\\Providers\\AppServiceProvider',
+    49 => 'App\\Providers\\Filament\\AdminPanelProvider',
   ),
   'eager' => 
   array (
@@ -242,6 +243,7 @@
     'Laravel\\Breeze\\Console\\InstallCommand' => 'Laravel\\Breeze\\BreezeServiceProvider',
     'Laravel\\Sail\\Console\\InstallCommand' => 'Laravel\\Sail\\SailServiceProvider',
     'Laravel\\Sail\\Console\\PublishCommand' => 'Laravel\\Sail\\SailServiceProvider',
+    'Laravel\\Socialite\\Contracts\\Factory' => 'Laravel\\Socialite\\SocialiteServiceProvider',
     'command.tinker' => 'Laravel\\Tinker\\TinkerServiceProvider',
   ),
   'when' => 
@@ -289,6 +291,9 @@
     array (
     ),
     'Laravel\\Sail\\SailServiceProvider' => 
+    array (
+    ),
+    'Laravel\\Socialite\\SocialiteServiceProvider' => 
     array (
     ),
     'Laravel\\Tinker\\TinkerServiceProvider' => 
