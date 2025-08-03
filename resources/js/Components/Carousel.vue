@@ -35,9 +35,9 @@ const config = {
 <template>
     <div class="carousel-container">
         <Carousel v-bind="config">
-            <Slide v-for="path in itemsToScroll" :key="index">
+            <Slide v-for="path in itemsToScroll" :key="path">
                 <div class="slide-content">
-                    <img :src="path" :alt="`Slide ${index}`" />
+                    <img :src="path" alt="image" />
                     <div class="button-overlay">
                         <PrimaryButton>READ MORE</PrimaryButton>
                     </div>
