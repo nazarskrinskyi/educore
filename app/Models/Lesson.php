@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Lesson extends Model
 {
-    protected $fillable = ['title', 'video_url', 'section_id'];
+    protected $fillable = ['title', 'description', 'content', 'preview', 'preview_image_path', 'video_path', 'is_published', 'section_id'];
 
     public function section(): BelongsTo
     {

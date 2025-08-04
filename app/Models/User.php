@@ -51,4 +51,18 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(RateCourse::class);
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function hasRole(string|array $role): bool
+    {
+        if (is_array($role)) {
+            return in_array($this->role, $role);
+        }
+
+        return $this->role === $role;
+    }
 }

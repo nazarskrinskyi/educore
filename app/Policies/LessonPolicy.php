@@ -13,16 +13,16 @@ class LessonPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasRole('instructor');
+        return $user->hasRole(['admin', 'instructor']);
     }
 
     public function update(User $user): bool
     {
-        return $user->hasRole('instructor');
+        return $user->hasRole(['admin', 'instructor']);
     }
 
     public function delete(User $user): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole(['admin', 'instructor']);
     }
 }

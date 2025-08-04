@@ -24,3 +24,5 @@ Homestead.yaml
 Thumbs.db
 ./idea
 .idea
+storage
+public/images
