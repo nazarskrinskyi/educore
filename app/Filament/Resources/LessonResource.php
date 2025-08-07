@@ -39,8 +39,12 @@ class LessonResource extends Resource
                     ->label('Image')
                     ->required(),
 
-                FileUpload::make('video_path')
+                FileUpload::make('video_url')
                     ->label('Video File')
+                    ->disk('public')
+                    ->directory('videos')
+                    ->preserveFilenames()
+                    ->maxSize(102400)
                     ->required(),
 
                 Checkbox::make('is_published')

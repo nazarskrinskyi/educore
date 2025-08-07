@@ -15,7 +15,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy app files BEFORE installing dependencies
+# Copy PHP config
+COPY /docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Copy app files
 COPY . .
 
 # Install PHP dependencies
