@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -15,26 +17,32 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, Notifiable, HasFactory;
+    use HasApiTokens, HasFactory, Notifiable, Billable;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'telegram_username',
+        'name', 'email', 'password', 'role', 'telegram_username'
     ];
 
     protected $hidden = ['password', 'remember_token'];
 
-    public function courses(): HasMany
+    public function courses(): BelongsToMany
     {
-        return $this->hasMany(Course::class, 'instructor_id');
+        return $this->belongsToMany(Course::class, 'course_user');
     }
 
-    public function results(): HasMany
+    public function lessons(): BelongsToMany
     {
-        return $this->hasMany(Result::class);
+        return $this->belongsToMany(Lesson::class, 'lesson_user')->withPivot('completed_at');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'student_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public function certificates(): HasMany
@@ -42,27 +50,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Certificate::class);
     }
 
-    public function comments(): HasMany
+    public function badges(): BelongsToMany
     {
-        return $this->hasMany(LessonComment::class);
+        return $this->belongsToMany(Badge::class, 'user_badge')->withPivot('awarded_at');
     }
 
-    public function courseRatings(): HasMany
+    public function points(): HasMany
     {
-        return $this->hasMany(RateCourse::class);
+        return $this->hasMany(UserPoint::class);
+    }
+
+    public function loginHistory(): HasMany
+    {
+        return $this->hasMany(LoginHistory::class);
+    }
+
+    public function wishlist(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
     }
 
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
-    }
-
-    public function hasRole(string|array $role): bool
-    {
-        if (is_array($role)) {
-            return in_array($this->role, $role);
-        }
-
-        return $this->role === $role;
     }
 }

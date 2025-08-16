@@ -4,87 +4,48 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\LessonResource\Pages;
 use App\Models\Lesson;
-use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
 
 class LessonResource extends Resource
 {
     protected static ?string $model = Lesson::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static ?string $navigationGroup = 'Курси та контент';
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-
-                Textarea::make('description')
-                    ->required(),
-
-                RichEditor::make('content')
-                    ->required(),
-
-                FileUpload::make('preview_image_path')
-                    ->label('Image')
-                    ->required(),
-
-                FileUpload::make('video_url')
-                    ->label('Video File')
-                    ->disk('public')
-                    ->directory('videos')
-                    ->preserveFilenames()
-                    ->maxSize(102400)
-                    ->required(),
-
-                Checkbox::make('is_published')
-                    ->required(),
-            ]);
+        return $form->schema([
+            Select::make('course_id')->relationship('course','title')->required(),
+            TextInput::make('title')->required(),
+            TextInput::make('slug')->required(),
+            Textarea::make('content'),
+            FileUpload::make('video_path')->directory('lessons/videos')->required(),
+            FileUpload::make('image_path')->directory('lessons/images')->image()->required(),
+            Toggle::make('is_published'),
+            TextInput::make('views')
+                ->numeric()
+                ->default(0)
+                ->disabled()
+                ->label('Views'),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('title')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('video_url')
-                    ->label('Video URL')
-                    ->limit(30)
-                    ->toggleable(),
-
-                TextColumn::make('section.title')
-                    ->label('Section')
-                    ->sortable()
-                    ->toggleable(),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+        return $table->columns([
+            TextColumn::make('id'),
+            TextColumn::make('title')->searchable(),
+            TextColumn::make('course.title')->label('Course'),
+        ])->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
     }
 
     public static function getPages(): array

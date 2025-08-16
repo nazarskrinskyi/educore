@@ -2,32 +2,65 @@
 
 namespace App\Policies;
 
+use App\Models\Test;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class TestPolicy
 {
-    public function view(User $user): bool
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
     {
-        return $user->hasRole(['admin', 'instructor', 'student']);
+        return true;
     }
 
-    public function take(User $user): bool
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Test $test): bool
     {
-        return $user->hasRole('student');
+        return true;
     }
 
+    /**
+     * Determine whether the user can create models.
+     */
     public function create(User $user): bool
     {
-        return $user->hasRole('admin', 'instructor');
+        return $user->role === 'admin' || $user->role === 'instructor';
     }
 
-    public function update(User $user): bool
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Test $test): bool
     {
-        return $user->hasRole('admin', 'instructor');
+        return $user->role === 'admin' || $user->role === 'instructor';
     }
 
-    public function delete(User $user): bool
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Test $test): bool
     {
-        return $user->hasRole('admin', 'instructor');
+        return $user->role === 'admin' || $user->role === 'instructor';
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, Test $test): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, Test $test): bool
+    {
+        return false;
     }
 }

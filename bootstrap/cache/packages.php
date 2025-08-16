@@ -97,6 +97,13 @@
       0 => 'Laravel\\Breeze\\BreezeServiceProvider',
     ),
   ),
+  'laravel/cashier' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Cashier\\CashierServiceProvider',
+    ),
+  ),
   'laravel/pail' => 
   array (
     'providers' => 
@@ -166,6 +173,13 @@
     'providers' => 
     array (
       0 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    ),
+  ),
+  'pelmered/filament-money-field' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Pelmered\\FilamentMoneyField\\FilamentMoneyFieldServiceProvider',
     ),
   ),
   'pestphp/pest-plugin-laravel' => 

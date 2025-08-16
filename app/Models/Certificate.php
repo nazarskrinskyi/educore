@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Certificate extends Model
 {
-    protected $fillable = ['user_id', 'course_id', 'pdf_path', 'issued_at'];
+    use HasFactory;
+
+    protected $fillable = ['user_id', 'course_id', 'certificate_path', 'issued_at'];
 
     public function user(): BelongsTo
     {

@@ -3,26 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Lesson extends Model
 {
-    protected $fillable = ['title', 'description', 'content', 'preview', 'preview_image_path', 'video_path', 'is_published', 'section_id'];
+    use HasFactory;
 
-    public function section(): BelongsTo
+    protected $fillable = [
+        'course_id', 'title', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug'
+    ];
+
+    public function course(): BelongsTo
     {
-        return $this->belongsTo(Section::class);
+        return $this->belongsTo(Course::class);
     }
 
-    public function test(): HasOne
+    public function tests(): HasMany
     {
-        return $this->hasOne(Test::class);
+        return $this->hasMany(Test::class);
     }
 
-    public function comments(): HasMany
+    public function students(): BelongsToMany
     {
-        return $this->hasMany(LessonComment::class);
+        return $this->belongsToMany(User::class, 'lesson_user')->withPivot('completed_at');
     }
 }

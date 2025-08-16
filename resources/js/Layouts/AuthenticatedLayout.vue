@@ -74,23 +74,17 @@ const showingNavigationDropdown = ref(false);
                                         <DropdownLink
                                             :href="route('profile.edit')"
                                         >
-                                            Overall Info
+                                            Courses
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('logout')"
                                             method="post"
                                             as="button"
                                         >
-                                            School Info
+                                            Lessons
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
-                                <NavLink
-                                    :href="route('modules')"
-                                    :active="route().current('modules')"
-                                >
-                                    Modules
-                                </NavLink>
                                 <NavLink
                                     :href="route('contact')"
                                     :active="route().current('contact')"

@@ -26,3 +26,5 @@ Thumbs.db
 .idea
 storage
 public/images
+/storage/framework
+./storage/framework/
