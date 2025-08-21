@@ -18,5 +18,6 @@
     <body class="font-sans antialiased">
         <?php if (!isset($__inertiaSsrDispatched)) { $__inertiaSsrDispatched = true; $__inertiaSsrResponse = app(\Inertia\Ssr\Gateway::class)->dispatch($page); }  if ($__inertiaSsrResponse) { echo $__inertiaSsrResponse->body; } else { ?><div id="app" data-page="<?php echo e(json_encode($page)); ?>"></div><?php } ?>
     </body>
+    <script src="https://js.stripe.com/v3/"></script>
 </html>
 <?php /**PATH /var/www/html/resources/views/app.blade.php ENDPATH**/ ?>

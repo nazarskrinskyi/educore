@@ -1,6 +1,7 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
-import AddToCartButton from "@/Components/AddToCartButton.vue";
+import {computed} from 'vue'
+import {Link} from '@inertiajs/vue3'
+import AddToCartButton from '@/Components/Cart/AddToCartButton.vue'
 
 /**
  * @typedef {Object} Course
@@ -10,59 +11,88 @@ import AddToCartButton from "@/Components/AddToCartButton.vue";
  * @property {string} image_path
  * @property {boolean} is_free
  * @property {number} price
+ * @property {number} rating
+ * @property {number} reviews_count
  * @property {{ name: string }} instructor
  * @property {{ name: string }} category
- * @property {{ name: string }[]} tags
+ * @property {{ id?: number, name: string, slug?: string }[]} tags
+ * @property {boolean} [is_bestseller]
  */
 
 const props = defineProps({
     /** @type {Course} */
-    course: Object,
-    /** @type {{ [key: number]: Course }} */
-    cart: {type: Object, default: () => ({})},
-});
+    course: {type: Object, required: true},
+    /** cart map or array; passed to AddToCartButton */
+    cart: {type: [Object, Array], default: () => ({})},
+})
 
-console.log(props)
+const ratingFormatted = computed(() => (Number(props.course?.rating || 0)).toFixed(1))
+const isBestseller = computed(() => {
+    const r = Number(props.course?.rating || 0)
+    const c = Number(props.course?.reviews_count || 0)
+    return !!props.course?.is_bestseller || (r >= 4.6 && c >= 1000)
+})
 
+function onImgError(e) {
+    e.target.src = 'https://via.placeholder.com/800x480?text=Course'
+}
+
+function formatCurrency(value) {
+    if (!value) return '$0'
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+    }).format(Number(value))
+}
 </script>
 
-
 <template>
-    <div class="border rounded-lg shadow hover:shadow-lg overflow-hidden bg-white">
-        <!-- Course image -->
-        <!--        <Link :href="route('course.show', course.slug)">-->
-        <img :src="course.image_path" alt="course image" class="w-full h-48 object-cover">
-        <!--        </Link>-->
+    <div class="border rounded-2xl shadow-sm hover:shadow-md overflow-hidden bg-white transition group">
+        <!-- image -->
+        <img :src="course.image_path" alt="course image" class="w-full h-48 object-cover" @error="onImgError"/>
 
         <div class="p-4">
-            <!-- Title -->
-            <!--            <Link :href="route('course.show', course.slug)">-->
-            <h3 class="font-bold text-lg mb-1 hover:text-blue-600">{{ course.title }}</h3>
-            <!--            </Link>-->
+            <!-- title -->
+            <Link class="font-bold text-lg leading-tight mb-1 group-hover:text-blue-600 line-clamp-2" href="/">
+                {{ course.title }}
+            </Link>
 
-            <!-- Tags -->
-            <div class="flex flex-wrap gap-1 mb-2">
+            <!-- tags -->
+            <div class="flex flex-wrap gap-1.5 mb-2">
                 <Link
-                   v-for="tag in props.course.tags"
-                   :href="tag.slug"
-                   :key="tag.id"
-                   class="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded">
+                    v-for="tag in (course.tags || [])"
+                    :href="tag.slug || '#'"
+                    :key="tag.id || tag.name"
+                    class="bg-gray-200 text-gray-800 text-[11px] px-2 py-0.5 rounded"
+                >
                     {{ tag.name }}
                 </Link>
             </div>
 
-            <!-- Instructor & Category -->
+            <!-- instructor & category -->
             <p class="text-gray-500 text-sm mb-2">
-                by {{ course.instructor.name }} | {{ course.category.name }}
+                by {{ course?.instructor?.name || '—' }}
+                <span class="text-gray-400">•</span>
+                {{ course?.category?.name || '—' }}
             </p>
 
-            <!-- Price -->
-            <p class="font-semibold text-gray-800 mb-2">
-                {{ course.is_free ? 'Free' : '$' + course.price }}
-            </p>
+            <!-- rating + reviews (score) -->
+            <div class="flex items-center gap-2 text-sm mb-2">
+                <span class="font-semibold text-yellow-600">⭐ {{ ratingFormatted }}</span>
+                <Stars :value="Number(course.rating || 0)" :size="14"/>
+                <span class="text-gray-500">({{ course.reviews_count || 0 }} відгуків)</span>
+                <span v-if="isBestseller"
+                      class="ml-1 inline-flex items-center text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 ring-1 ring-amber-200">Лідер продажів</span>
+            </div>
 
-            <!-- Add to Cart button -->
-            <AddToCartButton :course-id="course.id" :cart="cart"/>
+            <!-- price + add to cart -->
+            <div class="flex items-center justify-between mt-1">
+                <p class="font-semibold text-gray-900">
+                    {{ course.is_free ? 'Free' : formatCurrency(course.price) }}
+                </p>
+                <AddToCartButton :course="course" :cart="cart" />
+            </div>
         </div>
     </div>
 </template>

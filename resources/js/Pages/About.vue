@@ -1,8 +1,9 @@
 <script setup>
-import Cart from "@/Components/Cart.vue"
-import { usePage } from "@inertiajs/vue3"
+import Cart from "@/Components/Cart/Cart.vue"
+import {Link, usePage} from "@inertiajs/vue3"
 import { computed } from "vue"
 import CourseCard from "@/Components/CourseCard.vue";
+import { router } from '@inertiajs/vue3'
 
 defineProps({
     courses: {
@@ -14,6 +15,10 @@ defineProps({
 
 const page = usePage()
 const cart = computed(() => Object.values(page.props.cart ?? {}))
+
+function goToCourse(course) {
+    router.visit(route('courses.show', course.slug))
+}
 </script>
 
 <template>
@@ -25,6 +30,7 @@ const cart = computed(() => Object.values(page.props.cart ?? {}))
             :key="course.id"
             :course="course"
             :cart="cart"
+            @click="goToCourse(course)"
         />
     </div>
 

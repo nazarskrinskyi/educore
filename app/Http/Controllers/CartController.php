@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\CourseLevelEnum;
 use App\Models\Course;
+use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Illuminate\Http\{Request, RedirectResponse};
+use Illuminate\Http\{JsonResponse, Request, RedirectResponse};
 use Illuminate\Support\Facades\Session;
 use Inertia\Response as InertiaResponse;
 use Stripe\Stripe;
@@ -70,7 +73,9 @@ class CartController extends Controller
             'rating'     => round($course->reviews()->avg('rating') ?? 0, 1),
             'reviews'    => $course->reviews()->count(),
             'duration'   => $course->duration,
-            'level'      => $course->level,
+            'is_free'    => $course->is_free,
+            'lessons'    => $course->lessons()->count(),
+            'level'      => CourseLevelEnum::from((int)$course->level)->name
         ];
 
         $this->saveCart($cart);
@@ -95,40 +100,6 @@ class CartController extends Controller
     }
 
     /**
-     * Show the checkout page with Stripe payment intent
-     */
-    public function checkout(): InertiaResponse|RedirectResponse
-    {
-        $cart = $this->getCart();
-
-        if (empty($cart)) {
-            return redirect()->route('cart.index')
-                ->with('error', 'Your cart is empty');
-        }
-
-        $total = $this->calculateTotal($cart);
-
-        try {
-            Stripe::setApiKey(config('services.stripe.secret'));
-
-            $paymentIntent = PaymentIntent::create([
-                'amount' => (int)$total,
-                'currency' => self::CURRENCY,
-                'metadata' => ['integration_check' => 'accept_a_payment']
-            ]);
-
-            return Inertia::render('Cart/Checkout', [
-                'cart' => $cart,
-                'client_secret' => $paymentIntent->client_secret,
-                'total' => $total
-            ]);
-        } catch (ApiErrorException) {
-            return redirect()->back()
-                ->with('error', 'Error processing payment. Please try again.');
-        }
-    }
-
-    /**
      * Calculate total cart amount
      */
     private function calculateTotal(array $cart): float
@@ -139,24 +110,62 @@ class CartController extends Controller
     }
 
     /**
-     * Handle successful payment
+     * Show the checkout page with Stripe payment intent
+     * @throws ApiErrorException
      */
-    public function pay(Request $request): RedirectResponse
+    public function checkout(): InertiaResponse|RedirectResponse
     {
         $cart = $this->getCart();
-
         if (empty($cart)) {
-            return redirect()->route('home')
-                ->with('error', 'No items in cart');
+            return redirect()->route('cart.index')
+                ->with('error', 'Your cart is empty');
         }
 
-        $stripePriceId = 'price_deluxe_album';
+        $total = $this->calculateTotal($cart);
 
-        $quantity = 1;
-
-        return $request->user()->checkout([$stripePriceId => $quantity], [
-            'success_url' => route('checkout.success'),
-            'cancel_url' => route('checkout.cancel'),
+        Stripe::setApiKey(config('services.stripe.secret'));
+        $paymentIntent = PaymentIntent::create([
+            'amount' => (int) ($total * 100),
+            'currency' => self::CURRENCY,
+            'metadata' => [
+                'user_id' => auth()->id() ?? null,
+            ],
         ]);
+
+        return Inertia::render('Cart/Checkout', [
+            'cart' => $cart,
+            'client_secret' => $paymentIntent->client_secret,
+            'total' => $total,
+        ]);
+    }
+
+    /**
+     * Store order in db and clears cart session
+     */
+    public function storeOrder(Request $request): JsonResponse
+    {
+        $cart = $this->getCart();
+        $total = $this->calculateTotal($cart);
+
+        DB::transaction(function() use ($request, $cart, $total) {
+            $order = Order::create([
+                'user_id' => $request->user()->id,
+                'stripe_payment_id' => $request->payment_intent_id,
+                'amount' => $total,
+                'status' => 'paid',
+            ]);
+
+            foreach ($cart as $item) {
+                $order->items()->create([
+                    'course_id' => $item['id'],
+                    'price' => $item['price'],
+                ]);
+            }
+        });
+
+        // **Clear the cart from session**
+        Session::forget(self::CART_SESSION_KEY);
+
+        return response()->json(['success' => true]);
     }
 }

@@ -21,6 +21,8 @@ class AboutController extends Controller
 
         $courses->transform(function ($course) {
             $course->image_path = Storage::url($course->image_path);
+            $course->price = (int) ($course->price / 100);
+            $course->in_cart = session()->has('cart.' . $course->id);
             return $course;
         });
 

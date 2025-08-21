@@ -50,9 +50,9 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'course_user');
     }
 
-    public function payments(): HasMany
+    public function orders(): HasMany
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Order::class);
     }
 
     public function certificates(): HasMany

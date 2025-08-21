@@ -74,6 +74,11 @@ class CourseResource extends Resource
                 ->label('Difficulty Level')
                 ->required(),
 
+            TextInput::make('duration')
+                ->numeric()
+                ->default(0)
+                ->label('Duration in minutes'),
+
             TextInput::make('views')
                 ->numeric()
                 ->default(0)
