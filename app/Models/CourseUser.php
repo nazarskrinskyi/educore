@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * @method static updateOrCreate(array $array, array $array1)
+ */
 class CourseUser extends Pivot
 {
     protected $table = 'course_user';

@@ -13,12 +13,12 @@ class Lesson extends Model
     use HasFactory;
 
     protected $fillable = [
-        'course_id', 'title', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug'
+        'section_id', 'title', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug'
     ];
 
-    public function course(): BelongsTo
+    public function Section(): BelongsTo
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Section::class);
     }
 
     public function tests(): HasMany

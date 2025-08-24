@@ -14,6 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * @method static where(string $string, $email)
  * @method static updateOrCreate(array $array, array $array1)
+ * @property mixed $id
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -38,11 +39,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, 'student_id');
-    }
-
-    public function payments(): HasMany
-    {
-        return $this->hasMany(Payment::class);
     }
 
     public function certificates(): HasMany
@@ -73,5 +69,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }

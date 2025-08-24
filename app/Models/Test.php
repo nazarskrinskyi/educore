@@ -11,7 +11,7 @@ class Test extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lesson_id', 'course_id', 'description', 'title', 'score', 'duration', 'slug', 'image_path'];
+    protected $fillable = ['lesson_id', 'course_id', 'description', 'title', 'duration', 'slug', 'image_path'];
 
     public function lesson(): BelongsTo
     {

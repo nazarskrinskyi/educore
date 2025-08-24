@@ -30,7 +30,7 @@ for (let i = 1; i <= 5; i++) {
 </script>
 
 <template>
-    <Head><title>Dashboard</title></Head>
+    <Head title="Dashboard" />
 
     <AuthenticatedLayout>
         <div class="py-12">

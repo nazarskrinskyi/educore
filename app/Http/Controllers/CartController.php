@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\CourseLevelEnum;
+use App\Enums\CartEnum;
 use App\Models\Course;
-use App\Models\Order;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use App\Services\CartService;
+use App\Services\CourseService;
 use Inertia\Inertia;
 use Illuminate\Http\{JsonResponse, Request, RedirectResponse};
 use Illuminate\Support\Facades\Session;
@@ -19,23 +18,8 @@ use Stripe\Exception\ApiErrorException;
 
 class CartController extends Controller
 {
-    private const CART_SESSION_KEY = 'cart';
-    private const CURRENCY = 'uah';
-
-    /**
-     * Get the current cart from session
-     */
-    private function getCart(): array
+    public function __construct(private readonly CartService $cartService, private readonly CourseService $courseService)
     {
-        return Session::get(self::CART_SESSION_KEY, []);
-    }
-
-    /**
-     * Save cart to session
-     */
-    private function saveCart(array $cart): void
-    {
-        Session::put(self::CART_SESSION_KEY, $cart);
     }
 
     /**
@@ -44,7 +28,7 @@ class CartController extends Controller
     public function index(): InertiaResponse
     {
         return Inertia::render('Cart/Index', [
-            'cart' => $this->getCart()
+            'cart' => $this->cartService->getCart()
         ]);
     }
 
@@ -57,28 +41,18 @@ class CartController extends Controller
             'course_id' => ['required', 'exists:courses,id'],
         ]);
 
-        $course = Course::with('instructor', 'reviews')->findOrFail($validated['course_id']);
-        $cart = $this->getCart();
+        $id = $validated['course_id'];
 
-        if (isset($cart[$course->id])) {
-            return redirect()->back()->with('error', 'Course already in cart');
+        $course = Course::with('instructor', 'reviews')->findOrFail($id);
+        $cart = $this->cartService->getCart();
+
+        if (isset($cart[$id])) {
+            return redirect()->back()->with('warning', 'Course already in cart');
         }
 
-        $cart[$course->id] = [
-            'id'         => $course->id,
-            'name'       => $course->title,
-            'price'      => $course->price / 100,
-            'image'      => Storage::url($course->image_path),
-            'instructor' => $course->instructor?->name ?? 'Unknown',
-            'rating'     => round($course->reviews()->avg('rating') ?? 0, 1),
-            'reviews'    => $course->reviews()->count(),
-            'duration'   => $course->duration,
-            'is_free'    => $course->is_free,
-            'lessons'    => $course->lessons()->count(),
-            'level'      => CourseLevelEnum::from((int)$course->level)->name
-        ];
+        $cart[$id] = $this->cartService->assignCourseData($course, $id);
 
-        $this->saveCart($cart);
+        $this->cartService->saveCart($cart);
 
         return redirect()->back()->with('success', 'Course added to cart');
     }
@@ -88,25 +62,15 @@ class CartController extends Controller
      */
     public function remove(string $id): RedirectResponse
     {
-        $cart = $this->getCart();
+        $cart = $this->cartService->getCart();
 
         if (isset($cart[$id])) {
             unset($cart[$id]);
-            $this->saveCart($cart);
+            $this->cartService->saveCart($cart);
             return redirect()->back()->with('success', 'Course removed from cart');
         }
 
         return redirect()->back()->with('error', 'Course not found in cart');
-    }
-
-    /**
-     * Calculate total cart amount
-     */
-    private function calculateTotal(array $cart): float
-    {
-        return array_reduce($cart, function (float $total, array $item) {
-            return $total + $item['price'];
-        }, 0);
     }
 
     /**
@@ -115,18 +79,18 @@ class CartController extends Controller
      */
     public function checkout(): InertiaResponse|RedirectResponse
     {
-        $cart = $this->getCart();
+        $cart = $this->cartService->getCart();
         if (empty($cart)) {
             return redirect()->route('cart.index')
                 ->with('error', 'Your cart is empty');
         }
 
-        $total = $this->calculateTotal($cart);
+        $total = $this->cartService->calculateTotal($cart);
 
         Stripe::setApiKey(config('services.stripe.secret'));
         $paymentIntent = PaymentIntent::create([
-            'amount' => (int) ($total * 100),
-            'currency' => self::CURRENCY,
+            'amount' => (int)($total * 100),
+            'currency' => CartEnum::CURRENCY->value,
             'metadata' => [
                 'user_id' => auth()->id() ?? null,
             ],
@@ -144,27 +108,20 @@ class CartController extends Controller
      */
     public function storeOrder(Request $request): JsonResponse
     {
-        $cart = $this->getCart();
-        $total = $this->calculateTotal($cart);
+        $validated = $request->validate([
+            'payment_intent_id' => ['required'],
+        ]);
 
-        DB::transaction(function() use ($request, $cart, $total) {
-            $order = Order::create([
-                'user_id' => $request->user()->id,
-                'stripe_payment_id' => $request->payment_intent_id,
-                'amount' => $total,
-                'status' => 'paid',
-            ]);
+        $cart = $this->cartService->getCart();
 
-            foreach ($cart as $item) {
-                $order->items()->create([
-                    'course_id' => $item['id'],
-                    'price' => $item['price'],
-                ]);
-            }
-        });
+        $this->cartService->storeOrder((int) $validated['payment_intent_id'], $cart);
+
+        $this->courseService->enrollStudent($cart);
+
+        $this->courseService->notifyInstructors($cart);
 
         // **Clear the cart from session**
-        Session::forget(self::CART_SESSION_KEY);
+        Session::forget(CartEnum::CART_SESSION_KEY->value);
 
         return response()->json(['success' => true]);
     }

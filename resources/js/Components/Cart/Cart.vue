@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
+import Stars from "@/Components/Stars.vue";
 
 const { cart } = defineProps({
     cart: { type: Array, default: () => [] }
@@ -59,7 +60,7 @@ function removeFromCart(id) {
                             Автор: {{ item.instructor }}
                         </p>
                         <div class="flex items-center text-yellow-500 text-xs mt-1 gap-2">
-                            ⭐ {{ item.rating }}
+                            <Stars :size="14" :rating="Number(item.rating || 0)"/>
                             <span class="text-gray-500">({{ item.reviews_count || 0 }} відгуків)</span>
                         </div>
                         <p class="text-xs text-gray-500">{{ item.duration }} min | {{ item.level }} | {{ item.lessons }} lessons</p>
@@ -67,7 +68,7 @@ function removeFromCart(id) {
 
                     <!-- Ціна + кнопка -->
                     <div class="flex flex-col items-end">
-                        <span class="font-bold text-gray-800">${{ Number(item.price) }}</span>
+                        <span class="font-bold text-gray-800">{{ Number(item.price) }} ₴</span>
                         <button
                             @click="removeFromCart(item.id)"
                             class="text-red-500 hover:text-red-700 text-xs mt-1"
@@ -82,7 +83,7 @@ function removeFromCart(id) {
             <div class="px-4 py-3 bg-gray-50 border-t">
                 <div class="flex justify-between items-center font-bold text-gray-800">
                     <span>Всього:</span>
-                    <span>${{ total }}</span>
+                    <span>{{ total }} ₴</span>
                 </div>
                 <Link
                     :href="route('cart.checkout')"

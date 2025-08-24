@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Test;
+
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
@@ -12,6 +13,15 @@ class TestSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        for ($i = 1; $i <= 10; $i++) {
+            Test::factory()->create([
+                'title' => "Test $i",
+                'slug' => "test-$i",
+                'description' => "Test $i description",
+                'duration' => $i * 60,
+                'lesson_id' => $i,
+                'course_id' => $i
+            ]);
+        }
     }
 }

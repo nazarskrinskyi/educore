@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Badge;
 use Illuminate\Database\Seeder;
 
 class BadgeSeeder extends Seeder
@@ -12,6 +12,14 @@ class BadgeSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        for ($i = 1; $i <= 10; $i++) {
+            Badge::factory()->create(
+                [
+                    'name' => "Badge $i",
+                    'description' => "Description $i",
+                    'icon_path' => null
+                ]
+            );
+        }
     }
 }

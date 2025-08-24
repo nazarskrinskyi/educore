@@ -48,18 +48,18 @@ async function handleSubmit() {
         <ul class="mb-4">
             <li v-for="item in cart" :key="item.id" class="flex justify-between py-2 border-b">
                 <span>{{ item.name }}</span>
-                <span>${{ item.price }}</span>
+                <span>{{ item.price }} ₴</span>
             </li>
         </ul>
 
         <div class="text-right font-bold mb-4">
-            Всього: ${{ total }}
+            Всього: {{ total }} ₴
         </div>
 
         <div ref="cardElement" class="p-3 border rounded mb-4"></div>
 
         <button @click="handleSubmit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-            Оплатити ${{ total }}
+            Оплатити {{ total }} ₴
         </button>
     </div>
 </template>

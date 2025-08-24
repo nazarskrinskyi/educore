@@ -1,22 +1,23 @@
 <script setup>
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import {Link, usePage} from '@inertiajs/vue3';
 import MapCard from "@/Components/MapCard.vue";
 import ScrollToTop from "@/Components/ScrollToTop.vue";
+import Cart from "@/Components/Cart/Cart.vue";
 
 const showingNavigationDropdown = ref(false);
+const page = usePage()
+const cart = computed(() => Object.values(page.props.cart ?? {}))
 </script>
 
 <template>
     <div>
         <div class="min-h-screen bg-gray-100">
-            <nav
-                class="border-b border-gray-100 bg-white shadow"
-            >
+            <nav class="border-b border-gray-100 bg-white shadow sticky top-0 z-50">
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex h-20 justify-between">
@@ -72,7 +73,7 @@ const showingNavigationDropdown = ref(false);
 
                                     <template #content>
                                         <DropdownLink
-                                            :href="route('profile.edit')"
+                                            :href="route('courses.index')"
                                         >
                                             Courses
                                         </DropdownLink>
@@ -91,6 +92,7 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Contact
                                 </NavLink>
+                                <Cart :cart="cart" />
                             </div>
                         </div>
 

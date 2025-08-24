@@ -20,6 +20,7 @@ Route::get('/courses', [ServiceController::class, 'index'])->name('services');
 
 Route::get('/contact', [ContactMessageController::class, 'index'])->name('contact');
 
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');

@@ -1,38 +1,12 @@
 <script setup>
-import Cart from "@/Components/Cart/Cart.vue"
-import {Link, usePage} from "@inertiajs/vue3"
-import { computed } from "vue"
-import CourseCard from "@/Components/CourseCard.vue";
-import { router } from '@inertiajs/vue3'
-
-defineProps({
-    courses: {
-        type: Object,
-        default: () => ({}),
-    },
-});
-
-
-const page = usePage()
-const cart = computed(() => Object.values(page.props.cart ?? {}))
-
-function goToCourse(course) {
-    router.visit(route('courses.show', course.slug))
-}
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 </script>
 
 <template>
     <Head title="About" />
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <CourseCard
-            v-for="course in courses"
-            :key="course.id"
-            :course="course"
-            :cart="cart"
-            @click="goToCourse(course)"
-        />
-    </div>
+    <AuthenticatedLayout>
 
-    <Cart :cart="cart" />
+    </AuthenticatedLayout>
+
 </template>
