@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\CourseUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
@@ -26,8 +27,8 @@ class CourseResource extends JsonResource
                 'name' => $tag->name,
                 'slug' => $tag->slug,
             ]),
-            'owned' => $request->user() ? $request->user()->orders()
-                ->whereHas('items', fn($q) => $q->where('course_id', $this->id))
+            'owned' => $request->user() ? CourseUser::where('course_id', $this->id)
+                ->where('user_id', $request->user()->id)
                 ->exists() : false,
             'in_cart' => session()->has('cart.' . $this->id),
         ];

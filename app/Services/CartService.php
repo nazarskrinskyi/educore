@@ -57,7 +57,7 @@ class CartService
         }, 0);
     }
 
-    public function storeOrder(int $paymentIntentId, array $cart): void
+    public function storeOrder(string $paymentIntentId, array $cart): void
     {
         $total = $this->calculateTotal($cart);
 

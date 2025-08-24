@@ -8,13 +8,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @property mixed $id
+ */
 class Lesson extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'section_id', 'title', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug'
+        'section_id', 'title', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug',
     ];
+
+    protected $appends = ['completed_at'];
+
+    public function getCompletedAtAttribute()
+    {
+        if (!auth()->check()) return null;
+
+        return $this->students()
+            ->where('user_id', auth()->id())
+            ->first()?->pivot->completed_at;
+    }
 
     public function Section(): BelongsTo
     {

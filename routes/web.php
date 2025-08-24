@@ -6,7 +6,9 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LessonCompletionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +24,19 @@ Route::get('/contact', [ContactMessageController::class, 'index'])->name('contac
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
+Route::get('/courses/{course:slug}/lessons/{lesson:slug}', [CourseController::class, 'enrollShow'])->name('courses.player');
+
+Route::post('/courses/reviews/store', [ReviewController::class, 'store'])->name('courses.reviews.store');
+Route::put('/courses/reviews/{review:slug}', [ReviewController::class, 'update'])->name('courses.reviews.update');
+Route::delete('/courses/reviews/{review:slug}', [ReviewController::class, 'destroy'])->name('courses.reviews.destroy');
+
+Route::post('/lessons/{lesson}/toggle', [LessonCompletionController::class, 'toggle'])
+    ->name('lessons.toggle')
+    ->middleware('auth');
+
+Route::post('/lessons/{lesson}/complete', [LessonCompletionController::class, 'complete'])
+    ->name('lessons.complete')
+    ->middleware('auth');
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');

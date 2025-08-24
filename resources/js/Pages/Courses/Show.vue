@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import {computed, ref} from 'vue'
+import {Link, router} from '@inertiajs/vue3'
 import AddToCartButton from '@/Components/Cart/AddToCartButton.vue'
 import Stars from '@/Components/Stars.vue'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
@@ -11,19 +11,48 @@ const props = defineProps({
 })
 
 const totalStudents = computed(() => props.course?.students?.length || 0)
+
+const openSections = ref([])
+
+function toggleSection(sectionId) {
+    if (openSections.value.includes(sectionId)) {
+        openSections.value = openSections.value.filter(id => id !== sectionId)
+    } else {
+        openSections.value.push(sectionId)
+    }
+}
+
 const allLessons = computed(() => {
-    if (!props.course?.sections) return [];
-    return props.course.sections.flatMap(section => section.lessons || []);
-});
+    if (!props.course?.sections) return []
+    return props.course.sections.flatMap(s => s.lessons || [])
+})
 const totalLessons = computed(() => allLessons.value.length)
 
-function formatCurrency(value) {
-    if (!value) return '0 ₴'
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'UAH',
-        maximumFractionDigits: 0
-    }).format(Number(value))
+const reviewComment = ref('')
+const reviewRating = ref(0)
+
+function submitReview() {
+    if (!props.course.owned) return
+
+    router.post(route('courses.reviews.store', props.course), {
+        course_id: props.course.id,
+        comment: reviewComment.value,
+        rating: reviewRating.value
+    })
+
+    reviewComment.value = ''
+    reviewRating.value = 0
+}
+
+function updateReview(review) {
+    router.put(route('courses.reviews.update', review), {
+        comment: review.comment,
+        rating: review.rating
+    })
+}
+
+function deleteReview(review) {
+    router.delete(route('courses.reviews.destroy', review))
 }
 </script>
 
@@ -68,15 +97,33 @@ function formatCurrency(value) {
                         <p class="text-gray-700">{{ course.description }}</p>
                     </section>
 
-                    <!-- Lessons -->
+                    <!-- Lessons Accordion -->
                     <section>
                         <h2 class="text-xl font-semibold mb-2">Course Content ({{ totalLessons }} lessons)</h2>
-                        <ul class="divide-y border rounded-lg bg-white">
-                            <li v-for="lesson in allLessons" :key="lesson.id" class="p-3 flex items-center justify-between">
-                                <span>{{ lesson.title }}</span>
-                                <span class="text-sm text-gray-500">{{ lesson.views }} views</span>
-                            </li>
-                        </ul>
+                        <div class="space-y-2">
+                            <div v-for="section in course.sections" :key="section.id" class="border rounded-lg bg-white">
+                                <!-- Section Title -->
+                                <button
+                                    class="w-full text-left p-3 flex justify-between items-center font-semibold"
+                                    @click="toggleSection(section.id)"
+                                >
+                                    {{ section.title }}
+                                    <span>{{ openSections.includes(section.id) ? '-' : '+' }}</span>
+                                </button>
+
+                                <!-- Lessons List -->
+                                <ul v-show="openSections.includes(section.id)" class="border-t divide-y">
+                                    <li
+                                        v-for="lesson in section.lessons"
+                                        :key="lesson.id"
+                                        class="p-3 flex items-center justify-between"
+                                    >
+                                        <span>{{ lesson.title }}</span>
+                                        <span class="text-sm text-gray-500">{{ lesson.views }} views</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </section>
 
                     <!-- Tags -->
@@ -94,17 +141,51 @@ function formatCurrency(value) {
                         </div>
                     </section>
 
-                    <!-- Reviews -->
+                    <!-- Reviews Section -->
                     <section>
                         <h2 class="text-xl font-semibold mb-4">Student Reviews</h2>
-                        <div v-if="course.reviews?.length" class="space-y-4">
+
+                        <div v-if="course.reviews?.length" class="space-y-4 mb-4">
                             <div v-for="review in course.reviews" :key="review.id" class="p-4 bg-white border rounded-lg">
                                 <p class="font-semibold">{{ review.user?.name || 'Anonymous' }}</p>
                                 <Stars :rating="review.rating" :size="14" />
                                 <p class="text-gray-600 mt-2">{{ review.comment }}</p>
                             </div>
                         </div>
-                        <p v-else class="text-gray-500">No reviews yet.</p>
+                        <p v-else class="text-gray-500 mb-4">No reviews yet.</p>
+
+                        <!-- Review Form (only for course owners) -->
+                        <div v-if="course.owned" class="p-4 bg-white border rounded-lg">
+                            <h3 class="font-semibold mb-2">Add Your Review</h3>
+                            <div class="flex flex-col gap-2">
+                                    Rating:
+                                    <div class="flex items-center gap-2">
+                                        <button
+                                            type="button"
+                                            @click="reviewRating = Math.max(0, reviewRating - 1)"
+                                            class="px-2 py-1 border rounded"
+                                        >-</button>
+
+                                        <span class="w-6 text-center">{{ reviewRating }}</span>
+
+                                        <button
+                                            type="button"
+                                            @click="reviewRating = Math.min(5, reviewRating + 1)"
+                                            class="px-2 py-1 border rounded"
+                                        >+</button>
+                                    </div>
+                                <label>
+                                    Comment:
+                                    <textarea v-model="reviewComment" class="border rounded px-2 py-1 w-full" rows="3"></textarea>
+                                </label>
+                                <button
+                                    @click="submitReview"
+                                    class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600"
+                                >
+                                    Submit Review
+                                </button>
+                            </div>
+                        </div>
                     </section>
                 </div>
 
@@ -113,11 +194,11 @@ function formatCurrency(value) {
                     <div class="bg-white border rounded-lg shadow p-6 sticky top-6">
                         <img :src="course.image_url" alt="Course image" class="w-full h-40 object-cover rounded mb-4" />
                         <p class="text-2xl font-bold mb-2">
-                            {{ course.is_free ? 'Free' : formatCurrency(course.price_formatted) }}
+                            UAH {{ course.is_free ? 'Free' : course.price_formatted }}
                         </p>
                         <div v-if="course.owned" class="mb-5">
                             <Link
-                                :href="route('courses.show', course.slug)"
+                                :href="route('courses.player', { course: course.slug, lesson: course.sections[0].lessons[0].slug })"
                                 class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                             >
                                 Go to Course

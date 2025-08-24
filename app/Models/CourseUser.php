@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * @method static updateOrCreate(array $array, array $array1)
+ * @method static updateOrCreate(array $array)
+ * @method static where(string $string, mixed $id)
  */
 class CourseUser extends Pivot
 {
@@ -18,5 +20,10 @@ class CourseUser extends Pivot
         'progress_percent',
     ];
 
-    public $timestamps = true;
+    public $timestamps = false;
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

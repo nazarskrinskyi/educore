@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Models\CourseUser;
+use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,14 +45,28 @@ class CourseController extends Controller
             'students',
         ])->where('slug', $slug)->firstOrFail();
 
-        $course->owned = $request->user() ? $request->user()->orders()
-        ->whereHas('items', fn($q) => $q->where('course_id', $course->id))
-        ->exists() : false;
+        $course->owned = $request->user() ? CourseUser::where('course_id', $course->id)
+            ->where('user_id', $request->user()->id)
+            ->exists() : false;
 
         $course->in_cart = session()->has('cart.' . $course->id);
 
         return Inertia::render('Courses/Show', [
             'course' => $course,
+        ]);
+    }
+
+    public function enrollShow(Course $course, Lesson $lesson): Response
+    {
+        $course->load([
+            'sections.lessons',
+            'instructor',
+            'reviews.user'
+        ]);
+
+        return Inertia::render('Courses/Player', [
+            'course' => $course,
+            'lesson' => $lesson,
         ]);
     }
 }

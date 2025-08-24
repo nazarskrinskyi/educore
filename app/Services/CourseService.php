@@ -23,13 +23,13 @@ class CourseService
     {
         $user = auth()->user();
 
-        if (!$user || empty($cart['items'])) {
+        if (!$user || empty($cart)) {
             return;
         }
 
         DB::transaction(function () use ($user, $cart) {
-            foreach ($cart['items'] as $item) {
-                $courseId = $item['course_id'];
+            foreach ($cart as $item) {
+                $courseId = $item['id'];
 
                 $course = Course::find($courseId);
                 if (!$course) {
@@ -40,8 +40,6 @@ class CourseService
                     [
                         'user_id' => $user->id,
                         'course_id' => $course->id,
-                    ],
-                    [
                         'enrolled_at' => now(),
                         'progress_percent' => 0,
                     ]
@@ -58,8 +56,8 @@ class CourseService
      */
     public function notifyInstructors(array $cart): void
     {
-        foreach ($cart['items'] as $item) {
-            $course = Course::find($item['course_id']);
+        foreach ($cart as $item) {
+            $course = Course::find($item['id']);
 
             if ($course && $course->instructor) {
                 Mail::to($course->instructor->email)->send(new NewEnrollment($course));

@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import axios from 'axios'
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     cart: Array,
@@ -32,7 +32,7 @@ async function handleSubmit() {
     }
 
     if (paymentIntent.status === 'succeeded') {
-        await axios.post(route('checkout.order'), {
+        await router.post(route('checkout.order'), {
             payment_intent_id: paymentIntent.id
         })
 

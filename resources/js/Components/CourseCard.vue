@@ -36,15 +36,6 @@ const isBestseller = computed(() => {
 function goToCourse(course) {
     router.visit(route('courses.show', course.slug))
 }
-
-function formatCurrency(value) {
-    if (!value) return '0 ₴'
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'UAH',
-        maximumFractionDigits: 0
-    }).format(Number(value))
-}
 </script>
 
 <template>
@@ -90,7 +81,7 @@ function formatCurrency(value) {
             <!-- price + add to cart -->
             <div class="flex items-center justify-between mt-1">
                 <p class="font-semibold text-gray-900">
-                    {{ course.is_free ? 'Free' : formatCurrency(course.price_formatted) }}
+                    UAH {{ course.is_free ? 'Free' : course.price_formatted }}
                 </p>
                 <AddToCartButton :course="toRaw(course)" :cart="cart"/>
             </div>

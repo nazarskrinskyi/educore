@@ -18,7 +18,7 @@ class CourseSeeder extends Seeder
                     'title' => "Course $i",
                     'slug' => "course-$i",
                     'description' => "Course $i description",
-                    'price' => 100 * $i,
+                    'price' => 10000 * $i,
                     'category_id' => $i,
                     'instructor_id' => 1,
                     'image_path' => null,
