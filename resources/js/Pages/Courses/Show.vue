@@ -1,9 +1,10 @@
 <script setup>
 import {computed, ref} from 'vue'
-import {Link, router} from '@inertiajs/vue3'
+import {Link} from '@inertiajs/vue3'
 import AddToCartButton from '@/Components/Cart/AddToCartButton.vue'
 import Stars from '@/Components/Stars.vue'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import CommentSection from "@/Components/CommentSection.vue";
 
 const props = defineProps({
     course: { type: Object, required: true },
@@ -27,33 +28,6 @@ const allLessons = computed(() => {
     return props.course.sections.flatMap(s => s.lessons || [])
 })
 const totalLessons = computed(() => allLessons.value.length)
-
-const reviewComment = ref('')
-const reviewRating = ref(0)
-
-function submitReview() {
-    if (!props.course.owned) return
-
-    router.post(route('courses.reviews.store', props.course), {
-        course_id: props.course.id,
-        comment: reviewComment.value,
-        rating: reviewRating.value
-    })
-
-    reviewComment.value = ''
-    reviewRating.value = 0
-}
-
-function updateReview(review) {
-    router.put(route('courses.reviews.update', review), {
-        comment: review.comment,
-        rating: review.rating
-    })
-}
-
-function deleteReview(review) {
-    router.delete(route('courses.reviews.destroy', review))
-}
 </script>
 
 <template>
@@ -142,51 +116,13 @@ function deleteReview(review) {
                     </section>
 
                     <!-- Reviews Section -->
-                    <section>
-                        <h2 class="text-xl font-semibold mb-4">Student Reviews</h2>
-
-                        <div v-if="course.reviews?.length" class="space-y-4 mb-4">
-                            <div v-for="review in course.reviews" :key="review.id" class="p-4 bg-white border rounded-lg">
-                                <p class="font-semibold">{{ review.user?.name || 'Anonymous' }}</p>
-                                <Stars :rating="review.rating" :size="14" />
-                                <p class="text-gray-600 mt-2">{{ review.comment }}</p>
-                            </div>
-                        </div>
-                        <p v-else class="text-gray-500 mb-4">No reviews yet.</p>
-
-                        <!-- Review Form (only for course owners) -->
-                        <div v-if="course.owned" class="p-4 bg-white border rounded-lg">
-                            <h3 class="font-semibold mb-2">Add Your Review</h3>
-                            <div class="flex flex-col gap-2">
-                                    Rating:
-                                    <div class="flex items-center gap-2">
-                                        <button
-                                            type="button"
-                                            @click="reviewRating = Math.max(0, reviewRating - 1)"
-                                            class="px-2 py-1 border rounded"
-                                        >-</button>
-
-                                        <span class="w-6 text-center">{{ reviewRating }}</span>
-
-                                        <button
-                                            type="button"
-                                            @click="reviewRating = Math.min(5, reviewRating + 1)"
-                                            class="px-2 py-1 border rounded"
-                                        >+</button>
-                                    </div>
-                                <label>
-                                    Comment:
-                                    <textarea v-model="reviewComment" class="border rounded px-2 py-1 w-full" rows="3"></textarea>
-                                </label>
-                                <button
-                                    @click="submitReview"
-                                    class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600"
-                                >
-                                    Submit Review
-                                </button>
-                            </div>
-                        </div>
-                    </section>
+                    <CommentSection
+                        :reviews="course.reviews"
+                        :model-id="course.id"
+                        type="courses"
+                        :owned="course.owned"
+                        :user-id="$page.props.auth.user.id"
+                    />
                 </div>
 
                 <!-- Right Sidebar -->

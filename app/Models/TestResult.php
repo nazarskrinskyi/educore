@@ -10,7 +10,7 @@ class TestResult extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['test_id', 'student_id', 'score', 'passed', 'completed_at'];
+    protected $fillable = ['test_id', 'user_id', 'score', 'passed', 'completed_at'];
 
     public function test(): BelongsTo
     {
@@ -19,6 +19,6 @@ class TestResult extends Model
 
     public function student(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

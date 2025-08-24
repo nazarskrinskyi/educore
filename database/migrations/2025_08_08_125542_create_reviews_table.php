@@ -11,12 +11,12 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->tinyInteger('rating')->unsigned()->default(5);
             $table->text('comment')->nullable();
             $table->timestamps();
 
-            $table->unique(['course_id', 'student_id']);
+            $table->unique(['course_id', 'user_id']);
         });
     }
 

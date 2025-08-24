@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import {Head, router} from "@inertiajs/vue3";
+import CommentSection from "@/Components/CommentSection.vue";
 
 const props = defineProps({
     course: Object,
@@ -9,16 +10,6 @@ const props = defineProps({
 
 const activeTab = ref("overview");
 const completed = ref(!!props.lesson.completed_at);
-
-const sections = ref(
-    props.course.sections.map(section => ({
-        ...section,
-        lessons: section.lessons.map(lesson => ({
-            ...lesson,
-            completed: lesson.completed_at !== null,
-        })),
-    }))
-);
 
 function toggleCompletion(lessonItem) {
     router.post(
@@ -94,8 +85,13 @@ function onVideoProgress(e) {
                     <p>{{ props.course.description }}</p>
                 </div>
                 <div v-if="activeTab === 'comments'">
-                    <h2 class="text-xl font-semibold mb-2">Comments</h2>
-                    <!-- TODO: implement comments system -->
+                    <CommentSection
+                        :reviews="lesson.reviews"
+                        :model-id="lesson.id"
+                        type="lessons"
+                        :owned="course.owned"
+                        :user-id="$page.props.auth.user.id"
+                    />
                 </div>
                 <div v-if="activeTab === 'tests'">
                     <h2 class="text-xl font-semibold mb-2">Tests</h2>

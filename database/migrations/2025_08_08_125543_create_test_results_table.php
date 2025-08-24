@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('test_results', function (Blueprint $table) {
             $table->id();
             $table->foreignId('test_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->integer('score')->default(0);
             $table->timestamps();
 
-            $table->unique(['test_id', 'student_id']);
+            $table->unique(['test_id', 'user_id']);
         });
     }
 

@@ -28,3 +28,5 @@ storage
 public/images
 /storage/framework
 ./storage/framework/
+./storage/framework/views
+./storage/framework/cache

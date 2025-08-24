@@ -11,7 +11,7 @@ import Cart from "@/Components/Cart/Cart.vue";
 
 const showingNavigationDropdown = ref(false);
 const page = usePage()
-const cart = computed(() => Object.values(page.props.cart ?? {}))
+const cart = computed(() => page.props.cart?.items ?? [])
 </script>
 
 <template>

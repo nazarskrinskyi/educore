@@ -43,11 +43,9 @@ class CourseController extends Controller
             'sections.lessons.tests',
             'reviews.user',
             'students',
-        ])->where('slug', $slug)->firstOrFail();
-
-        $course->owned = $request->user() ? CourseUser::where('course_id', $course->id)
-            ->where('user_id', $request->user()->id)
-            ->exists() : false;
+        ])->where('slug', $slug)
+            ->through(fn($course) => new CourseResource($course))
+            ->firstOrFail();
 
         $course->in_cart = session()->has('cart.' . $course->id);
 
@@ -63,6 +61,10 @@ class CourseController extends Controller
             'instructor',
             'reviews.user'
         ]);
+
+        $course->owned = auth()->user() ? CourseUser::where('course_id', $course->id)
+            ->where('user_id', auth()->id())
+            ->exists() : false;
 
         return Inertia::render('Courses/Player', [
             'course' => $course,
