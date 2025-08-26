@@ -17,7 +17,7 @@ class TestResult extends Model
         return $this->belongsTo(Test::class);
     }
 
-    public function student(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

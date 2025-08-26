@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\LessonResource;
 use App\Models\Course;
 use App\Models\CourseUser;
 use App\Models\Lesson;
@@ -21,7 +22,7 @@ class CourseController extends Controller
             'sections.lessons',
             'sections.lessons.tests',
             'reviews.user',
-            'students',
+            'users',
         ])
             ->filter($request)
             ->paginate(6)
@@ -33,34 +34,30 @@ class CourseController extends Controller
         ]);
     }
 
-    public function show(Request $request, string $slug): Response
+    public function show(string $slug): Response
     {
         $course = Course::with([
             'category',
             'instructor',
             'tags',
             'sections.lessons',
+            'sections',
             'sections.lessons.tests',
             'reviews.user',
-            'students',
+            'users',
         ])->where('slug', $slug)
-            ->through(fn($course) => new CourseResource($course))
             ->firstOrFail();
 
         $course->in_cart = session()->has('cart.' . $course->id);
 
         return Inertia::render('Courses/Show', [
-            'course' => $course,
+            'course' => (new CourseResource($course))->resolve(),
         ]);
     }
 
     public function enrollShow(Course $course, Lesson $lesson): Response
     {
-        $course->load([
-            'sections.lessons',
-            'instructor',
-            'reviews.user'
-        ]);
+        $course->load(['sections.lessons']);
 
         $course->owned = auth()->user() ? CourseUser::where('course_id', $course->id)
             ->where('user_id', auth()->id())
@@ -68,7 +65,7 @@ class CourseController extends Controller
 
         return Inertia::render('Courses/Player', [
             'course' => $course,
-            'lesson' => $lesson,
+            'lesson' => (new LessonResource($lesson))->resolve(),
         ]);
     }
 }

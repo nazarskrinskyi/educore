@@ -9,6 +9,7 @@ const props = defineProps({
     type: { type: String, required: true },
     owned: { type: Boolean, default: false },
     userId: { type: Number, required: true },
+    is_rated: { type: Boolean, default: true },
 })
 
 const reviewComment = ref('')
@@ -62,7 +63,7 @@ function deleteReview(review) {
                 class="p-4 bg-white border rounded-lg"
             >
                 <p class="font-semibold">{{ review.user?.name || 'Anonymous' }}</p>
-                <Stars :rating="review.rating" :size="14" />
+                <Stars :rating="review.rating" :size="14" v-if="is_rated" />
 
                 <div v-if="editingReview === review.id">
                     <textarea v-model="review.comment" class="border rounded px-2 py-1 w-full mt-2" rows="3"></textarea>
@@ -80,8 +81,8 @@ function deleteReview(review) {
                     </button>
                 </div>
                 <p v-else class="text-gray-600 mt-2">{{ review.comment }}</p>
-
                 <!-- Actions (only for owner of the review) -->
+
                 <div v-if="review.user_id === userId" class="mt-2 flex gap-2">
                     <button
                         @click="editingReview = review.id"
@@ -108,21 +109,23 @@ function deleteReview(review) {
                 <p class="text-gray-600">✅ You already left a review. You can edit or delete it below.</p>
             </div>
             <div v-else class="flex flex-col gap-2">
-                Rating:
-                <div class="flex items-center gap-2">
-                    <button
-                        type="button"
-                        @click="reviewRating = Math.max(0, reviewRating - 1)"
-                        class="px-2 py-1 border rounded"
-                    >-</button>
+                <div v-if="is_rated">
+                    Rating:
+                    <div class="flex items-center gap-2">
+                        <button
+                            type="button"
+                            @click="reviewRating = Math.max(0, reviewRating - 1)"
+                            class="px-2 py-1 border rounded"
+                        >-</button>
 
-                    <span class="w-6 text-center">{{ reviewRating }}</span>
+                        <span class="w-6 text-center">{{ reviewRating }}</span>
 
-                    <button
-                        type="button"
-                        @click="reviewRating = Math.min(5, reviewRating + 1)"
-                        class="px-2 py-1 border rounded"
-                    >+</button>
+                        <button
+                            type="button"
+                            @click="reviewRating = Math.min(5, reviewRating + 1)"
+                            class="px-2 py-1 border rounded"
+                        >+</button>
+                    </div>
                 </div>
 
                 <textarea v-model="reviewComment" class="border rounded px-2 py-1 w-full" rows="3"></textarea>

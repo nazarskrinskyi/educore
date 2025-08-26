@@ -11,7 +11,7 @@ import Cart from "@/Components/Cart/Cart.vue";
 
 const showingNavigationDropdown = ref(false);
 const page = usePage()
-const cart = computed(() => page.props.cart?.items ?? [])
+const cart = computed(() => Object.values(page.props.cart ?? {}))
 </script>
 
 <template>
@@ -76,13 +76,6 @@ const cart = computed(() => page.props.cart?.items ?? [])
                                             :href="route('courses.index')"
                                         >
                                             Courses
-                                        </DropdownLink>
-                                        <DropdownLink
-                                            :href="route('logout')"
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Lessons
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>

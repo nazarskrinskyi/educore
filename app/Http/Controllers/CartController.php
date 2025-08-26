@@ -116,7 +116,7 @@ class CartController extends Controller
 
         $this->cartService->storeOrder($validated['payment_intent_id'], $cart);
 
-        $this->courseService->enrollStudent($cart);
+        $this->courseService->enrollUser($cart);
 
         $this->courseService->notifyInstructors($cart);
 

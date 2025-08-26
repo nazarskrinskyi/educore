@@ -7,11 +7,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import CommentSection from "@/Components/CommentSection.vue";
 
 const props = defineProps({
-    course: { type: Object, required: true },
-    cart: { type: [Object, Array], default: () => ({}) }
+    course: {type: Object, required: true},
+    cart: {type: [Object, Array], default: () => ({})}
 })
 
-const totalStudents = computed(() => props.course?.students?.length || 0)
+const totalStudents = computed(() => props.course?.users?.length || 0)
 
 const openSections = ref([])
 
@@ -45,9 +45,9 @@ const totalLessons = computed(() => allLessons.value.length)
               <span class="flex items-center gap-1">
                <Stars :rating="course.rating" :size="14"/>
               </span>
-                        <span>({{ course.reviews?.length || 0 }} reviews)</span>
-                        <span>{{ totalStudents }} students enrolled</span>
-                        <span>• {{ course.category?.name }}</span>
+                        <span>{{ course.reviews?.length || 0 }} reviews</span> |
+                        <span>{{ totalStudents }} students enrolled</span> |
+                        <span>{{ course.category?.name }}</span>
                     </div>
                     <p class="mt-2">Instructor: <strong>{{ course.instructor?.name }}</strong></p>
                 </div>
@@ -60,7 +60,7 @@ const totalLessons = computed(() => allLessons.value.length)
                     <!-- Video Preview -->
                     <div v-if="course.video_path" class="aspect-video rounded-lg overflow-hidden bg-black">
                         <video controls class="w-full h-full">
-                            <source :src="course.video_path" type="video/mp4" />
+                            <source :src="course.video_path" type="video/mp4"/>
                             Your browser does not support the video tag.
                         </video>
                     </div>
@@ -75,7 +75,8 @@ const totalLessons = computed(() => allLessons.value.length)
                     <section>
                         <h2 class="text-xl font-semibold mb-2">Course Content ({{ totalLessons }} lessons)</h2>
                         <div class="space-y-2">
-                            <div v-for="section in course.sections" :key="section.id" class="border rounded-lg bg-white">
+                            <div v-for="section in course.sections" :key="section.id"
+                                 class="border rounded-lg bg-white">
                                 <!-- Section Title -->
                                 <button
                                     class="w-full text-left p-3 flex justify-between items-center font-semibold"
@@ -128,11 +129,11 @@ const totalLessons = computed(() => allLessons.value.length)
                 <!-- Right Sidebar -->
                 <div class="space-y-6">
                     <div class="bg-white border rounded-lg shadow p-6 sticky top-6">
-                        <img :src="course.image_url" alt="Course image" class="w-full h-40 object-cover rounded mb-4" />
+                        <img :src="course.image_url" alt="Course image" class="w-full h-40 object-cover rounded mb-4"/>
                         <p class="text-2xl font-bold mb-2">
                             UAH {{ course.is_free ? 'Free' : course.price_formatted }}
                         </p>
-                        <div v-if="course.owned" class="mb-5">
+                        <div v-if="course.owned && course.sections?.length && course.sections[0].lessons?.length" class="mb-5">
                             <Link
                                 :href="route('courses.player', { course: course.slug, lesson: course.sections[0].lessons[0].slug })"
                                 class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
@@ -141,7 +142,7 @@ const totalLessons = computed(() => allLessons.value.length)
                             </Link>
                         </div>
                         <div v-else>
-                            <AddToCartButton :course="course" :cart="cart" class="w-full mb-3" />
+                            <AddToCartButton :course="course" :cart="cart" class="w-full mb-3"/>
                         </div>
                         <p class="text-sm text-gray-500">30-Day Money-Back Guarantee</p>
                     </div>

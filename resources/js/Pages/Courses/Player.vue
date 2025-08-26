@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import {Head, router} from "@inertiajs/vue3";
 import CommentSection from "@/Components/CommentSection.vue";
+import TestCard from "@/Components/TestCard.vue";
 
 const props = defineProps({
     course: Object,
@@ -91,11 +92,21 @@ function onVideoProgress(e) {
                         type="lessons"
                         :owned="course.owned"
                         :user-id="$page.props.auth.user.id"
+                        :is_rated="false"
                     />
                 </div>
                 <div v-if="activeTab === 'tests'">
-                    <h2 class="text-xl font-semibold mb-2">Tests</h2>
-                    <!-- TODO: show tests related to this lesson -->
+                    <h2 class="text-xl font-semibold mb-4">Tests</h2>
+
+                    <div v-if="lesson.tests.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <TestCard
+                            v-for="test in lesson.tests"
+                            :key="test.id"
+                            :test="test"
+                        />
+                    </div>
+
+                    <div v-else class="text-gray-500">Тестів поки немає.</div>
                 </div>
             </div>
         </div>

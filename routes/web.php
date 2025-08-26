@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseReviewController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -42,6 +43,8 @@ Route::post('/lessons/{lesson}/toggle', [LessonCompletionController::class, 'tog
 Route::post('/lessons/{lesson}/complete', [LessonCompletionController::class, 'complete'])
     ->name('lessons.complete')
     ->middleware('auth');
+
+Route::get('/tests/{test:slug}', [TestController::class, 'show'])->name('tests.show');
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');

@@ -19,7 +19,7 @@ class CourseService
      * @param array $cart
      * @return void
      */
-    public function enrollStudent(array $cart): void
+    public function enrollUser(array $cart): void
     {
         $user = auth()->user();
 
@@ -70,6 +70,6 @@ class CourseService
      */
     public function isOwnedByUser(Course $course, User $user): bool
     {
-        return $course->students()->where('user_id', $user->id)->exists();
+        return $course->users()->where('user_id', $user->id)->exists();
     }
 }

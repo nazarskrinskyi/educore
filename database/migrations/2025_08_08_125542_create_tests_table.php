@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('image_path')->nullable();
             $table->text('description')->nullable();
             $table->integer('duration')->default(0);
+            $table->integer('pass_percentage')->default(70);
             $table->timestamps();
         });
     }

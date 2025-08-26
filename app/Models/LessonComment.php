@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LessonComment extends Model
 {
-    protected $fillable = ['lesson_id', 'user_id', 'content'];
+    protected $fillable = ['lesson_id', 'user_id', 'comment'];
 
     public function user(): BelongsTo
     {

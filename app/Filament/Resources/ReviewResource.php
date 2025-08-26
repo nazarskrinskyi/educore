@@ -20,7 +20,7 @@ class ReviewResource extends Resource
         return $table->columns([
             TextColumn::make('id'),
             TextColumn::make('course.title')->label('Course'),
-            TextColumn::make('student.name')->label('Student'),
+            TextColumn::make('user.name')->label('Student'),
             TextColumn::make('rating'),
             TextColumn::make('created_at')->dateTime(),
         ])->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);

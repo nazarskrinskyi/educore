@@ -14,7 +14,6 @@ class CourseReviewController extends Controller
     {
         $validated = $request->validate([
             'course_id' => ['nullable', 'integer', 'exists:courses,id'],
-            'lesson_id' => ['nullable', 'integer', 'exists:lessons,id'],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'comment' => ['nullable', 'string', 'max:255'],
         ]);
@@ -23,7 +22,6 @@ class CourseReviewController extends Controller
 
         $exists = Review::where('user_id', $user->id)
             ->when($validated['course_id'] ?? null, fn($q) => $q->where('course_id', $validated['course_id']))
-            ->when($validated['lesson_id'] ?? null, fn($q) => $q->where('lesson_id', $validated['lesson_id']))
             ->exists();
 
         if ($exists) {

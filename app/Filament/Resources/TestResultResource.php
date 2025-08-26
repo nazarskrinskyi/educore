@@ -20,7 +20,7 @@ class TestResultResource extends Resource
         return $table->columns([
             TextColumn::make('id'),
             TextColumn::make('test.title')->label('Test'),
-            TextColumn::make('student.name')->label('Student'),
+            TextColumn::make('user.name')->label('Student'),
             TextColumn::make('score')->sortable(),
             TextColumn::make('created_at')->dateTime(),
         ])->actions([Tables\Actions\EditAction::make()]);
