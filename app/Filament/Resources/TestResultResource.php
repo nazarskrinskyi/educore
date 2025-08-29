@@ -19,7 +19,7 @@ class TestResultResource extends Resource
     {
         return $table->columns([
             TextColumn::make('id'),
-            TextColumn::make('test.title')->label('Test'),
+            TextColumn::make('test.title')->label('Tests'),
             TextColumn::make('user.name')->label('Student'),
             TextColumn::make('score')->sortable(),
             TextColumn::make('created_at')->dateTime(),

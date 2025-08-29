@@ -30,3 +30,6 @@ public/images
 ./storage/framework/
 ./storage/framework/views
 ./storage/framework/cache
+/tests
+./tests
+tests

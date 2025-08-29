@@ -43,4 +43,9 @@ class Test extends Model
     {
         return $this->image_path ? Storage::url($this->image_path) : '';
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

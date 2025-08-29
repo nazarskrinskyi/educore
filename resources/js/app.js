@@ -1,22 +1,20 @@
 import '../css/app.css';
 import './bootstrap';
 
-import { createInertiaApp, Head } from '@inertiajs/vue3';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { createInertiaApp } from '@inertiajs/vue3';
 import { createApp, h } from 'vue';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { Head } from '@inertiajs/vue3';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue'),
-        ),
+        resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({el, App, props, plugin}) {
-        return createApp({render: () => h(App, props)})
+        createApp({render: () => h(App, props)})
             .use(plugin)
             .component('Head', Head)
             .use(ZiggyVue)

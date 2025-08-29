@@ -15,9 +15,9 @@ class TestSeeder extends Seeder
     {
         for ($i = 1; $i <= 10; $i++) {
             Test::factory()->create([
-                'title' => "Test $i",
+                'title' => "Tests $i",
                 'slug' => "test-$i",
-                'description' => "Test $i description",
+                'description' => "Tests $i description",
                 'duration' => $i * 60,
                 'lesson_id' => $i,
                 'course_id' => $i

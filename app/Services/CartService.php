@@ -38,7 +38,7 @@ class CartService
             'price' => $course->price / 100,
             'image' => Storage::url($course->image_path),
             'instructor' => $course->instructor?->name ?? 'Unknown',
-            'rating' => round($course->reviews()->avg('rating') ?? 0, 1),
+            'rating' => round((int) $course->reviews()->avg('rating') ?? 0, 1),
             'reviews' => $course->reviews()->count(),
             'duration' => $course->duration,
             'is_free' => $course->is_free,

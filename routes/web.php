@@ -44,7 +44,12 @@ Route::post('/lessons/{lesson}/complete', [LessonCompletionController::class, 'c
     ->name('lessons.complete')
     ->middleware('auth');
 
-Route::get('/tests/{test:slug}', [TestController::class, 'show'])->name('tests.show');
+Route::middleware('verified')->group(function () {
+    Route::get('/tests/{test:slug}', [TestController::class, 'show'])->name('tests.show');
+    Route::post('/tests/{test:id}/progress', [TestController::class, 'saveProgress'])->name('tests.progress');
+    Route::get('/tests/{test:id}/progress', [TestController::class, 'getProgress'])->name('tests.progress.get');
+    Route::post('/tests/{test}/submit', [TestController::class, 'submit'])->name('tests.submit');
+});
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');

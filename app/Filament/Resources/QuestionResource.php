@@ -50,7 +50,7 @@ class QuestionResource extends Resource
         return $table->columns([
             TextColumn::make('id'),
             TextColumn::make('question_text')->limit(60),
-            TextColumn::make('test.title')->label('Test'),
+            TextColumn::make('test.title')->label('Tests'),
         ])->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
     }
 
