@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LessonCommentRequest;
 use App\Models\LessonComment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class LessonCommentController
 {
-    public function store(Request $request): RedirectResponse
+    public function store(LessonCommentRequest $validated): RedirectResponse
     {
-        $validated = $request->validate([
-            'lesson_id' => ['nullable', 'integer', 'exists:lessons,id'],
-            'comment' => ['nullable', 'string', 'max:255'],
-        ]);
-
-        $user = $request->user();
+        $user = $validated->user();
 
         $exists = LessonComment::where('user_id', $user->id)
             ->when($validated['lesson_id'] ?? null, fn($q) => $q->where('lesson_id', $validated['lesson_id']))
@@ -29,18 +25,14 @@ class LessonCommentController
 
         $validated['user_id'] = $user->id;
 
-        LessonComment::create($validated);
+        LessonComment::create(array_filter($validated->all()));
 
         return back()->with('success', 'comment created successfully');
     }
 
-    public function update(Request $request, LessonComment $comment): RedirectResponse
+    public function update(LessonCommentRequest $validated, LessonComment $comment): RedirectResponse
     {
-        $validated = $request->validate([
-            'comment' => ['nullable', 'string', 'max:255'],
-        ]);
-
-        $comment->update($validated);
+        $comment->update(array_filter($validated->all()));
 
         return back()->with('success', 'comment updated successfully');
     }

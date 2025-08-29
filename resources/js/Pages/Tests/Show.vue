@@ -64,6 +64,16 @@ onMounted(() => {
     }
 })
 
+onMounted(async () => {
+    const response = await axios.get(route('tests.progress.get', props.test.id))
+    if (response.data) {
+        elapsed.value = response.data.elapsed_seconds ?? 0
+        if (response.data.answers && Array.isArray(response.data.answers)) {
+            response.data.answers.forEach(a => { answers[a.question_id] = a })
+        }
+    }
+})
+
 onUnmounted(() => {
     if (ticker) clearInterval(ticker)
 })
@@ -80,22 +90,10 @@ onMounted(() => {
 onUnmounted(() => { if (autosaveTimer) clearInterval(autosaveTimer) })
 
 const answeredCount = computed(() => {
-    return props.test.questions.filter(q => {
-        const a = answers[q.id]
-        if (!a) return false
-        switch (q.question_type) {
-            case QUESTION_TYPES.MultipleChoice:
-            case QUESTION_TYPES.TrueFalse:
-            case QUESTION_TYPES.MultipleChoiceAndTrueFalse:
-                return !!(a.selected_answer_id || a.bool !== undefined)
-            case QUESTION_TYPES.OpenEnded:
-            case QUESTION_TYPES.ShortAnswer:
-            case QUESTION_TYPES.MultipleChoiceAndShortAnswer:
-            case QUESTION_TYPES.TrueFalseAndShortAnswer:
-                return !!(a.text) || !!a.selected_answer_id || a.bool !== undefined
-            default:
-                return false
-        }
+    return Object.values(answers).filter(a => {
+        const boolVal = a.bool !== undefined ? Boolean(a.bool) : undefined
+
+        return a.selected_answer_id !== null || a.text || boolVal !== undefined
     }).length
 })
 
@@ -225,9 +223,9 @@ function secondsToClock(s) {
                             @click="jump(i)"
                             class="h-10 rounded-xl border text-sm"
                             :class="[
-                i === idx ? 'ring-2 ring-indigo-500 border-indigo-500' : '',
-                answers[q.id] ? 'bg-green-50 border-green-400' : 'hover:bg-gray-50'
-              ]"
+                                i === idx ? 'ring-2 ring-indigo-500 border-indigo-500' : '',
+                                answers[q.id] ? 'bg-green-50 border-green-400' : 'hover:bg-gray-50'
+                            ]"
                         >
                             {{ i + 1 }}
                         </button>

@@ -38,10 +38,14 @@ class TestController extends Controller
             ->where('is_completed', false)
             ->first();
 
+        if (!$attempt) {
+            return response()->json(null);
+        }
+
         return response()->json($attempt);
     }
 
-    public function saveProgress(TestRequest $data, Test $test): \Illuminate\Http\Response
+    public function saveProgress(TestRequest $data, Test $test): void
     {
         $user = auth()->user();
 
@@ -65,14 +69,12 @@ class TestController extends Controller
                 ['question_id' => $answerData['question_id']],
                 [
                     'selected_answer_id' => $answerData['selected_answer_id'] ?? null,
-                    'selected_answer_ids' => $answerData['selected_answer_ids'] ?? null,
+                    'selected_answer_ids' => isset($answerData['selected_answer_ids']) ? json_encode($answerData['selected_answer_ids']) : null,
                     'bool' => $answerData['bool'] ?? null,
                     'text' => $answerData['text'] ?? null,
                 ]
             );
         }
-
-        return response()->noContent();
     }
 
     public function submit(Request $request, Test $test): RedirectResponse

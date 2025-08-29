@@ -24,14 +24,14 @@ class CourseReviewController extends Controller
 
         $validated['user_id'] = $user->id;
 
-        Review::create($validated);
+        Review::create(array_filter($validated->all()));
 
         return back()->with('success', 'Review created successfully');
     }
 
     public function update(CourseRequest $validated, Review $review): RedirectResponse
     {
-        $review->update($validated->all());
+        $review->update(array_filter($validated->all()));
 
         return back()->with('success', 'Review updated successfully');
     }
