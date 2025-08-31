@@ -7,24 +7,20 @@ namespace App\Services;
 use App\Enums\QuestionTypeEnum;
 use App\Models\Test;
 use App\Models\TestAttempt;
-use App\Models\TestResult;
+use App\Repositories\Test\TestRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-class TestService
+readonly class TestService
 {
+    public function __construct(private TestRepositoryInterface $testRepository)
+    {
+    }
+
     public function saveAttempt(array $data, TestAttempt $attempt): void
     {
         foreach ($data['answers'] as $answerData) {
-            $attempt->answers()->updateOrCreate(
-                ['question_id' => $answerData['question_id']],
-                [
-                    'selected_answer_id' => $answerData['selected_answer_id'] ?? null,
-                    'selected_answer_ids' => isset($answerData['selected_answer_ids']) ? json_encode($answerData['selected_answer_ids']) : null,
-                    'bool' => $answerData['bool'] ?? null,
-                    'text' => $answerData['text'] ?? null,
-                ]
-            );
+            $this->testRepository->createOrUpdateTestAttempt($attempt, $answerData);
         }
     }
 
@@ -63,23 +59,16 @@ class TestService
 
         DB::beginTransaction();
         try {
-            TestResult::updateOrCreate(
-                [
-                    'test_id' => $test->id,
-                    'user_id' => $userId,
-                ],
-                [
-                    'score'        => $percent,
-                    'passed'       => $passed,
-                    'completed_at' => now(),
-                    'details'      => $details,
-                ]
-            );
+            $data =  [
+                'score'        => $percent,
+                'passed'       => $passed,
+                'completed_at' => now(),
+                'details'      => $details,
+            ];
 
-            TestAttempt::where([
-                'test_id' => $test->id,
-                'user_id' => $userId,
-            ])->delete();
+            $this->testRepository->createOrUpdateTestResult($userId, $test->id, $data);
+
+            $this->testRepository->deleteTestAttemptByUserIdAndTestId($userId, $test->id);
 
             DB::commit();
 

@@ -7,13 +7,16 @@ namespace App\Services;
 use App\Enums\CartEnum;
 use App\Enums\CourseLevelEnum;
 use App\Models\Course;
-use App\Models\Order;
-use Illuminate\Support\Facades\DB;
+use App\Repositories\Order\OrderRepositoryInterface;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
-class CartService
+readonly class CartService
 {
+    public function __construct(private OrderRepositoryInterface $orderRepository)
+    {
+    }
+
     /**
      * Get the current cart from session
      */
@@ -61,20 +64,6 @@ class CartService
     {
         $total = $this->calculateTotal($cart);
 
-        DB::transaction(function () use ($paymentIntentId, $cart, $total) {
-            $order = Order::create([
-                'user_id' => auth()?->id(),
-                'stripe_payment_id' => $paymentIntentId,
-                'amount' => $total,
-                'status' => CartEnum::ORDER_STATUS_PAID->value,
-            ]);
-
-            foreach ($cart as $item) {
-                $order->items()->create([
-                    'course_id' => $item['id'],
-                    'price' => $item['price'],
-                ]);
-            }
-        });
+        $this->orderRepository->create($paymentIntentId, $cart, $total);
     }
 }

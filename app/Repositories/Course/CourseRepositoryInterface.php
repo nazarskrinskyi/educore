@@ -15,4 +15,8 @@ interface CourseRepositoryInterface
     public function getOneWithAllRelationsBySlug(string $slug): Course;
 
     public function isUserHasCourse(int $userId, int $courseId): bool;
+
+    public function createCourseUser(int $userId, array $cart): void;
+
+    public function getCourseById(int $courseId): ?Course;
 }

@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Storage;
  * @property bool|mixed $in_cart
  * @property mixed $sections
  * @property mixed $id
+ * @property mixed $instructor
  */
 class Course extends Model
 {

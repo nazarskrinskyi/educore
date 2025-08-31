@@ -7,12 +7,16 @@ namespace App\Services;
 use App\Mail\NewEnrollment;
 use App\Models\Course;
 use App\Models\CourseUser;
-use App\Models\User;
+use App\Repositories\Course\CourseRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 
-class CourseService
+readonly class CourseService
 {
+    public function __construct(private CourseRepositoryInterface $courseRepository)
+    {
+    }
+
     /**
      * Enroll all students from the cart to the courses.
      *
@@ -21,31 +25,13 @@ class CourseService
      */
     public function enrollUser(array $cart): void
     {
-        $user = auth()->user();
+        $userId = auth()->id();
 
-        if (!$user || empty($cart)) {
+        if (!$userId || empty($cart)) {
             return;
         }
 
-        DB::transaction(function () use ($user, $cart) {
-            foreach ($cart as $item) {
-                $courseId = $item['id'];
-
-                $course = Course::find($courseId);
-                if (!$course) {
-                    continue;
-                }
-
-                CourseUser::updateOrCreate(
-                    [
-                        'user_id' => $user->id,
-                        'course_id' => $course->id,
-                        'enrolled_at' => now(),
-                        'progress_percent' => 0,
-                    ]
-                );
-            }
-        });
+        $this->courseRepository->createCourseUser($userId, $cart);
     }
 
     /**
@@ -57,19 +43,11 @@ class CourseService
     public function notifyInstructors(array $cart): void
     {
         foreach ($cart as $item) {
-            $course = Course::find($item['id']);
+            $course = $this->courseRepository->getCourseById($item['id']);
 
             if ($course && $course->instructor) {
                 Mail::to($course->instructor->email)->send(new NewEnrollment($course));
             }
         }
-    }
-
-    /**
-     * Check if a user already owns a course.
-     */
-    public function isOwnedByUser(Course $course, User $user): bool
-    {
-        return $course->users()->where('user_id', $user->id)->exists();
     }
 }
