@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->integer('score')->default(0);
             $table->boolean('passed')->default(false);
+            $table->json('details')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
 

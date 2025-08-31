@@ -29,6 +29,7 @@ class TestResource extends JsonResource
                 'answers' => $question->answers->map(fn($answer) => [
                     'id' => $answer->id,
                     'question_id' => $answer->question_id,
+                    'bool' => $answer->bool,
                     'answer_text' => $answer->answer_text,
                     'image_url' => $question->image_url,
                     'video_url' => $question->video_url,

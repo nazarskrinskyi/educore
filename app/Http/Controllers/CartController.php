@@ -18,8 +18,10 @@ use Stripe\Exception\ApiErrorException;
 
 class CartController extends Controller
 {
-    public function __construct(private readonly CartService $cartService, private readonly CourseService $courseService)
-    {
+    public function __construct(
+        private readonly CartService $cartService,
+        private readonly CourseService $courseService
+    ) {
     }
 
     /**
@@ -67,6 +69,7 @@ class CartController extends Controller
         if (isset($cart[$id])) {
             unset($cart[$id]);
             $this->cartService->saveCart($cart);
+
             return redirect()->back()->with('success', 'Course removed from cart');
         }
 
@@ -81,8 +84,7 @@ class CartController extends Controller
     {
         $cart = $this->cartService->getCart();
         if (empty($cart)) {
-            return redirect()->route('cart.index')
-                ->with('error', 'Your cart is empty');
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
         $total = $this->cartService->calculateTotal($cart);

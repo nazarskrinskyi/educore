@@ -5,28 +5,21 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CourseResource;
 use App\Http\Resources\LessonResource;
 use App\Models\Course;
-use App\Models\CourseUser;
 use App\Models\Lesson;
+use App\Repositories\Course\CourseRepositoryInterface;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class CourseController extends Controller
 {
+    public function __construct(private readonly CourseRepositoryInterface $courseRepository)
+    {
+    }
+
     public function index(Request $request): Response
     {
-        $courses = Course::with([
-            'category',
-            'instructor',
-            'tags',
-            'sections.lessons',
-            'sections.lessons.tests',
-            'reviews.user',
-            'users',
-        ])
-            ->filter($request)
-            ->paginate(6)
-            ->through(fn($course) => new CourseResource($course));
+        $courses = $this->courseRepository->getAllFilteredWithAllRelationsPaginated(6, $request);
 
         return Inertia::render('Courses/Index', [
             'courses' => $courses,
@@ -36,17 +29,7 @@ class CourseController extends Controller
 
     public function show(string $slug): Response
     {
-        $course = Course::with([
-            'category',
-            'instructor',
-            'tags',
-            'sections.lessons',
-            'sections',
-            'sections.lessons.tests',
-            'reviews.user',
-            'users',
-        ])->where('slug', $slug)
-            ->firstOrFail();
+        $course = $this->courseRepository->getOneWithAllRelationsBySlug($slug);
 
         $course->in_cart = session()->has('cart.' . $course->id);
 
@@ -59,9 +42,7 @@ class CourseController extends Controller
     {
         $course->load(['sections.lessons']);
 
-        $course->owned = auth()->user() ? CourseUser::where('course_id', $course->id)
-            ->where('user_id', auth()->id())
-            ->exists() : false;
+        $course->owned = auth()->user() && $this->courseRepository->isUserHasCourse(auth()->id(), $course->id);
 
         return Inertia::render('Courses/Player', [
             'course' => $course,

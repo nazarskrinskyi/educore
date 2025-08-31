@@ -6,18 +6,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LessonCommentRequest;
 use App\Models\LessonComment;
+use App\Repositories\LessonComment\LessonCommentRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
-class LessonCommentController
+class LessonCommentController extends Controller
 {
+    public function __construct(private readonly LessonCommentRepositoryInterface $lessonCommentRepository)
+    {
+    }
+
     public function store(LessonCommentRequest $validated): RedirectResponse
     {
-        $user = $validated->user();
-
-        $exists = LessonComment::where('user_id', $user->id)
-            ->when($validated['lesson_id'] ?? null, fn($q) => $q->where('lesson_id', $validated['lesson_id']))
-            ->exists();
+        $user   = $validated->user();
+        $exists = $this->lessonCommentRepository->isUserHasLessonComment($user->id, $validated['lesson_id']);
 
         if ($exists) {
             return back()->withErrors(['comment' => 'You already submitted a comment.']);
@@ -25,21 +26,21 @@ class LessonCommentController
 
         $validated['user_id'] = $user->id;
 
-        LessonComment::create(array_filter($validated->all()));
+        $this->lessonCommentRepository->create(array_filter($validated->all()));
 
         return back()->with('success', 'comment created successfully');
     }
 
     public function update(LessonCommentRequest $validated, LessonComment $comment): RedirectResponse
     {
-        $comment->update(array_filter($validated->all()));
+        $this->lessonCommentRepository->update(array_filter($validated->all()), $comment);
 
         return back()->with('success', 'comment updated successfully');
     }
 
     public function destroy(LessonComment $comment): RedirectResponse
     {
-        $comment->delete();
+        $this->lessonCommentRepository->delete($comment);
 
         return back()->with('success', 'comment deleted successfully');
     }

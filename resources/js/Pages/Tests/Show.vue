@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
-
 import QMultipleChoice from '@/Components/TestQuestionTypes/MultipleChoice.vue'
 import QMultipleAnswer from '@/Components/TestQuestionTypes/MultipleAnswer.vue'
 import QTrueFalse from '@/Components/TestQuestionTypes/TrueFalse.vue'

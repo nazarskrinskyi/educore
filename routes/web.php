@@ -25,6 +25,8 @@ Route::get('/courses', [ServiceController::class, 'index'])->name('services');
 Route::get('/contact', [ContactMessageController::class, 'index'])->name('contact');
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+
+Route::middleware('verified')->group(function () {
 Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
 Route::get('/courses/{course:slug}/lessons/{lesson:slug}', [CourseController::class, 'enrollShow'])->name('courses.player');
 
@@ -44,28 +46,27 @@ Route::post('/lessons/{lesson}/complete', [LessonCompletionController::class, 'c
     ->name('lessons.complete')
     ->middleware('auth');
 
-Route::middleware('verified')->group(function () {
     Route::get('/tests/{test:slug}', [TestController::class, 'show'])->name('tests.show');
     Route::post('/tests/{test:id}/progress', [TestController::class, 'saveProgress'])->name('tests.progress');
     Route::get('/tests/{test:id}/progress', [TestController::class, 'getProgress'])->name('tests.progress.get');
     Route::post('/tests/{test:id}/submit', [TestController::class, 'submit'])->name('tests.submit');
     Route::get('/tests/{test:id}/result', [TestController::class, 'result'])->name('test.result');
+
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/checkout/order', [CartController::class, 'storeOrder'])->name('checkout.order');
+    Route::get('/checkout/success', function () {
+        return Inertia::render('Cart/Success');
+    })->name('checkout.success');
+    Route::get('/checkout/cancel', function () {
+        return Inertia::render('Cart/Cancel');
+    })->name('checkout.cancel');
 });
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
-
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-Route::post('/checkout/order', [CartController::class, 'storeOrder'])->name('checkout.order');
-Route::get('/checkout/success', function () {
-    return Inertia::render('Cart/Success');
-})->name('checkout.success');
-Route::get('/checkout/cancel', function () {
-    return Inertia::render('Cart/Cancel');
-})->name('checkout.cancel');
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 
