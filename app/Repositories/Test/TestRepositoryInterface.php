@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Repositories\Test;
+
+use App\Models\TestAttempt;
+use App\Models\TestResult;
+
+interface TestRepositoryInterface
+{
+    public function getOneNotCompletedWithAnswersByUserIdAndTestId(int $userId, int $testId): ?TestAttempt;
+
+    public function createAttempt(int $userId, int $testId): TestAttempt;
+
+    public function getUserTestResult(int $userId, int $testId): ?TestResult;
+}
