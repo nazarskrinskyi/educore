@@ -13,6 +13,8 @@ return new class extends Migration
             $table->foreignId('test_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->integer('score')->default(0);
+            $table->boolean('passed')->default(false);
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
 
             $table->unique(['test_id', 'user_id']);

@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method static firstOrCreate(array $array, int[] $array1)
+ * @method static where(array $array)
+ */
 class TestAttempt extends Model
 {
     use HasFactory;

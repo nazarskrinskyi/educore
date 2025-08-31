@@ -32,7 +32,7 @@ Route::post('/courses/reviews/store', [CourseReviewController::class, 'store'])-
 Route::put('/courses/reviews/{review:id}', [CourseReviewController::class, 'update'])->name('courses.reviews.update');
 Route::delete('/courses/reviews/{review:id}', [CourseReviewController::class, 'destroy'])->name('courses.reviews.destroy');
 
-    Route::post('/lessons/reviews/store', [LessonCommentController::class, 'store'])->name('lessons.reviews.store');
+Route::post('/lessons/reviews/store', [LessonCommentController::class, 'store'])->name('lessons.reviews.store');
 Route::put('/lessons/reviews/{review:id}', [LessonCommentController::class, 'update'])->name('lessons.reviews.update');
 Route::delete('/lessons/reviews/{review:id}', [LessonCommentController::class, 'destroy'])->name('lessons.reviews.destroy');
 
@@ -48,7 +48,8 @@ Route::middleware('verified')->group(function () {
     Route::get('/tests/{test:slug}', [TestController::class, 'show'])->name('tests.show');
     Route::post('/tests/{test:id}/progress', [TestController::class, 'saveProgress'])->name('tests.progress');
     Route::get('/tests/{test:id}/progress', [TestController::class, 'getProgress'])->name('tests.progress.get');
-    Route::post('/tests/{test}/submit', [TestController::class, 'submit'])->name('tests.submit');
+    Route::post('/tests/{test:id}/submit', [TestController::class, 'submit'])->name('tests.submit');
+    Route::get('/tests/{test:id}/result', [TestController::class, 'result'])->name('test.result');
 });
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');

@@ -2,23 +2,17 @@
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
-const QUESTION_TYPES = Object.freeze({
-    MultipleChoice: 1,
-    OpenEnded: 2,
-    TrueFalse: 3,
-    ShortAnswer: 4,
-    MultipleChoiceAndShortAnswer: 5,
-    TrueFalseAndShortAnswer: 6,
-    MultipleChoiceAndTrueFalse: 7,
-})
-
 import QMultipleChoice from '@/Components/TestQuestionTypes/MultipleChoice.vue'
-import QOpenEnded from '@/Components/TestQuestionTypes/OpenEnded.vue'
+import QMultipleAnswer from '@/Components/TestQuestionTypes/MultipleAnswer.vue'
 import QTrueFalse from '@/Components/TestQuestionTypes/TrueFalse.vue'
 import QShortAnswer from '@/Components/TestQuestionTypes/ShortAnswer.vue'
-import QMixedMC_Short from '@/Components/TestQuestionTypes/MixedMC_Short.vue'
-import QMixedTF_Short from '@/Components/TestQuestionTypes/MixedTF_Short.vue'
-import QMixedMC_TF from '@/Components/TestQuestionTypes/MixedMC_TF.vue'
+
+const QUESTION_TYPES = Object.freeze({
+    MultipleChoice: 1,
+    MultipleAnswer: 2,
+    TrueFalse: 3,
+    ShortAnswer: 4,
+})
 
 const props = defineProps({
     test: { type: Object, required: true },
@@ -28,12 +22,9 @@ const props = defineProps({
 
 const questionComponents = {
     [QUESTION_TYPES.MultipleChoice]: QMultipleChoice,
-    [QUESTION_TYPES.OpenEnded]: QOpenEnded,
+    [QUESTION_TYPES.MultipleAnswer]: QMultipleAnswer,
     [QUESTION_TYPES.TrueFalse]: QTrueFalse,
     [QUESTION_TYPES.ShortAnswer]: QShortAnswer,
-    [QUESTION_TYPES.MultipleChoiceAndShortAnswer]: QMixedMC_Short,
-    [QUESTION_TYPES.TrueFalseAndShortAnswer]: QMixedTF_Short,
-    [QUESTION_TYPES.MultipleChoiceAndTrueFalse]: QMixedMC_TF,
 }
 
 const idx = ref(0)
@@ -114,9 +105,19 @@ const submitting = ref(false)
 function handleSubmit() {
     if (submitting.value) return
     submitting.value = true
+
+    const formattedAnswers = Object.values(answers).map(a => ({
+        question_id: a.question_id,
+        selected_answer_id: a.selected_answer_id ?? null,
+        selected_answer_ids: a.selected_answer_ids ?? null,
+        bool: a.bool !== undefined ? Boolean(a.bool) : null,
+        text: a.text ?? null
+    }))
+
     router.post(route('tests.submit', props.test.id), {
-        answers: Object.values(answers),
-        elapsed_seconds: elapsed.value
+        answers: formattedAnswers,
+        elapsed_seconds: elapsed.value,
+        is_completed: true
     }, {
         preserveScroll: true,
         onFinish: () => { submitting.value = false }

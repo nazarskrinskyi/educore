@@ -5,12 +5,9 @@ namespace App\Enums;
 enum QuestionTypeEnum: int
 {
     case MultipleChoice = 1;
-    case OpenEnded = 2;
+    case MultipleAnswer = 2;
     case TrueFalse = 3;
     case ShortAnswer = 4;
-    case MultipleChoiceAndShortAnswer = 5;
-    case TrueFalseAndShortAnswer = 6;
-    case MultipleChoiceAndTrueFalse = 7;
 
     public function getValue(): int
     {

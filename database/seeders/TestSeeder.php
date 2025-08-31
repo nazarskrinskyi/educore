@@ -20,7 +20,8 @@ class TestSeeder extends Seeder
                 'description' => "Tests $i description",
                 'duration' => $i * 60,
                 'lesson_id' => $i,
-                'course_id' => $i
+                'course_id' => $i,
+                'pass_percentage' => 70
             ]);
         }
     }

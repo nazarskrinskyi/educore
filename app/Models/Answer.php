@@ -11,7 +11,12 @@ class Answer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['question_id', 'answer_text', 'answer_image_path', 'answer_video_path', 'answer_audio_path', 'is_correct'];
+    protected $fillable = ['question_id', 'answer_text', 'answer_image_path', 'answer_video_path', 'answer_audio_path', 'is_correct', 'bool'];
+
+    protected $casts = [
+        'selected_answer_ids' => 'array',
+        'bool' => 'boolean',
+    ];
 
     protected $appends = ['audio_url', 'image_url', 'video_url'];
 

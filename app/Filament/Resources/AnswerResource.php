@@ -4,9 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AnswerResource\Pages;
 use App\Models\Answer;
-use Filament\Forms\Components\FileUpload;
+use App\Enums\QuestionTypeEnum;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,12 +24,30 @@ class AnswerResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('question_id')->relationship('question','question_text')->searchable(),
-            Textarea::make('answer_text')->required(),
-            FileUpload::make('answer_image')->directory('answers/images')->image()->label('Answer Image'),
-            FileUpload::make('answer_video')->directory('answers/videos')->label('Answer Video'),
-            FileUpload::make('answer_audio')->directory('answers/audios')->label('Answer Audio'),
-            Toggle::make('is_correct')->label('Is Correct'),
+            Select::make('question_id')
+                ->label('Question')
+                ->relationship('question', 'question_text')
+                ->searchable()
+                ->reactive()
+                ->required(),
+
+            Textarea::make('answer_text')
+                ->label('Answer Text'),
+
+           Toggle::make('bool')
+                ->label('True/False Value'),
+
+            Toggle::make('is_correct')
+                ->label('Is Correct'),
+
+            FileUpload::make('answer_image_path')
+                ->directory('answers/images')
+                ->image()
+                ->label('Answer Image'),
+
+            FileUpload::make('answer_video_path')
+                ->directory('answers/videos')
+                ->label('Answer Video')
         ]);
     }
 
@@ -39,7 +58,10 @@ class AnswerResource extends Resource
             TextColumn::make('answer_text')->limit(80),
             TextColumn::make('question.question_text')->label('Question')->limit(60),
             TextColumn::make('is_correct')->label('Correct'),
-        ])->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
+        ])->actions([
+            Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make()
+        ]);
     }
 
     public static function getPages(): array

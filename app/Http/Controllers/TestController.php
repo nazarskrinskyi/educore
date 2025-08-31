@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\QuestionTypeEnum;
-use App\Http\Requests\TestRequest;
+use App\Http\Requests\TestSaveProgressRequest;
+use App\Http\Requests\TestSubmitRequest;
 use App\Http\Resources\TestResource;
 use App\Models\Test;
 use App\Models\TestAttempt;
 use App\Models\TestResult;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -45,7 +44,7 @@ class TestController extends Controller
         return response()->json($attempt);
     }
 
-    public function saveProgress(TestRequest $data, Test $test): void
+    public function saveProgress(TestSaveProgressRequest $data, Test $test): void
     {
         $user = auth()->user();
 
@@ -77,128 +76,120 @@ class TestController extends Controller
         }
     }
 
-    public function submit(Request $request, Test $test): RedirectResponse
+    public function submit(TestSubmitRequest $validated, Test $test): Response|RedirectResponse
     {
-        $test->load(['questions.answers']);
-
-        $validated = $request->validate([
-            'answers' => ['required', 'array'],
-            'answers.*.question_id' => ['required', 'integer', 'exists:questions,id'],
-            'answers.*.selected_answer_id' => ['nullable', 'integer', 'exists:answers,id'],
-            'answers.*.selected_answer_ids' => ['nullable', 'array'],
-            'answers.*.selected_answer_ids.*' => ['integer', 'exists:answers,id'],
-            'answers.*.bool' => ['nullable', 'boolean'],
-            'answers.*.text' => ['nullable', 'string'],
-            'elapsed_seconds' => ['nullable', 'integer', 'min:0'],
-        ]);
+        $test->load('questions.answers');
 
         $answersByQuestion = collect($validated['answers'])->keyBy('question_id');
 
-        $score = 0;
-        $maxAuto = 0;
-        $detail = [];
+        $totalScore = 0;
+        $earnedScore = 0;
 
         DB::beginTransaction();
         try {
             foreach ($test->questions as $q) {
                 $submitted = $answersByQuestion->get($q->id, []);
+                dump($submitted);
 
-                $resultForQ = [
-                    'question_id' => $q->id,
-                    'question_type' => (int) $q->question_type,
-                    'correct' => null,
-                    'awarded' => 0,
-                    'auto_gradable' => false,
-                    'data' => $submitted,
-                ];
-
-                $type = (int) $q->question_type;
-                $correctIds = $q->answers->where('is_correct', true)->pluck('id')->values();
-
-                $isAutoGradable = in_array($type, [
-                    QuestionTypeEnum::MultipleChoice->value,
-                    QuestionTypeEnum::TrueFalse->value,
-                    QuestionTypeEnum::MultipleChoiceAndTrueFalse->value,
-                ]);
-
-                if ($isAutoGradable) {
-                    $maxAuto += 1;
-                    $resultForQ['auto_gradable'] = true;
-
-                    switch ($type) {
-                        case QuestionTypeEnum::MultipleChoice->value:
-                            $selected = (int) ($submitted['selected_answer_id'] ?? 0);
-                            $isCorrect = $correctIds->count() === 1 && $correctIds->contains($selected);
-                            $resultForQ['correct'] = $isCorrect;
-                            $resultForQ['awarded'] = $isCorrect ? 1 : 0;
-                            $score += $resultForQ['awarded'];
-                            break;
-
-                        case QuestionTypeEnum::TrueFalse->value:
-                            $selected = (int) ($submitted['selected_answer_id'] ?? 0);
-                            $isCorrect = $correctIds->count() === 1 && $correctIds->contains($selected);
-                            $resultForQ['correct'] = $isCorrect;
-                            $resultForQ['awarded'] = $isCorrect ? 1 : 0;
-                            $score += $resultForQ['awarded'];
-                            break;
-
-                        case QuestionTypeEnum::MultipleChoiceAndTrueFalse->value:
-                            $awarded = 0;
-
-                            $selected = (int) ($submitted['selected_answer_id'] ?? 0);
-                            if ($selected && $correctIds->contains($selected)) {
-                                $awarded += 0.5;
-                            }
-
-                            $bool = Arr::get($submitted, 'bool', null);
-                            if ($bool !== null) {
-                                $tfCorrect = $q->answers->firstWhere('is_correct', true);
-                                if ($tfCorrect) {
-                                    $isTrueText = strtolower(trim($tfCorrect->answer_text ?? '')) === 'true';
-                                    $isCorrectTF = ($bool === true && $isTrueText) || ($bool === false && !$isTrueText);
-                                    if ($isCorrectTF) $awarded += 0.5;
-                                }
-                            }
-
-                            $resultForQ['correct'] = $awarded === 1.0;
-                            $resultForQ['awarded'] = $awarded;
-                            $score += $awarded;
-                            break;
-                    }
-                } else {
-                    $resultForQ['correct'] = null;
-                    $resultForQ['awarded'] = 0;
-                }
-
-                $detail[] = $resultForQ;
+//                $questionScore = $q->score ?? 1;
+//                $totalScore += $questionScore;
+//
+//                $awarded = 0;
+//                $type = (int)$q->question_type;
+//
+//                switch ($type) {
+//                    case QuestionTypeEnum::MultipleChoice->value:
+//                        $correctIds = $q->answers->where('is_correct', true)->pluck('id')->values();
+//                        $selected = (int)($submitted['selected_answer_id'] ?? 0);
+//                        if ($correctIds->count() === 1 && $correctIds->contains($selected)) {
+//                            $awarded = $questionScore;
+//                        }
+//                        break;
+//
+//                    case QuestionTypeEnum::MultipleAnswer->value:
+//                        $correctIds = $q->answers->where('is_correct', true)->pluck('id')->sort()->values();
+//                        $selectedIds = collect($submitted['selected_answer_ids'] ?? [])->sort()->values();
+//                        if ($correctIds->count() && $correctIds->values()->all() === $selectedIds->values()->all()) {
+//                            $awarded = $questionScore;
+//                        }
+//                        break;
+//
+//                    case QuestionTypeEnum::TrueFalse->value:
+//                        $awarded = $submitted['bool'] ? $questionScore : 0;
+//                        break;
+//
+//                    case QuestionTypeEnum::ShortAnswer->value:
+//                        $awarded = 0;
+//                        break;
+//                }
+//
+//                $earnedScore += $awarded;
             }
+            dd(11);
 
-            $percent = $maxAuto > 0 ? round(($score / $maxAuto) * 100) : 0;
+            $percent = $totalScore > 0 ? round(($earnedScore / $totalScore) * 100) : 0;
+            $passed = $percent >= ($test->pass_percentage ?? 70);
 
-            TestResult::create([
-                'test_id'      => $test->id,
-                'user_id'      => $request->user()->id,
-                'score'        => $percent,
-                'passed'       => $percent >= 70,
-                'completed_at' => now(),
-            ]);
-
+            TestResult::updateOrCreate(
+                [
+                    'test_id' => $test->id,
+                    'user_id' => $validated->user()->id,
+                ],
+                [
+                    'score' => $percent,
+                    'passed' => $passed,
+                    'completed_at' => now(),
+                ]
+            );
 
             DB::commit();
 
-            return back()->with([
-                'result' => [
-                    'score'      => $percent,
-                    'passed'     => $percent >= 70,
-                    'auto_max'   => $maxAuto,
-                    'auto_score' => $score,
-                    'detail'     => $detail,
-                ],
-            ]);
+            TestAttempt::where([
+                'test_id' => $test->id,
+                'user_id' => $validated->user()->id,
+            ])->delete();
+
+            return redirect()->route('test.result', ['test' => $test->id]);
         } catch (Throwable $e) {
             DB::rollBack();
             report($e);
             return back()->withErrors(['submit' => 'Failed to submit test. Please try again.']);
         }
+    }
+
+    public function result(Test $test): Response|RedirectResponse
+    {
+        $userId = auth()->id();
+
+        $result = TestResult::where('test_id', $test->id)
+            ->where('user_id', $userId)
+            ->firstOrFail();
+
+        $test->load('questions.answers');
+
+        $answers = collect($test->questions)->mapWithKeys(fn($q) => [
+            $q->id => $q->answers->map(fn($a) => [
+                'id' => $a->id,
+                'answer_text' => $a->answer_text,
+                'is_correct' => $a->is_correct,
+            ]),
+        ]);
+
+        $detail = $test->questions->map(function($q) use ($result, $answers) {
+            $userAnswer = $answers->where('question_id', $q->id)->first();
+            return [
+                'question_id' => $q->id,
+                'question_type' => $q->question_type,
+                'awarded' => $userAnswer->awarded ?? 0,
+                'max_score' => $q->score ?? 1,
+                'data' => $userAnswer->data ?? null,
+            ];
+        });
+
+        return Inertia::render('Tests/Result', [
+            'test' => $test,
+            'result' => $result,
+            'detail' => $detail,
+        ]);
     }
 }

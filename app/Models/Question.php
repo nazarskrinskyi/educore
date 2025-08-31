@@ -12,7 +12,7 @@ class Question extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['test_id', 'question_text', 'question_type', 'image_path', 'video_path', 'audio_path'];
+    protected $fillable = ['test_id', 'question_text', 'score', 'question_type', 'image_path', 'video_path', 'audio_path'];
 
     protected $appends = ['audio_url', 'image_url', 'video_url'];
 

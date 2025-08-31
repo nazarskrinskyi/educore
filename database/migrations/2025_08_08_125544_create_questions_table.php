@@ -13,10 +13,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('test_id')->constrained()->cascadeOnDelete();
             $table->text('question_text');
+            $table->integer('score')->default(0);
             $table->string('image_path')->nullable();
             $table->string('video_path')->nullable();
             $table->string('audio_path')->nullable();
-            $table->enum('question_type', QuestionTypeEnum::getValues())->default('text');
+            $table->enum('question_type', QuestionTypeEnum::getValues())->default('1');
             $table->timestamps();
         });
     }

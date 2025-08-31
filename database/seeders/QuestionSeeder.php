@@ -19,10 +19,11 @@ class QuestionSeeder extends Seeder
                 Question::factory()->create([
                     'test_id' => $testId,
                     'question_text' => "Question $questionNumber",
-                    'question_type' => rand(1, 7),
+                    'question_type' => rand(1, 4),
                     'image_path' => null,
                     'video_path' => null,
-                    'audio_path' => null
+                    'audio_path' => null,
+                    'score' => rand(20, 30),
                 ]);
                 $questionNumber++;
             }

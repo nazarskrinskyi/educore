@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('answer_image')->nullable();
             $table->string('answer_video')->nullable();
             $table->string('answer_audio')->nullable();
+            $table->boolean('bool')->nullable();
             $table->boolean('is_correct')->default(false);
             $table->timestamps();
         });

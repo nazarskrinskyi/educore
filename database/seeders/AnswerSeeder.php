@@ -3,27 +3,65 @@
 namespace Database\Seeders;
 
 use App\Models\Answer;
+use App\Models\Question;
 use Illuminate\Database\Seeder;
+use App\Enums\QuestionTypeEnum;
 
 class AnswerSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $answerNumber = 1;
-        for ($questionId = 1; $questionId <= 40; $questionId++) {
-            for ($i = 1; $i <= 4; $i++) {
-                Answer::factory()->create([
-                    'question_id' => $questionId,
-                    'answer_text' => "Answer $answerNumber",
-                    'is_correct' => $i === 1,
-                    'answer_image' => null,
-                    'answer_video' => null,
-                    'answer_audio' => null
-                ]);
-                $answerNumber++;
+        foreach (Question::all() as $key => $question) {
+            switch ($question->question_type) {
+                case QuestionTypeEnum::MultipleChoice->value:
+                    Answer::factory()->create([
+                        'question_id' => $question->id,
+                        'answer_text' => 'Correct Answer ' . $key + 1,
+                        'is_correct' => true,
+                    ]);
+
+                    Answer::factory(3)->create([
+                        'question_id' => $question->id,
+                        'answer_text' => 'Wrong Answer ' . $key + 1,
+                        'is_correct' => false,
+                    ]);
+                    break;
+
+                case QuestionTypeEnum::MultipleAnswer->value:
+                    Answer::factory(2)->create([
+                        'question_id' => $question->id,
+                        'answer_text' => 'Correct Answer ' . $key + 1,
+                        'is_correct' => true,
+                    ]);
+
+                    Answer::factory(2)->create([
+                        'question_id' => $question->id,
+                        'answer_text' => 'Wrong Answer ' . $key + 1,
+                        'is_correct' => false,
+                    ]);
+                    break;
+
+                case QuestionTypeEnum::TrueFalse->value:
+                    Answer::create([
+                        'question_id' => $question->id,
+                        'bool' => true,
+                        'is_correct' => true,
+                    ]);
+
+                    Answer::create([
+                        'question_id' => $question->id,
+                        'bool' => false,
+                        'is_correct' => false,
+                    ]);
+                    break;
+
+                case QuestionTypeEnum::ShortAnswer->value:
+                    Answer::create([
+                        'question_id' => $question->id,
+                        'answer_text' => 'Sample short answer',
+                        'is_correct' => true,
+                    ]);
+                    break;
             }
         }
     }

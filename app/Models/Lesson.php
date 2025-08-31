@@ -19,7 +19,7 @@ class Lesson extends Model
     use HasFactory;
 
     protected $fillable = [
-        'section_id', 'title', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug', 'pass_percentage'
+        'section_id', 'title', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug',
     ];
 
     protected $appends = ['image_url', 'video_url', 'completed_at'];
@@ -62,5 +62,4 @@ class Lesson extends Model
     {
         return $this->video_path ? Storage::url($this->video_path) : '';
     }
-
 }

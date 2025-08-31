@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * @property mixed $image_path
+ * @property mixed $id
+ * @property mixed $questions
  */
 class Test extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lesson_id', 'course_id', 'description', 'title', 'duration', 'slug', 'image_path'];
+    protected $fillable = ['lesson_id', 'course_id', 'pass_percentage', 'description', 'title', 'duration', 'slug', 'image_path'];
 
     protected $appends = ['image_url'];
 
@@ -42,10 +44,5 @@ class Test extends Model
     public function getImageUrlAttribute(): string
     {
         return $this->image_path ? Storage::url($this->image_path) : '';
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
     }
 }
