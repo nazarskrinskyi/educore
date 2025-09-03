@@ -28,7 +28,7 @@ class LessonResource extends Resource
             TextInput::make('title')->required(),
             TextInput::make('slug')->required(),
             Textarea::make('content'),
-            FileUpload::make('video_path')->directory('lessons/videos')->required(),
+            FileUpload::make('video_path')->directory('lessons/videos')->maxSize(102400)->required(),
             FileUpload::make('image_path')->directory('lessons/images')->image()->required(),
             Toggle::make('is_published'),
             TextInput::make('views')

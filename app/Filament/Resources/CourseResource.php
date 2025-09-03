@@ -57,6 +57,7 @@ class CourseResource extends Resource
 
             FileUpload::make('video_path')
                 ->directory('courses/videos')
+                ->maxSize(102400)
                 ->label('Course Video'),
 
             Toggle::make('is_published')

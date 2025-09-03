@@ -47,6 +47,7 @@ class AnswerResource extends Resource
 
             FileUpload::make('answer_video_path')
                 ->directory('answers/videos')
+                ->maxSize(102400)
                 ->label('Answer Video')
         ]);
     }
