@@ -24,7 +24,7 @@ class LessonResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('course_id')->relationship('course','title')->required(),
+            Select::make('section_id')->relationship('section','title')->required(),
             TextInput::make('title')->required(),
             TextInput::make('slug')->required(),
             Textarea::make('content'),
@@ -44,7 +44,6 @@ class LessonResource extends Resource
         return $table->columns([
             TextColumn::make('id'),
             TextColumn::make('title')->searchable(),
-            TextColumn::make('course.title')->label('Course'),
         ])->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
     }
 

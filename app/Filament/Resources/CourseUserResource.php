@@ -17,12 +17,14 @@ class CourseUserResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('course.title')->label('Course'),
-            TextColumn::make('user.name')->label('User'),
-            TextColumn::make('progress_percent')->suffix('%'),
-            TextColumn::make('enrolled_at')->dateTime(),
-        ])->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
+        return $table
+            ->defaultSort('enrolled_at', 'desc') // 👈 specify a column that exists
+            ->columns([
+                TextColumn::make('course.title')->label('Course'),
+                TextColumn::make('user.name')->label('User'),
+                TextColumn::make('progress_percent')->suffix('%'),
+                TextColumn::make('enrolled_at')->dateTime(),
+            ]);
     }
 
     public static function getPages(): array

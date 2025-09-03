@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class CourseUser extends Pivot
 {
-    protected $table = 'course_user';
+    protected $primaryKey = 'course_id'; // for example
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'course_id',
@@ -20,10 +22,13 @@ class CourseUser extends Pivot
         'progress_percent',
     ];
 
-    public $timestamps = false;
-
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

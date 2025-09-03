@@ -7,10 +7,11 @@ namespace App\Repositories\Course;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface CourseRepositoryInterface
 {
-    public function getAllFilteredWithAllRelationsPaginated(int $perPage, Request $request): array;
+    public function getAllFilteredWithAllRelationsPaginated(int $perPage, Request $request): LengthAwarePaginator;
 
     public function getOneWithAllRelationsBySlug(string $slug): Course;
 

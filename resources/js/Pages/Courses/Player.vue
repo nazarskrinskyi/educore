@@ -50,7 +50,7 @@ function onVideoProgress(e) {
                 <video
                     class="w-full h-full"
                     controls
-                    :src="props.lesson.video_path ? `/storage/${props.lesson.video_path}` : ''"
+                    :src="props.lesson.video_url"
                     @timeupdate="onVideoProgress"
                 ></video>
             </div>

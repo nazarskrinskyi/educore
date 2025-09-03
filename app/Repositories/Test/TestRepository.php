@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories\Test;
 
 use App\Models\TestAttempt;
+use App\Models\TestAttemptAnswer;
 use App\Models\TestResult;
 
 class TestRepository implements TestRepositoryInterface
@@ -33,7 +34,7 @@ class TestRepository implements TestRepositoryInterface
             ->firstOrFail();
     }
 
-    public function createOrUpdateTestAttempt(TestAttempt $attempt, array $data): TestAttempt
+    public function createOrUpdateTestAttempt(TestAttempt $attempt, array $data): TestAttemptAnswer
     {
         return $attempt->answers()->updateOrCreate(
             ['question_id' => $data['question_id']],

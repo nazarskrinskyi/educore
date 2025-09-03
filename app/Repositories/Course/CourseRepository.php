@@ -9,10 +9,11 @@ use App\Models\Course;
 use App\Models\CourseUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CourseRepository implements CourseRepositoryInterface
 {
-    public function getAllFilteredWithAllRelationsPaginated(int $perPage, Request $request): array
+    public function getAllFilteredWithAllRelationsPaginated(int $perPage, Request $request): LengthAwarePaginator
     {
         return Course::with([
             'category',
@@ -24,7 +25,7 @@ class CourseRepository implements CourseRepositoryInterface
             'users',
         ])
             ->filter($request)
-            ->paginate(6)
+            ->paginate($perPage)
             ->through(fn($course) => new CourseResource($course));
     }
 
