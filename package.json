@@ -33,7 +33,9 @@
         "@stripe/stripe-js": "^7.8.0",
         "axios": "1.11.0",
         "pinia": "^3.0.3",
+        "plyr": "^3.8.3",
         "vue": "^3.3.4",
+        "vue-plyr": "^7.0.0",
         "vue-router": "^4.5.1",
         "vue3-carousel": "^0.16.0"
     }

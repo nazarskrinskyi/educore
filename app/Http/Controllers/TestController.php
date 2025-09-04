@@ -71,7 +71,7 @@ class TestController extends Controller
 
             $this->testService->submit($test, $request->input('answers'), auth()->id());
 
-            return redirect()->route('test.result', ['test' => $test->id]);
+            return redirect()->route('tests.result', ['test' => $test->id]);
         } catch (Throwable $e) {
             report($e);
             return back()->withErrors(['submit' => 'Failed to submit test. Please try again.']);
@@ -88,6 +88,8 @@ class TestController extends Controller
             'test' => $test,
             'result' => $result,
             'detail' => $result->details ?? [],
+            'lessonLink' => route('courses.player', ['lesson' => $test->lesson->slug, 'course' => $test->lesson->section->course->slug]),
+            'lessonName' => $test->lesson->title,
         ]);
     }
 }

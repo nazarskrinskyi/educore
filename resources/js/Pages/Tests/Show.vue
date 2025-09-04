@@ -5,6 +5,7 @@ import QMultipleChoice from '@/Components/TestQuestionTypes/MultipleChoice.vue'
 import QMultipleAnswer from '@/Components/TestQuestionTypes/MultipleAnswer.vue'
 import QTrueFalse from '@/Components/TestQuestionTypes/TrueFalse.vue'
 import QShortAnswer from '@/Components/TestQuestionTypes/ShortAnswer.vue'
+import Navigation from "@/Components/Navigation.vue";
 
 const QUESTION_TYPES = Object.freeze({
     MultipleChoice: 1,
@@ -137,13 +138,16 @@ function secondsToClock(s) {
         <!-- Header -->
         <header class="sticky top-0 z-10 bg-white border-b">
             <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+                <Navigation :links="[
+                    {name: props.test.course.title, href: route('courses.show', props.test.course.slug)},
+                    {name: props.test.lesson.title, href: route('courses.player', {course: props.test.course.slug, lesson: props.test.lesson.slug})}
+                ]" />
                 <div class="flex items-center gap-3">
                     <div v-if="test.image_url" class="w-10 h-10 overflow-hidden rounded-xl">
                         <img :src="test.image_url" alt="" class="w-full h-full object-cover" />
                     </div>
                     <div>
                         <h1 class="text-xl font-semibold">{{ test.title }}</h1>
-                        <p class="text-sm text-gray-500 line-clamp-1">{{ test.description }}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-6">

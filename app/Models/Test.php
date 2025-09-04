@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
  * @property mixed $image_path
  * @property mixed $id
  * @property mixed $questions
+ * @property mixed $lesson
  */
 class Test extends Model
 {
@@ -44,5 +45,10 @@ class Test extends Model
     public function getImageUrlAttribute(): string
     {
         return $this->image_path ? Storage::url($this->image_path) : '';
+    }
+
+    public function is_passed(): bool
+    {
+        return $this->results()->where('user_id', auth()->id())->exists();
     }
 }

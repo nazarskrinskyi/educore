@@ -40,7 +40,7 @@ readonly class TestService
             $questionScore = $question->score ?? 1;
             $totalScore += $questionScore;
 
-            $awarded = $this->evaluateAnswer($question, $submitted, $questionScore);
+            $awarded = $this->evaluateAnswer($question, (array)$submitted, $questionScore);
 
             $earnedScore += $awarded;
 

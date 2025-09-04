@@ -1,8 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import {Head, router} from "@inertiajs/vue3";
 import CommentSection from "@/Components/CommentSection.vue";
 import TestCard from "@/Components/TestCard.vue";
+import 'plyr/dist/plyr.css'
+import VuePlyr from 'vue-plyr'
+import Navigation from "@/Components/Navigation.vue";
 
 const props = defineProps({
     course: Object,
@@ -41,18 +44,23 @@ function onVideoProgress(e) {
 </script>
 
 <template>
-    <Head :title="`${props.course.title} | ${props.lesson.title}`" />
+    <Head :title="`${props.course.title} | ${props.lesson.title}`"/>
 
     <div class="flex h-screen bg-gray-100">
         <!-- Video Section -->
         <div class="flex-1 flex flex-col">
-            <div class="flex-1 bg-black flex items-center justify-center">
-                <video
-                    class="w-full h-full"
-                    controls
-                    :src="props.lesson.video_url"
-                    @timeupdate="onVideoProgress"
-                ></video>
+            <Navigation :links="[
+                {name: props.course.title, href: route('courses.show', props.course.slug)},
+            ]" />
+            <div class="flex-1 bg-black flex items-center justify-center max-h-[1000px]">
+                    <VuePlyr class="max-h-[800px]">
+                        <video
+                            controls
+                            playsinline
+                            :src="props.lesson.video_url"
+                            @timeupdate="onVideoProgress"
+                        ></video>
+                    </VuePlyr>
             </div>
 
             <!-- Tabs (bottom bar) -->
@@ -103,6 +111,7 @@ function onVideoProgress(e) {
                             v-for="test in lesson.tests"
                             :key="test.id"
                             :test="test"
+                            :is_passed="test.is_passed"
                         />
                     </div>
 

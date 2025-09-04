@@ -50,7 +50,7 @@ Route::post('/lessons/{lesson}/complete', [LessonCompletionController::class, 'c
     Route::post('/tests/{test:id}/progress', [TestController::class, 'saveProgress'])->name('tests.progress');
     Route::get('/tests/{test:id}/progress', [TestController::class, 'getProgress'])->name('tests.progress.get');
     Route::post('/tests/{test:id}/submit', [TestController::class, 'submit'])->name('tests.submit');
-    Route::get('/tests/{test:id}/result', [TestController::class, 'result'])->name('test.result');
+    Route::get('/tests/{test:id}/result', [TestController::class, 'result'])->name('tests.result');
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
