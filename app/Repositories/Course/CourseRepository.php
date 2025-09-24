@@ -8,7 +8,6 @@ use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Models\CourseUser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class CourseRepository implements CourseRepositoryInterface
@@ -52,25 +51,23 @@ class CourseRepository implements CourseRepositoryInterface
 
     public function createCourseUser(int $userId, array $cart): void
     {
-        DB::transaction(function () use ($userId, $cart) {
-            foreach ($cart as $item) {
-                $courseId = $item['id'];
+        foreach ($cart as $item) {
+            $courseId = $item['id'];
 
-                $course = Course::find($courseId);
-                if (!$course) {
-                    continue;
-                }
-
-                CourseUser::updateOrCreate(
-                    [
-                        'user_id' => $userId,
-                        'course_id' => $course->id,
-                        'enrolled_at' => now(),
-                        'progress_percent' => 0,
-                    ]
-                );
+            $course = Course::find($courseId);
+            if (!$course) {
+                continue;
             }
-        });
+
+            CourseUser::updateOrCreate(
+                [
+                    'user_id' => $userId,
+                    'course_id' => $course->id,
+                    'enrolled_at' => now(),
+                    'progress_percent' => 0,
+                ]
+            );
+        }
     }
 
     public function getCourseById(int $courseId): ?Course

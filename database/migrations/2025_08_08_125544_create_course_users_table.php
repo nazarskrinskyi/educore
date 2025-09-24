@@ -14,6 +14,7 @@ return new class extends Migration
             $table->timestamp('enrolled_at')->nullable();
             $table->unsignedTinyInteger('progress_percent')->default(0);
             $table->primary(['course_id', 'user_id']);
+            $table->timestamps();
         });
     }
 

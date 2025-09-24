@@ -1,34 +1,26 @@
 <script setup>
-import {computed, ref} from 'vue'
-import {Link} from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3'
 import AddToCartButton from '@/Components/Cart/AddToCartButton.vue'
 import Stars from '@/Components/Stars.vue'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import CommentSection from "@/Components/CommentSection.vue";
+import CommentSection from "@/Components/CommentSection.vue"
+
+import { useCourse } from '@/composables/useCourse'
 
 const props = defineProps({
-    course: {type: Object, required: true},
-    cart: {type: [Object, Array], default: () => ({})}
+    course: { type: Object, required: true },
+    cart: { type: [Object, Array], default: () => ({}) }
 })
 
-const totalStudents = computed(() => props.course?.users?.length || 0)
-
-const openSections = ref([])
-
-function toggleSection(sectionId) {
-    if (openSections.value.includes(sectionId)) {
-        openSections.value = openSections.value.filter(id => id !== sectionId)
-    } else {
-        openSections.value.push(sectionId)
-    }
-}
-
-const allLessons = computed(() => {
-    if (!props.course?.sections) return []
-    return props.course.sections.flatMap(s => s.lessons || [])
-})
-const totalLessons = computed(() => allLessons.value.length)
+const {
+    openSections,
+    toggleSection,
+    totalStudents,
+    totalLessons,
+    cart
+} = useCourse(props.course, props.cart)
 </script>
+
 
 <template>
     <Head :title="course.title" />

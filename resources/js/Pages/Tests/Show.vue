@@ -1,18 +1,10 @@
 <script setup>
-import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
-import { router } from '@inertiajs/vue3'
+import Navigation from "@/Components/Navigation.vue"
 import QMultipleChoice from '@/Components/TestQuestionTypes/MultipleChoice.vue'
 import QMultipleAnswer from '@/Components/TestQuestionTypes/MultipleAnswer.vue'
 import QTrueFalse from '@/Components/TestQuestionTypes/TrueFalse.vue'
 import QShortAnswer from '@/Components/TestQuestionTypes/ShortAnswer.vue'
-import Navigation from "@/Components/Navigation.vue";
-
-const QUESTION_TYPES = Object.freeze({
-    MultipleChoice: 1,
-    MultipleAnswer: 2,
-    TrueFalse: 3,
-    ShortAnswer: 4,
-})
+import { useTest } from '@/composables/useTest'
 
 const props = defineProps({
     test: { type: Object, required: true },
@@ -20,117 +12,29 @@ const props = defineProps({
     now: { type: String, default: null }
 })
 
+const {
+    idx,
+    total,
+    current,
+    answers,
+    answeredCount,
+    progress,
+    submitting,
+    QUESTION_TYPES,
+    next,
+    prev,
+    jump,
+    updateAnswer,
+    handleSubmit,
+    secondsToClock
+} = useTest(props.test, props.previousAnswers)
+
 const questionComponents = {
     [QUESTION_TYPES.MultipleChoice]: QMultipleChoice,
     [QUESTION_TYPES.MultipleAnswer]: QMultipleAnswer,
     [QUESTION_TYPES.TrueFalse]: QTrueFalse,
     [QUESTION_TYPES.ShortAnswer]: QShortAnswer,
 }
-
-const idx = ref(0)
-const total = computed(() => props.test.questions.length)
-const current = computed(() => props.test.questions[idx.value])
-
-const answers = reactive({})
-
-onMounted(() => {
-    if (props.previousAnswers && Array.isArray(props.previousAnswers)) {
-        props.previousAnswers.forEach(a => { answers[a.question_id] = a })
-    }
-})
-
-const hasTimer = computed(() => (props.test.duration ?? 0) > 0)
-const totalSeconds = computed(() => (props.test.duration ?? 0) * 60)
-const elapsed = ref(0)
-let ticker = null
-
-onMounted(() => {
-    if (hasTimer.value) {
-        ticker = setInterval(() => {
-            elapsed.value += 1
-            if (elapsed.value >= totalSeconds.value) {
-                handleSubmit()
-            }
-        }, 1000)
-    }
-})
-
-onMounted(async () => {
-    const response = await axios.get(route('tests.progress.get', props.test.id))
-    if (response.data) {
-        elapsed.value = response.data.elapsed_seconds ?? 0
-        if (response.data.answers && Array.isArray(response.data.answers)) {
-            response.data.answers.forEach(a => { answers[a.question_id] = a })
-        }
-    }
-})
-
-onUnmounted(() => {
-    if (ticker) clearInterval(ticker)
-})
-
-let autosaveTimer = null
-onMounted(() => {
-    autosaveTimer = setInterval(() => {
-        router.post(route('tests.progress', props.test.id), {
-            answers: Object.values(answers),
-            elapsed_seconds: elapsed.value
-        }, { preserveScroll: true, preserveState: true })
-    }, 15000)
-})
-onUnmounted(() => { if (autosaveTimer) clearInterval(autosaveTimer) })
-
-const answeredCount = computed(() => {
-    return Object.values(answers).filter(a => {
-        const boolVal = a.bool !== undefined ? Boolean(a.bool) : undefined
-
-        return a.selected_answer_id !== null || a.text || boolVal !== undefined
-    }).length
-})
-
-const progress = computed(() => (answeredCount.value / total.value) * 100)
-
-function go(n) {
-    idx.value = Math.min(Math.max(0, n), total.value - 1)
-}
-function next() { go(idx.value + 1) }
-function prev() { go(idx.value - 1) }
-function jump(i) { go(i) }
-
-function updateAnswer(payload) {
-    answers[payload.question_id] = { ...answers[payload.question_id], ...payload }
-}
-
-const submitting = ref(false)
-function handleSubmit() {
-    if (submitting.value) return
-    submitting.value = true
-
-    const formattedAnswers = Object.values(answers).map(a => ({
-        question_id: a.question_id,
-        selected_answer_id: a.selected_answer_id ?? null,
-        selected_answer_ids: a.selected_answer_ids ?? null,
-        bool: a.bool !== undefined ? Boolean(a.bool) : null,
-        text: a.text ?? null
-    }))
-
-    router.post(route('tests.submit', props.test.id), {
-        answers: formattedAnswers,
-        elapsed_seconds: elapsed.value,
-        is_completed: true
-    }, {
-        preserveScroll: true,
-        onFinish: () => { submitting.value = false }
-    })
-}
-
-function secondsToClock(s) {
-    const t = Math.max(0, s)
-    const m = Math.floor(t / 60).toString().padStart(2, '0')
-    const sec = Math.floor(t % 60).toString().padStart(2, '0')
-    return `${m}:${sec}`
-}
-
 </script>
 
 <template>

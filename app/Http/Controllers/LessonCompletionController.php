@@ -26,7 +26,7 @@ class LessonCompletionController extends Controller
         return back();
     }
 
-    public function complete(Request $request, Lesson $lesson): JsonResponse
+    public function complete(Request $request, Lesson $lesson): RedirectResponse
     {
         $user = $request->user();
 
@@ -34,6 +34,6 @@ class LessonCompletionController extends Controller
             $lesson->id => ['completed_at' => now()]
         ]);
 
-        return response()->json(['status' => 'completed']);
+        return back();
     }
 }

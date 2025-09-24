@@ -1,46 +1,18 @@
 <script setup>
-import {ref} from "vue";
-import {Head, router} from "@inertiajs/vue3";
-import CommentSection from "@/Components/CommentSection.vue";
-import TestCard from "@/Components/TestCard.vue";
-import 'plyr/dist/plyr.css'
+import { Head } from '@inertiajs/vue3'
+import Navigation from '@/Components/Navigation.vue'
+import CommentSection from '@/Components/CommentSection.vue'
+import TestCard from '@/Components/TestCard.vue'
 import VuePlyr from 'vue-plyr'
-import Navigation from "@/Components/Navigation.vue";
+import 'plyr/dist/plyr.css'
 
 const props = defineProps({
     course: Object,
-    lesson: Object,
-});
+    lesson: Object
+})
 
-const activeTab = ref("overview");
-const completed = ref(!!props.lesson.completed_at);
-
-function toggleCompletion(lessonItem) {
-    router.post(
-        route("lessons.toggle", lessonItem.id),
-        {},
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                lessonItem.completed = !lessonItem.completed;
-            },
-        }
-    );
-}
-
-function markCompleted() {
-    router.post(route("lessons.complete", props.lesson.id), {}, {
-        preserveScroll: true,
-        onSuccess: () => completed.value = true,
-    });
-}
-
-function onVideoProgress(e) {
-    const video = e.target;
-    if (!completed.value && video.currentTime / video.duration > 0.9) {
-        markCompleted();
-    }
-}
+import { useLesson } from '@/composables/useLesson'
+const { activeTab, toggleCompletion, onVideoProgress } = useLesson(props.lesson)
 </script>
 
 <template>

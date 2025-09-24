@@ -1,12 +1,12 @@
 <template>
     <div class="max-w-4xl mx-auto p-6">
         <Navigation :links="[{name: props.lessonName, href: props.lessonLink}]" />
-        <!-- Заголовок тесту -->
+        <!-- Text Title -->
         <h1 class="text-3xl font-bold text-gray-800 mb-4 mt-5">
             Test Result: <span class="text-purple-600">{{ test.title }}</span>
         </h1>
 
-        <!-- Результат -->
+        <!-- Result -->
         <div
             class="bg-white shadow-md rounded-xl p-6 flex items-center justify-between border"
             :class="result.passed ? 'border-green-400' : 'border-red-400'"
@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <!-- Деталі питань -->
+        <!-- Details -->
         <div v-if="detail.length" class="mt-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">
                 Question Breakdown

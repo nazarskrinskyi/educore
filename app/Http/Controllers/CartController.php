@@ -15,13 +15,15 @@ use Inertia\Response as InertiaResponse;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Stripe\Exception\ApiErrorException;
+use Throwable;
 
 class CartController extends Controller
 {
     public function __construct(
-        private readonly CartService $cartService,
+        private readonly CartService   $cartService,
         private readonly CourseService $courseService
-    ) {
+    )
+    {
     }
 
     /**
@@ -114,17 +116,17 @@ class CartController extends Controller
             'payment_intent_id' => ['required'],
         ]);
 
-        $cart = $this->cartService->getCart();
+        try {
+            $cart = $this->cartService->getCart();
+            $this->cartService->storeOrder($validated['payment_intent_id'], $cart);
+            $this->courseService->enrollUser($cart);
+            $this->courseService->notifyInstructors($cart);
 
-        $this->cartService->storeOrder($validated['payment_intent_id'], $cart);
+            Session::forget(CartEnum::CART_SESSION_KEY->value);
 
-        $this->courseService->enrollUser($cart);
-
-        $this->courseService->notifyInstructors($cart);
-
-        // **Clear the cart from session**
-        Session::forget(CartEnum::CART_SESSION_KEY->value);
-
-        return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
+        } catch (Throwable $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
     }
 }
