@@ -72,6 +72,8 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 
 Route::middleware('verified')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/show-results', [ProfileController::class, 'showResults'])->name('profile.show.results');
+    Route::get('/profile/show-courses', [ProfileController::class, 'showCourses'])->name('profile.show.courses');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

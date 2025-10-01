@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Course;
+use App\Models\Test;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +15,21 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    public function showResults(): Response
+    {
+        $tests = Test::where('user_id', auth()->id())->whereHas('testResults')->get();
+        return Inertia::render('Profile/UsersResults', [
+            'tests' => $tests,
+        ]);
+    }
+
+    public function showCourses(): Response
+    {
+        $courses = Course::where('user_id', auth()->id())->get();
+
+        return Inertia::render('Profile/UserCourses');
+    }
+
     /**
      * Display the user's profile form.
      */
