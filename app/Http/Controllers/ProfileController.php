@@ -15,9 +15,14 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    public function showResults(): Response
+    public function showTests(): Response
     {
-        $tests = Test::where('user_id', auth()->id())->whereHas('testResults')->get();
+        $tests = Test::with([
+            'course.users' => function ($query) {
+                $query->where('users.id', auth()->id());
+            }
+        ])->get();
+
         return Inertia::render('Profile/UsersResults', [
             'tests' => $tests,
         ]);
@@ -25,9 +30,11 @@ class ProfileController extends Controller
 
     public function showCourses(): Response
     {
-        $courses = Course::where('user_id', auth()->id())->get();
+        $courses = Course::with('users')->where('users.id', auth()->id())->get();
 
-        return Inertia::render('Profile/UserCourses');
+        return Inertia::render('Profile/UserCourses', [
+            'courses' => $courses
+        ]);
     }
 
     /**

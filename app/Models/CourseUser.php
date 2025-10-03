@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class CourseUser extends Pivot
 {
-    protected $primaryKey = 'course_id'; // for example
+    protected $primaryKey = 'course_id';
     public $incrementing = true;
     protected $keyType = 'int';
 

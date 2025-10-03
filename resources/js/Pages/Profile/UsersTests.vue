@@ -10,7 +10,10 @@ defineProps({
 
 <template>
     <AuthenticatedLayout>
-        <Navigation />
+        <template #header>
+            <Navigation />
+        </template>
+
         <div v-if="tests.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <TestCard
                 v-for="test in tests"

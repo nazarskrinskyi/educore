@@ -71,7 +71,14 @@ class Course extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'course_user');
+        return $this->belongsToMany(User::class, 'course_user')
+            ->withPivot(['enrolled_at', 'progress_percent'])
+            ->withTimestamps();
+    }
+
+    public function isUserEnrolled(int $userId): bool
+    {
+        return $this->users()->where('user_id', $userId)->exists();
     }
 
     public function orders(): HasMany
