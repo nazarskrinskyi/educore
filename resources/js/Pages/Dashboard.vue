@@ -8,132 +8,139 @@ import AnimatedImage from "@/Components/AnimatedImage.vue";
 import ExploreMore from "@/Components/ExploreMore.vue";
 import CertificateCard from "@/Components/CertificateCard.vue";
 
-const itemsToScroll = [];
-for (let i = 1; i < 4; i++) {
-    itemsToScroll.push(`/images/download${i}.png`);
-}
+const itemsToScroll = Array.from({ length: 3 }, (_, i) => `/images/download${i + 1}.png`);
 
-const cardsItems = [];
-for (let i = 1; i < 4; i++) {
-    cardsItems.push(
-        {'text': `Card ${i}`, 'image': `/images/download${i}.png`}
-    );
-}
+const cardsItems = Array.from({ length: 3 }, (_, i) => ({
+    text: `Platform ${i + 1}`,
+    image: `/images/download${i + 1}.png`,
+}));
 
-const certificateItems = [];
-for (let i = 1; i <= 5; i++) {
-    certificateItems.push(
-        {'text': `Certificate Text ${i}`, 'title': `Certificate ${i}`, 'image': `/images/download${i}.png`, 'tags': ['ISO 9001:2015', 'ISO 9001:2015'] }
-    );
-}
-
+const certificateItems = Array.from({ length: 5 }, (_, i) => ({
+    title: `Certificate ${i + 1}`,
+    text: `Certified excellence in education innovation and management process #${i + 1}.`,
+    image: `/images/download${i + 1}.png`,
+    tags: ['ISO 9001:2015', 'Quality Assurance']
+}));
 </script>
 
 <template>
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="mb-10 block">
-                    <Carousel :items-to-scroll="itemsToScroll"/>
+        <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-100 px-6 py-16">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-20">
+
+                <!-- Carousel -->
+                <div>
+                    <Carousel :items-to-scroll="itemsToScroll" />
                 </div>
 
-                <div class="flex justify-center border-t border-gray-500 mb-10">
-                    <div class="justify-left w-1/3 mt-5">
-                        <div class="flex flex-col justify-center gap-4 flex-wrap w-full">
-                            <div class="text-2xl bold">Platforms</div>
-                            <div class="text-5xl bold text-blue-400 mb-3">We Serve In Extensive Traits</div>
-                            <div class="text-lg">Educore is a holistic system that serves the entire education system with a digitally empowered.</div>
-                            <div>
-                                <PrimaryButton class="w-full flex justify-between items-center">
-                                    Get A Quote
-                                    <span class="text-xl">→</span>
-                                </PrimaryButton>
-                            </div>
-                            <div>
-                                <PrimaryButton class="w-full flex justify-between items-center">
-                                    Get A Quote
-                                    <span class="text-xl">→</span>
-                                </PrimaryButton>
-                            </div>
+                <!-- Platforms Section -->
+                <section class="flex flex-col lg:flex-row items-center gap-10 border-t border-gray-300 pt-16">
+                    <div class="flex-1 space-y-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Platforms</h2>
+                        <h3 class="text-5xl font-extrabold text-blue-500 leading-tight">We Serve In Extensive Traits</h3>
+                        <p class="text-lg text-gray-600">
+                            Educore is a holistic system empowering the entire education ecosystem through innovative digital transformation.
+                            It enhances learning, management, and collaboration for schools and universities worldwide.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <PrimaryButton class="w-full sm:w-auto flex items-center justify-center gap-2">
+                                Get A Quote <span class="text-xl">→</span>
+                            </PrimaryButton>
+                            <PrimaryButton class="w-full sm:w-auto flex items-center justify-center gap-2 hover:text-white transition-all">
+                                Learn More <span class="text-xl">→</span>
+                            </PrimaryButton>
                         </div>
                     </div>
-                    <div class="justify-right w-2/3 mt-5 self-end">
-                        <div class="flex flex-row justify-center gap-7 flex-wrap">
-                            <Card
-                                v-for="(item, index) in cardsItems"
-                                :key="index"
-                                :image="item.image"
-                                :text="item.text"
-                                :height="'250px'"
-                                :max-width="'180px'"
-                            />
-                        </div>
-                    </div>
-                </div>
 
-                <div class="mb-5 block border-t border-gray-500">
+                    <div class="flex-1 flex justify-center flex-wrap gap-6">
+                        <Card
+                            v-for="(item, index) in cardsItems"
+                            :key="index"
+                            :image="item.image"
+                            :text="item.text"
+                            :height="'260px'"
+                            :max-width="'200px'"
+                        />
+                    </div>
+                </section>
+
+                <!-- Workflow -->
+                <section class="border-t border-gray-300 pt-16">
                     <EducoreWorkflow />
-                </div>
+                </section>
 
-                <div class="mb-5 block border-t border-gray-500">
-                    <div class="flex justify-center border-t border-gray-500 mb-10">
-                        <div class="flex flex-col justify-left w-1/2 mt-5">
-                            <ExploreMore :title="'About Educore System:'"
-                                         :text="'Discover the leading all-in-one solution for educational institutions with core features and innovative solutions designed to cover all school operations.'"
-                                         :usp="['Home', 'Services', 'Products', 'Blog', 'About Us', 'Contact Us']"
-                                         :list-name="'Our Features:'"
-                                         :button-name="'EXPLORE MORE'"
-                            />
-                        </div>
-                        <div class="justify-right w-1/2 mt-5 self-end">
-                            <AnimatedImage
-                                :background="'/images/AboutBgEllipse.png'"
-                                :background-image="'/images/aboutDB.png'"
-                                :gif-image="'/images/animation.gif'"
-                            />
-                        </div>
+                <!-- About Section -->
+                <section class="flex flex-col lg:flex-row items-center gap-12 border-t border-gray-300 pt-16">
+                    <div class="flex-1 space-y-6">
+                        <ExploreMore
+                            :title="'About Educore System'"
+                            :text="'Educore is an innovative all-in-one educational management system built to streamline operations, enhance communication, and support smart learning environments for schools, colleges, and universities.'"
+                            :usp="['Unified Dashboard', 'Smart Attendance', 'AI-based Analytics', 'Cloud Security', 'Parent Portal', '24/7 Support']"
+                            :list-name="'Key Highlights:'"
+                            :button-name="'EXPLORE MORE'"
+                        />
                     </div>
-                </div>
+                    <div class="flex-1 flex justify-center">
+                        <AnimatedImage
+                            :background="'/images/AboutBgEllipse.png'"
+                            :background-image="'/images/aboutDB.png'"
+                            :gif-image="'/images/animation.gif'"
+                        />
+                    </div>
+                </section>
 
-                <div class="mb-5 block border-t border-gray-500">
-                    <div class="flex justify-center border-t border-gray-500 mb-10 gap-8">
-                        <div class="flex flex-col justify-left w-1/2 mt-5">
-                            <AnimatedImage
-                                :background="'/images/AboutBgEllipse.png'"
-                                :background-image="'/images/core-features.png'"
-                                :gif-image="'/images/core-features.gif'"
-                            />
-                        </div>
-                        <div class="justify-right w-1/2 mt-5 self-end ml-5">
-                            <ExploreMore :title="'Educore Core Features:'"
-                                         :text="'Educore is a holistic system that serves the entire education system with a digitally empowered.'"
-                                         :usp="['Home', 'Services', 'Products', 'Blog', 'About Us', 'Contact Us']"
-                                         :list-name="'USP’s'"
-                                         :button-name="'EXPLORE MORE'"
-                            />
-                        </div>
+                <!-- Core Features -->
+                <section class="flex flex-col lg:flex-row-reverse items-center gap-12 border-t border-gray-300 pt-16">
+                    <div class="flex-1 space-y-6">
+                        <ExploreMore
+                            :title="'Educore Core Features'"
+                            :text="'Our system covers all critical aspects of educational management — from admissions to performance tracking — designed with flexibility and scalability at its heart.'"
+                            :usp="['Automated Workflows', 'Digital Classrooms', 'Financial Management', 'Secure Data Storage', 'Custom Reporting']"
+                            :list-name="'Features:'"
+                            :button-name="'EXPLORE MORE'"
+                        />
                     </div>
-                </div>
+                    <div class="flex-1 flex justify-center">
+                        <AnimatedImage
+                            :background="'/images/AboutBgEllipse.png'"
+                            :background-image="'/images/core-features.png'"
+                            :gif-image="'/images/core-features.gif'"
+                        />
+                    </div>
+                </section>
 
-                <div class="mb-5 block border-t border-gray-500">
-                    <p class="font-bold text-2xl text-center mt-8">Certifications</p>
-                    <h3 class="font-bold text-3xl text-center text-blue-500 mb-5">Trusted Certifications & partnerships</h3>
-                    <p class="text-center text-2xl">Educore is certified and partnered with industry leaders to provide the highest standards of data security, quality
-                        management, and technological excellence.</p>
-                    <div class="flex flex-row justify-center gap-5 flex-wrap">
-                        <CertificateCard v-for="item in certificateItems" :title="item.title" :text="item.text" :image="item.image" :tags="item.tags"/>
+                <!-- Certifications -->
+                <section class="border-t border-gray-300 pt-16 text-center space-y-8">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800">Certifications</h2>
+                        <h3 class="text-4xl font-extrabold text-blue-500">Trusted Certifications & Partnerships</h3>
+                        <p class="max-w-3xl mx-auto text-lg text-gray-600">
+                            Educore holds industry-recognized certifications and partnerships that demonstrate our commitment
+                            to quality, compliance, and excellence in educational technology.
+                        </p>
                     </div>
-                    <div class="flex justify-center mt-5">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 justify-items-center">
+                        <CertificateCard
+                            v-for="item in certificateItems"
+                            :key="item.title"
+                            :title="item.title"
+                            :text="item.text"
+                            :image="item.image"
+                            :tags="item.tags"
+                        />
+                    </div>
+
+                    <div class="flex justify-center">
                         <PrimaryButton class="gap-2">
-                            View All CERTIFICATIONS
-                            <span class="text-xl">→</span>
+                            View All CERTIFICATIONS <span class="text-xl">→</span>
                         </PrimaryButton>
                     </div>
-                </div>
+                </section>
+
             </div>
         </div>
     </AuthenticatedLayout>
-
 </template>

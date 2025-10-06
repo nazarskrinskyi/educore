@@ -1,9 +1,10 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
-    filters: Object
+    filters: Object,
+    categories: Array,
 })
 
 const search = ref(props.filters.search || '')
@@ -27,32 +28,65 @@ function applyFilters() {
 </script>
 
 <template>
-    <!-- Filters -->
-    <div class="mb-6 grid grid-cols-1 md:grid-cols-5 gap-4">
-        <input v-model="search" type="text" placeholder="Search courses..."
-               class="border rounded p-2 w-full" @keyup.enter="applyFilters" />
+    <div class="mb-8 p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+            <!-- Search -->
+            <div class="relative col-span-1 md:col-span-2">
+                <input
+                    v-model="search"
+                    type="text"
+                    placeholder="Search courses..."
+                    @keyup.enter="applyFilters"
+                    class="w-full p-3 pl-10 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 placeholder-gray-400"
+                />
+                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.386a1 1 0 01-1.414 1.415l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z" clip-rule="evenodd"/></svg>
+            </div>
 
-        <select v-model="category" class="border rounded p-2 w-full" @change="applyFilters">
-            <option value="">All Categories</option>
-            <option value="1">Web Development</option>
-            <option value="2">Design</option>
-            <option value="3">Marketing</option>
-        </select>
+            <!-- Category -->
+            <select
+                v-model="category"
+                @change="applyFilters"
+                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
+            >
+                <option value="">All Categories</option>
+                <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+            </select>
 
-        <select v-model="rating" class="border rounded p-2 w-full" @change="applyFilters">
-            <option value="">All Ratings</option>
-            <option value="4">4★ & up</option>
-            <option value="3">3★ & up</option>
-            <option value="2">2★ & up</option>
-        </select>
+            <!-- Rating -->
+            <select
+                v-model="rating"
+                @change="applyFilters"
+                class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
+            >
+                <option value="">All Ratings</option>
+                <option value="4">4★ & up</option>
+                <option value="3">3★ & up</option>
+                <option value="2">2★ & up</option>
+            </select>
 
-        <input v-model="priceMin" type="number" placeholder="Min Price"
-               class="border rounded p-2 w-full" @change="applyFilters" />
-        <input v-model="priceMax" type="number" placeholder="Max Price"
-               class="border rounded p-2 w-full" @change="applyFilters" />
+            <!-- Price Range -->
+            <div class="flex gap-2">
+                <input
+                    v-model="priceMin"
+                    type="number"
+                    placeholder="Min Price"
+                    @change="applyFilters"
+                    class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
+                />
+                <input
+                    v-model="priceMax"
+                    type="number"
+                    placeholder="Max Price"
+                    @change="applyFilters"
+                    class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
 <style scoped>
-
+input:hover, select:hover {
+    border-color: #60a5fa; /* Tailwind blue-400 */
+}
 </style>

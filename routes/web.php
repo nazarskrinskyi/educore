@@ -23,6 +23,7 @@ Route::get('/about', AboutController::class)->name('about');
 Route::get('/courses', [ServiceController::class, 'index'])->name('services');
 
 Route::get('/contact', [ContactMessageController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 

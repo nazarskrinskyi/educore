@@ -7,12 +7,19 @@ defineProps({
     is_passed: {
         type: Boolean,
         default: false
+    },
+    show_course: {
+        type: Boolean,
+        default: false
     }
 });
 </script>
 
 <template>
     <div class="border rounded-lg shadow p-4 bg-white hover:shadow-lg transition relative">
+        <div v-if="show_course" class="text-xl mb-2 font-bold text-center">
+            {{ test.course.title }}
+        </div>
         <img
             v-if="test.image_url"
             :src="test.image_url"

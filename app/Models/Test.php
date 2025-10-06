@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +28,11 @@ class Test extends Model
         return $this->belongsTo(Lesson::class);
     }
 
+    public function test_attempts(): HasMany
+    {
+        return $this->hasMany(TestAttempt::class);
+    }
+
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class);
@@ -50,5 +56,10 @@ class Test extends Model
     public function is_passed(): bool
     {
         return $this->results()->where('user_id', auth()->id())->exists();
+    }
+
+    public function get_test_attempts(): Collection
+    {
+        return $this->test_attempts()->where('user_id', auth()->id())->get();
     }
 }

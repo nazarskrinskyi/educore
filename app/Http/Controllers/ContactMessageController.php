@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactMessageRequest;
 use App\Models\ContactMessage;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,10 +17,10 @@ class ContactMessageController extends Controller
         return Inertia::render('Contact');
     }
 
-    public function store(ContactMessageRequest $request): JsonResponse
+    public function store(ContactMessageRequest $request): RedirectResponse
     {
         ContactMessage::create($request->validated());
 
-        return response()->json(['message' => 'Thank you for contacting us!']);
+        return back()->with('message', 'Thank you for contacting us!');
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Resources\CourseResource;
+use App\Http\Resources\TestResource;
 use App\Models\Course;
 use App\Models\Test;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -17,23 +19,27 @@ class ProfileController extends Controller
 {
     public function showTests(): Response
     {
-        $tests = Test::with([
-            'course.users' => function ($query) {
-                $query->where('users.id', auth()->id());
-            }
-        ])->get();
+        $tests = Test::whereHas('course.users', function ($query) {
+            $query->where('users.id', auth()->id());
+        })
+            ->with('course')
+            ->get();
 
-        return Inertia::render('Profile/UsersResults', [
-            'tests' => $tests,
+        return Inertia::render('Profile/UsersTests', [
+            'tests' => TestResource::collection($tests),
         ]);
     }
 
     public function showCourses(): Response
     {
-        $courses = Course::with('users')->where('users.id', auth()->id())->get();
+        $courses = Course::whereHas('users', function ($query) {
+            $query->where('users.id', auth()->id());
+        })
+            ->with('users')
+            ->get();
 
         return Inertia::render('Profile/UserCourses', [
-            'courses' => $courses
+            'courses' => CourseResource::collection($courses),
         ]);
     }
 
