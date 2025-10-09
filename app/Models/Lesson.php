@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
  * @property mixed $id
  * @property mixed $image_path
  * @property mixed $video_path
+ * @property mixed $section
  */
 class Lesson extends Model
 {

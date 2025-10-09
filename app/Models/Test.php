@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
  * @property mixed $id
  * @property mixed $questions
  * @property mixed $lesson
+ * @property mixed $course
  */
 class Test extends Model
 {
@@ -56,6 +57,11 @@ class Test extends Model
     public function is_passed(): bool
     {
         return $this->results()->where('user_id', auth()->id())->exists();
+    }
+
+    public function is_successfully_passed(): bool
+    {
+        return $this->results()->where('user_id', auth()->id())->where('passed', true)->exists();
     }
 
     public function get_test_attempts(): Collection

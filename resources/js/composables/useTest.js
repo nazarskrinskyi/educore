@@ -119,6 +119,9 @@ export function useTest(test, previousAnswers = null) {
         jump,
         updateAnswer,
         handleSubmit,
-        secondsToClock
+        secondsToClock,
+        hasTimer,
+        totalSeconds,
+        elapsed,
     }
 }

@@ -6,7 +6,9 @@ use App\Http\Requests\TestSaveProgressRequest;
 use App\Http\Requests\TestSubmitRequest;
 use App\Http\Resources\TestResource;
 use App\Models\Test;
+use App\Models\User;
 use App\Repositories\Test\TestRepositoryInterface;
+use App\Services\CourseProgressService;
 use App\Services\TestService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -70,6 +72,10 @@ class TestController extends Controller
             $test->load('questions.answers');
 
             $this->testService->submit($test, $request->input('answers'), auth()->id());
+
+            $course = $test->course;
+            $user = User::find(auth()->id());
+            app(CourseProgressService::class)->updateProgress($user, $course);
 
             return redirect()->route('tests.result', ['test' => $test->id]);
         } catch (Throwable $e) {

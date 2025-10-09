@@ -35,6 +35,7 @@ defineProps({
                         :key="test.id"
                         :test="test"
                         :is_passed="test.is_passed"
+                        :is_successfully_passed="test.is_successfully_passed"
                         :show_course="true"
                         class="transform transition duration-300 hover:scale-[1.03] hover:shadow-2xl"
                     />

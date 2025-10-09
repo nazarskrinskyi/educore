@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Lesson;
-use Illuminate\Http\JsonResponse;
+use App\Services\CourseProgressService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -23,16 +23,19 @@ class LessonCompletionController extends Controller
             $user->lessons()->detach($lesson->id) :
             $user->lessons()->attach($lesson->id, ['completed_at' => now()]);
 
+        $course = $lesson->section->course;
+        app(CourseProgressService::class)->updateProgress($user, $course);
+
         return back();
     }
 
     public function complete(Request $request, Lesson $lesson): RedirectResponse
     {
         $user = $request->user();
+        $user->lessons()->syncWithoutDetaching([$lesson->id => ['completed_at' => now()]]);
 
-        $user->lessons()->syncWithoutDetaching([
-            $lesson->id => ['completed_at' => now()]
-        ]);
+        $course = $lesson->section->course;
+        app(CourseProgressService::class)->updateProgress($user, $course);
 
         return back();
     }

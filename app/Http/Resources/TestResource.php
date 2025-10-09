@@ -17,6 +17,7 @@ class TestResource extends JsonResource
             'slug' => $this->slug,
             'lesson_id' => $this->lesson_id,
             'is_passed' => $this->is_passed(),
+            'is_successfully_passed' => $this->is_successfully_passed(),
             'description' => $this->description,
             'duration' => $this->duration,
             'image_url' => $this->image_url,

@@ -84,6 +84,7 @@ const { activeTab, toggleCompletion, onVideoProgress } = useLesson(props.lesson)
                             :key="test.id"
                             :test="test"
                             :is_passed="test.is_passed"
+                            :is_successfully_passed="test.is_successfully_passed"
                         />
                     </div>
 

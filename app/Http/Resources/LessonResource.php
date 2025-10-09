@@ -37,6 +37,7 @@ class LessonResource extends JsonResource
                 'duration' => $test->duration,
                 'image_url' => $test->image_url,
                 'is_passed' => $test->is_passed(),
+                'is_successfully_passed' => $test->is_successfully_passed(),
             ]),
         ];
     }

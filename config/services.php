@@ -14,6 +14,11 @@ return [
     |
     */
 
+    'telegram' => [
+        'token' => env('TELEGRAM_BOT_TOKEN'),
+        'name' => env('TELEGRAM_BOT_NAME'),
+    ],
+
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),

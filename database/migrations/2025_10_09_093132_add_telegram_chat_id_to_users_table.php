@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sections', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('telegram_chat_id')->nullable()->after('email');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sections');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('telegram_chat_id');
+        });
     }
 };

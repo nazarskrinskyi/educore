@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static find(mixed $courseId)
  * @method static min(string $string)
  * @method static max(string $string)
+ * @method static whereDate(string $string, \Illuminate\Support\Carbon $subDay)
  * @property int|mixed $price
  * @property mixed|string $video_path
  * @property mixed|string $image_path

@@ -4,7 +4,6 @@ import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PopupMessage from "@/Components/PopupMessage.vue";
 
-// Форма контактів
 const form = useForm({
     name: "",
     email: "",
@@ -13,9 +12,8 @@ const form = useForm({
 });
 
 const errorMessage = ref("");
-const flashMessage = ref(""); // локальний ref для повідомлення
+const flashMessage = ref("");
 
-// Сабміт форми
 const submit = () => {
     if (form.name.trim().length < 2) {
         errorMessage.value = "Ім’я має містити щонайменше 2 символи.";
@@ -25,11 +23,10 @@ const submit = () => {
     errorMessage.value = "";
 
     form.post(route("contact.store"), {
-        preserveState: true, // зберігаємо стан компонента, не редіректимо
+        preserveState: true,
         onSuccess: (page) => {
             flashMessage.value = page.props.flash?.successContactMessage || "Повідомлення надіслано!";
             form.reset();
-            console.log(flashMessage.value)
 
             setTimeout(() => flashMessage.value = '', 5000);
         },
