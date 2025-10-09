@@ -7,7 +7,10 @@ import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
     courses: Object,
-    filters: Object
+    filters: Object,
+    categories: Array,
+    priceRange: Object,
+    difficulties: Object
 })
 </script>
 
@@ -15,7 +18,7 @@ const props = defineProps({
     <Head title="Courses" />
 
     <AuthenticatedLayout>
-        <CourseFilters :filters="filters" />
+        <CourseFilters :filters="filters" :categories="categories" :price-range="priceRange" :difficulties="difficulties"/>
 
         <div class="container mx-auto py-6">
             <!-- Courses grid -->

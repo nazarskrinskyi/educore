@@ -1,9 +1,10 @@
 <script setup>
-import {Head, useForm, usePage} from "@inertiajs/vue3";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Head, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PopupMessage from "@/Components/PopupMessage.vue";
 
+// Форма контактів
 const form = useForm({
     name: "",
     email: "",
@@ -11,9 +12,10 @@ const form = useForm({
     message: "",
 });
 
-const successMessage = ref("");
 const errorMessage = ref("");
+const flashMessage = ref(""); // локальний ref для повідомлення
 
+// Сабміт форми
 const submit = () => {
     if (form.name.trim().length < 2) {
         errorMessage.value = "Ім’я має містити щонайменше 2 символи.";
@@ -21,16 +23,22 @@ const submit = () => {
     }
 
     errorMessage.value = "";
+
     form.post(route("contact.store"), {
-        preserveScroll: true,
-        onSuccess: () => {
-            successMessage.value = "✅ Дякуємо! Ми зв’яжемось із вами найближчим часом.";
+        preserveState: true, // зберігаємо стан компонента, не редіректимо
+        onSuccess: (page) => {
+            flashMessage.value = page.props.flash?.successContactMessage || "Повідомлення надіслано!";
             form.reset();
+            console.log(flashMessage.value)
+
+            setTimeout(() => flashMessage.value = '', 5000);
+        },
+        onError: (errors) => {
+            console.log(errors);
         },
     });
-};
 
-const flashMessage = ref(usePage().props.value.flash.message || '');
+};
 </script>
 
 <template>
@@ -39,6 +47,10 @@ const flashMessage = ref(usePage().props.value.flash.message || '');
     <AuthenticatedLayout>
         <section class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 px-6 py-16">
             <div class="max-w-2xl mx-auto text-center">
+
+                <!-- Popup повідомлення -->
+                <PopupMessage v-if="flashMessage" :message="flashMessage" type="success" />
+
                 <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">📬 Зв’яжіться з нами</h1>
                 <p class="text-gray-700 text-lg mb-10">
                     Ми відкриті до співпраці, пропозицій і нових ідей. Ваш відгук допомагає нам розвивати EduCore.
@@ -106,13 +118,8 @@ const flashMessage = ref(usePage().props.value.flash.message || '');
                     <p v-if="errorMessage" class="text-red-600 font-semibold text-center mt-4">
                         {{ errorMessage }}
                     </p>
-                    <p v-if="successMessage" class="text-green-600 font-semibold text-center mt-4">
-                        {{ successMessage }}
-                    </p>
                 </form>
             </div>
         </section>
-
-        <PopupMessage v-if="flashMessage" :message="flashMessage" type="success" />
     </AuthenticatedLayout>
 </template>

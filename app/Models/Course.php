@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @method static findOrFail(mixed $course_id)
  * @method static find(mixed $courseId)
+ * @method static min(string $string)
+ * @method static max(string $string)
  * @property int|mixed $price
  * @property mixed|string $video_path
  * @property mixed|string $image_path
@@ -109,11 +111,36 @@ class Course extends Model
     public function scopeFilter(Builder $query, Request $request): Builder
     {
         return $query
-            ->when($request->search, fn($q) => $q->where(fn($sub) => $sub->where('title', 'like', "%$request->search%")
-                ->orWhere('description', 'like', "%$request->search%")))
-            ->when($request->category, fn($q) => $q->where('category_id', $request->category))
-            ->when($request->rating, fn($q) => $q->whereHas('reviews', fn($sub) => $sub->where('rating', '>=', $request->rating)))
-            ->when($request->price_min, fn($q) => $q->where('price', '>=', $request->price_min))
-            ->when($request->price_max, fn($q) => $q->where('price', '<=', $request->price_max));
+            ->when($request->search, fn($q) =>
+                $q->where(fn($sub) =>
+                $sub->where('title', 'like', "%$request->search%")
+                    ->orWhere('description', 'like', "%$request->search%")
+                )
+            )
+            ->when($request->difficulty, fn($q) =>
+                $q->where('level', $request->difficulty)
+            )
+            ->when($request->category, fn($q) =>
+                $q->where('category_id', $request->category)
+            )
+            ->when($request->sorting, function ($q) use ($request) {
+                match ($request->sorting) {
+                    'rating_asc' => $q->withAvg('reviews', 'rating')->orderBy('reviews_avg_rating', 'asc'),
+                    'rating_desc' => $q->withAvg('reviews', 'rating')->orderBy('reviews_avg_rating', 'desc'),
+                    'price_asc' => $q->orderBy('price', 'asc'),
+                    'price_desc' => $q->orderBy('price', 'desc'),
+                    'newest' => $q->orderBy('created_at', 'desc'),
+                    default => null,
+                };
+            })
+            ->when($request->has('price_min') && $request->price_min !== '', fn($q) =>
+                $q->where('price', '>=', $request->price_min * 100)
+            )
+            ->when($request->has('price_max') && $request->price_max !== '', fn($q) =>
+                $q->where('price', '<=', $request->price_max * 100)
+            )
+            ->when($request->boolean('is_free'), fn($q) =>
+                $q->where('is_free', true)
+            );
     }
 }

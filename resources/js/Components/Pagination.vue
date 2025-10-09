@@ -1,88 +1,46 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
 import { router } from '@inertiajs/vue3'
 
-const props = defineProps({
-    filters: Object,
-    categories: Array,
+defineProps({
+    elems: {
+        type: Object,
+        validator(value: unknown): boolean {
+            return typeof value === 'object' && 'links' in value && Array.isArray(value.links)
+        }
+    }
 })
-
-const search = ref(props.filters.search || '')
-const category = ref(props.filters.category || '')
-const rating = ref(props.filters.rating || '')
-const priceMin = ref(props.filters.price_min || '')
-const priceMax = ref(props.filters.price_max || '')
-
-function applyFilters() {
-    router.get(route('courses.index'), {
-        search: search.value,
-        category: category.value,
-        rating: rating.value,
-        price_min: priceMin.value,
-        price_max: priceMax.value,
-    }, {
-        preserveState: true,
-        replace: true
-    })
-}
 </script>
 
 <template>
-    <!-- Filters -->
-    <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-        <!-- Search -->
-        <input
-            v-model="search"
-            type="text"
-            placeholder="Search courses..."
-            @keyup.enter="applyFilters"
-            class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 placeholder-gray-400"
-        />
-
-        <!-- Category -->
-        <select
-            v-model="category"
-            @change="applyFilters"
-            class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
-        >
-            <option value="">All Categories</option>
-            <option value="{{ category.id }}" v-for="category in categories">{{ category.name }}</option>
-        </select>
-
-        <!-- Rating -->
-        <select
-            v-model="rating"
-            @change="applyFilters"
-            class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
-        >
-            <option value="">All Ratings</option>
-            <option value="4">4★ & up</option>
-            <option value="3">3★ & up</option>
-            <option value="2">2★ & up</option>
-        </select>
-
-        <!-- Min Price -->
-        <input
-            v-model="priceMin"
-            type="number"
-            placeholder="Min Price"
-            @change="applyFilters"
-            class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
-        />
-
-        <!-- Max Price -->
-        <input
-            v-model="priceMax"
-            type="number"
-            placeholder="Max Price"
-            @change="applyFilters"
-            class="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
+    <div class="mt-10 flex justify-center items-center flex-wrap gap-2">
+        <button
+            v-for="link in elems.links"
+            :key="link.label"
+            :disabled="!link.url"
+            v-html="formatLabel(link.label)"
+            @click="router.get(link.url, {}, { preserveState: true, replace: true })"
+            class="min-w-[40px] px-4 py-2 text-sm font-medium border rounded-xl transition-all duration-200 shadow-sm
+                   hover:-translate-y-[1px] hover:shadow-md"
+            :class="{
+                'bg-blue-600 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-700': link.active,
+                'bg-white text-gray-700 border-gray-300 hover:bg-blue-50 hover:border-blue-400': !link.active && link.url,
+                'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-70': !link.url
+            }"
         />
     </div>
 </template>
 
+<script lang="ts">
+function formatLabel(label: string) {
+    if (label.includes('Previous')) return '←';
+    if (label.includes('Next')) return '→';
+    return label;
+}
+</script>
+
 <style scoped>
-input:hover, select:hover {
-    border-color: #60a5fa; /* Tailwind blue-400 */
+/* Smooth hover scale */
+button:not(:disabled):hover {
+    transform: scale(1.05);
 }
 </style>

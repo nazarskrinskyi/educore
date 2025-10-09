@@ -17,4 +17,9 @@ enum CourseLevelEnum: int
     {
         return array_map(fn($role) => $role->value, self::cases());
     }
+
+    public static function getValuesWithNames(): array
+    {
+        return array_map(fn($role) => ['value' => $role->value, 'name' => $role->name], self::cases());
+    }
 }

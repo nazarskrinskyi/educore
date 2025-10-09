@@ -35,6 +35,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => [
+                'successContactMessage' => $request->session()->get('successContactMessage'),
+            ],
             'cart' => function () {
                 return Session::get('cart', []);
             },

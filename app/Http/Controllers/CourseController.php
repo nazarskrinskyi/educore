@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CourseLevelEnum;
 use App\Http\Resources\CourseResource;
 use App\Http\Resources\LessonResource;
+use App\Models\Category;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Repositories\Course\CourseRepositoryInterface;
@@ -20,10 +22,20 @@ class CourseController extends Controller
     public function index(Request $request): Response
     {
         $courses = $this->courseRepository->getAllFilteredWithAllRelationsPaginated(6, $request);
+        $categories = Category::whereHas('courses')->get();
+
+        $minPrice = Course::min('price') / 100;
+        $maxPrice = Course::max('price') / 100;
 
         return Inertia::render('Courses/Index', [
             'courses' => $courses,
-            'filters' => $request->only(['search', 'category', 'rating', 'price_min', 'price_max']),
+            'filters' => $request->only(['search', 'category', 'price_min', 'price_max', 'is_free', 'difficulty', 'sorting']),
+            'categories' => $categories,
+            'priceRange' => [
+                'min' => $minPrice,
+                'max' => $maxPrice,
+            ],
+            'difficulties' => CourseLevelEnum::getValuesWithNames()
         ]);
     }
 
