@@ -12,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 /**
  * @method static where(string $string, mixed $id)
  * @method static find(int $id)
+ * @method static findOrFail(int $id)
  */
 class Certificate extends Model
 {

@@ -6,6 +6,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import CommentSection from "@/Components/CommentSection.vue"
 
 import { useCourse } from '@/composables/useCourse'
+import CourseProgress from "@/Components/CourseProgress.vue";
 
 const props = defineProps({
     course: { type: Object, required: true },
@@ -94,7 +95,7 @@ const {
                     </section>
 
                     <!-- Tags -->
-                    <section v-if="course.tags.len">
+                    <section v-if="course.tags?.length">
                         <h2 class="text-xl font-semibold mb-2">Tags</h2>
                         <div class="flex flex-wrap gap-2">
                             <Link
@@ -136,7 +137,12 @@ const {
                         <div v-else>
                             <AddToCartButton :course="course" :cart="cart" class="w-full mb-3"/>
                         </div>
-                        <p class="text-sm text-gray-500">30-Day Money-Back Guarantee</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                30-Day Money-Back Guarantee
+                            </p>
+                            <CourseProgress :course-id="course.id" />
+                        </div>
                     </div>
 
                     <!-- Extra Info -->

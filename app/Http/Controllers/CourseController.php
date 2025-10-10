@@ -62,6 +62,12 @@ class CourseController extends Controller
 
         $course->owned = auth()->user() && $this->courseRepository->isUserHasCourse(auth()->id(), $course->id);
 
+        $viewedKey = 'viewed_lessons.' . $lesson->id;
+        if (!session()->has($viewedKey)) {
+            $lesson->increment('views');
+            session()->put($viewedKey, now());
+        }
+
         return Inertia::render('Courses/Player', [
             'course' => $course,
             'lesson' => (new LessonResource($lesson))->resolve(),

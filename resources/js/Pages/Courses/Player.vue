@@ -5,13 +5,14 @@ import CommentSection from '@/Components/CommentSection.vue'
 import TestCard from '@/Components/TestCard.vue'
 import VuePlyr from 'vue-plyr'
 import 'plyr/dist/plyr.css'
+import { useLesson } from '@/composables/useLesson'
+import CourseProgress from "@/Components/CourseProgress.vue";
 
 const props = defineProps({
     course: Object,
     lesson: Object
 })
 
-import { useLesson } from '@/composables/useLesson'
 const { activeTab, toggleCompletion, onVideoProgress } = useLesson(props.lesson)
 </script>
 
@@ -95,8 +96,16 @@ const { activeTab, toggleCompletion, onVideoProgress } = useLesson(props.lesson)
 
         <!-- Sidebar (Sections & Lessons) -->
         <div class="w-80 bg-white border-l overflow-y-auto">
-            <div class="p-4 border-b">
-                <h2 class="text-lg font-semibold">{{ props.course.title }}</h2>
+            <div class="p-4 border-b flex items-center justify-between">
+                <!-- Course Title -->
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                    {{ props.course.title }}
+                </h2>
+
+                <!-- Progress Circle -->
+                <div class="ml-4">
+                    <CourseProgress :course-id="props.course.id" />
+                </div>
             </div>
             <div>
                 <div v-for="section in props.course.sections" :key="section.id" class="border-b">
