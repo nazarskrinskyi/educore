@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\CourseLevelEnum;
 use App\Models\CourseUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,7 +18,7 @@ class CourseResource extends JsonResource
             'description' => $this->description,
             'slug' => $this->slug,
             'duration' => $this->duration,
-            'level' => $this->level,
+            'level' => CourseLevelEnum::getNameByValue($this->level),
             'views' => $this->views,
             'image_url' => $this->image_path ? Storage::url($this->image_path) : null,
             'is_free' => $this->is_free,

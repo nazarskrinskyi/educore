@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\CourseController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\LessonCommentController;
 use App\Http\Controllers\LessonCompletionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseReviewController;
-use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,11 +18,12 @@ Route::get('/', HomeController::class)->name('dashboard');
 
 Route::get('/about', AboutController::class)->name('about');
 
-Route::get('/courses', [ServiceController::class, 'index'])->name('services');
-
 Route::get('/contact', [ContactMessageController::class, 'index'])->name('contact');
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+
+Route::get('api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
 Route::middleware('verified')->group(function () {
     Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');

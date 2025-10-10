@@ -95,7 +95,7 @@ class CourseResource extends Resource
             TextColumn::make('title')->searchable()->limit(30),
             TextColumn::make('category.name')->label('Category'),
             TextColumn::make('instructor.name')->label('Instructor'),
-            TextColumn::make('price')->money('usd'),
+            TextColumn::make('price')->money('UAH'),
             TextColumn::make('created_at')->dateTime(),
         ])->actions([
             Tables\Actions\EditAction::make(),

@@ -94,7 +94,7 @@ const {
                     </section>
 
                     <!-- Tags -->
-                    <section>
+                    <section v-if="course.tags.len">
                         <h2 class="text-xl font-semibold mb-2">Tags</h2>
                         <div class="flex flex-wrap gap-2">
                             <Link

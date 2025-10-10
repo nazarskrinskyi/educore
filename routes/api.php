@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\CourseProgressController;
@@ -14,9 +13,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('contact', [ContactMessageController::class, 'store'])->name('contact.store');
-
-Route::get('auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
-Route::get('auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
 Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
 Route::post('telegram/webhook', [TelegramController::class, 'webhook']);

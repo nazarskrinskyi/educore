@@ -45,6 +45,12 @@ class CourseController extends Controller
 
         $course->in_cart = session()->has('cart.' . $course->id);
 
+        $viewedKey = 'viewed_courses.' . $course->id;
+        if (!session()->has($viewedKey)) {
+            $course->increment('views');
+            session()->put($viewedKey, now());
+        }
+
         return Inertia::render('Courses/Show', [
             'course' => (new CourseResource($course))->resolve(),
         ]);
