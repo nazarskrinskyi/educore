@@ -1,12 +1,13 @@
-<script setup lang="ts">
+<script setup>
 import TestCard from "@/Components/TestCard.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Navigation from "@/Pages/Profile/Partials/Navigation.vue";
 import { Head } from "@inertiajs/vue3";
 
-defineProps({
+const props = defineProps({
     tests: [Array, Object],
 });
+
 </script>
 
 <template>

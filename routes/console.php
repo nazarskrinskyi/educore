@@ -10,7 +10,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('reminders:telegram')
-    ->daily()
+    ->everyMinute()
     ->timezone('Europe/Kiev')
     ->evenInMaintenanceMode()
     ->withoutOverlapping();

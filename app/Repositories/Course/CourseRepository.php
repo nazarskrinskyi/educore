@@ -39,7 +39,9 @@ class CourseRepository implements CourseRepositoryInterface
             'sections.lessons.tests',
             'reviews.user',
             'users',
-        ])->where('slug', $slug)->firstOrFail();
+        ])->whereHas('users', function ($query) {
+            $query->where('users.id', auth()->id());
+        })->where('slug', $slug)->firstOrFail();
     }
 
     public function isUserHasCourse(int $userId, int $courseId): bool
