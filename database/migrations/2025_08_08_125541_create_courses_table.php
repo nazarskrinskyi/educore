@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('video_path')->nullable();
             $table->string('level')->nullable();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('instructor_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('is_published')->default(false);
             $table->integer('views')->default(0);
             $table->integer('duration')->default(0);

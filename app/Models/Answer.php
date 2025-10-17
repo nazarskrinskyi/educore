@@ -11,7 +11,7 @@ class Answer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['question_id', 'answer_text', 'answer_image_path', 'answer_video_path', 'answer_audio_path', 'is_correct', 'bool'];
+    protected $fillable = ['question_id', 'user_id', 'answer_text', 'answer_image_path', 'answer_video_path', 'answer_audio_path', 'is_correct', 'bool'];
 
     protected $casts = [
         'selected_answer_ids' => 'array',
@@ -38,5 +38,10 @@ class Answer extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

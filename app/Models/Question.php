@@ -12,7 +12,7 @@ class Question extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['test_id', 'question_text', 'score', 'question_type', 'image_path', 'video_path', 'audio_path'];
+    protected $fillable = ['test_id', 'question_text', 'user_id', 'score', 'question_type', 'image_path', 'video_path', 'audio_path'];
 
     protected $appends = ['audio_url', 'image_url', 'video_url'];
 
@@ -39,5 +39,10 @@ class Question extends Model
     public function answers(): HasMany
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

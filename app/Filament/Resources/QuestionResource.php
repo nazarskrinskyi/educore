@@ -6,6 +6,7 @@ use App\Enums\QuestionTypeEnum;
 use App\Filament\Resources\QuestionResource\Pages;
 use App\Models\Question;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
@@ -41,7 +42,8 @@ class QuestionResource extends Resource
                 ->directory('questions/videos')
                 ->label('Question Video'),
             FileUpload::make('audio_path')
-                ->directory('questions/audios')
+                ->directory('questions/audios'),
+            Hidden::make('user_id')->default(auth()->id()),
         ]);
     }
 

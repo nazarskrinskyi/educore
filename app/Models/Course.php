@@ -36,7 +36,7 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'slug', 'description', 'price', 'category_id', 'instructor_id',
+        'title', 'slug', 'description', 'price', 'category_id', 'user_id',
         'image_path', 'video_path', 'is_published', 'views', 'is_free', 'level', 'duration'
     ];
 
@@ -59,7 +59,7 @@ class Course extends Model
 
     public function instructor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'instructor_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function sections(): HasMany

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -22,6 +23,7 @@ class CategoryResource extends Resource
     {
         return $form->schema([
             TextInput::make('name')->required()->maxLength(255),
+            Hidden::make('user_id')->default(auth()->id()),
             TextInput::make('slug')->required()->maxLength(255),
             Textarea::make('description'),
         ]);

@@ -20,7 +20,7 @@ class Lesson extends Model
     use HasFactory;
 
     protected $fillable = [
-        'section_id', 'title', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug',
+        'section_id', 'title', 'user_id', 'content', 'video_path', 'image_path', 'is_published', 'views', 'slug',
     ];
 
     protected $appends = ['image_url', 'video_url', 'completed_at'];
@@ -62,5 +62,10 @@ class Lesson extends Model
     public function getVideoUrlAttribute(): string
     {
         return $this->video_path ? Storage::url($this->video_path) : '';
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

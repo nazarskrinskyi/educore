@@ -36,7 +36,7 @@ class CourseResource extends Resource
                 ->relationship('category', 'name')
                 ->searchable(),
 
-            Select::make('instructor_id')
+            Select::make('user_id')
                 ->relationship('instructor', 'name')
                 ->searchable(),
 

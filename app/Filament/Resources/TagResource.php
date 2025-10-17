@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TagResource\Pages;
 use App\Models\Tag;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,6 +22,7 @@ class TagResource extends Resource
     {
         return $form->schema([
             TextInput::make('name')->required(),
+            Hidden::make('user_id')->default(auth()->id()),
             TextInput::make('slug')->required(),
         ]);
     }

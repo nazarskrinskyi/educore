@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LessonResource\Pages;
 use App\Models\Lesson;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -27,6 +28,7 @@ class LessonResource extends Resource
             Select::make('section_id')->relationship('section','title')->required(),
             TextInput::make('title')->required(),
             TextInput::make('slug')->required(),
+            Hidden::make('user_id')->default(auth()->id()),
             Textarea::make('content'),
             FileUpload::make('video_path')->directory('lessons/videos')->maxSize(102400)->required(),
             FileUpload::make('image_path')->directory('lessons/images')->image()->required(),

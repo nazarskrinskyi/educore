@@ -20,7 +20,7 @@ class CourseSeeder extends Seeder
                     'description' => "Course $i description",
                     'price' => 10000 * $i,
                     'category_id' => $i,
-                    'instructor_id' => 1,
+                    'user_id' => 1,
                     'image_path' => null,
                     'video_path' => null,
                     'is_published' => true,

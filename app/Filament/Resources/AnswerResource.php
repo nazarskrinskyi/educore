@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AnswerResource\Pages;
 use App\Models\Answer;
 use App\Enums\QuestionTypeEnum;
+use App\Models\Question;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
@@ -29,10 +31,18 @@ class AnswerResource extends Resource
                 ->relationship('question', 'question_text')
                 ->searchable()
                 ->reactive()
-                ->required(),
+                ->required()
+                ->options(function () {
+                    return Question::whereHas('test.course', fn ($q) => $q->where('user_id', auth()->id()))
+                        ->pluck('question_text', 'id')
+                        ->toArray();
+                }),
 
             Textarea::make('answer_text')
                 ->label('Answer Text'),
+
+            Hidden::make('user_id')
+                ->default(auth()->id()),
 
            Toggle::make('bool')
                 ->label('True/False Value'),

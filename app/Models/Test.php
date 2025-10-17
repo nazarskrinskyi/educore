@@ -20,7 +20,7 @@ class Test extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lesson_id', 'course_id', 'pass_percentage', 'description', 'title', 'duration', 'slug', 'image_path'];
+    protected $fillable = ['lesson_id', 'user_id', 'course_id', 'pass_percentage', 'description', 'title', 'duration', 'slug', 'image_path'];
 
     protected $appends = ['image_url'];
 
@@ -67,5 +67,10 @@ class Test extends Model
     public function get_test_attempts(): Collection
     {
         return $this->test_attempts()->where('user_id', auth()->id())->get();
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

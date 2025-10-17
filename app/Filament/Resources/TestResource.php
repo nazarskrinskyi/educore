@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TestResource\Pages;
 use App\Models\Test;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -26,6 +27,7 @@ class TestResource extends Resource
             Select::make('lesson_id')->relationship('lesson','title'),
             Select::make('course_id')->relationship('course','title'),
             TextInput::make('title')->required(),
+            Hidden::make('user_id')->default(auth()->id()),
             TextInput::make('slug')->required(),
             TextArea::make('description'),
             TextInput::make('duration')->numeric()->required(),
