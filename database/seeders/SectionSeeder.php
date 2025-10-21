@@ -9,15 +9,17 @@ class SectionSeeder extends Seeder
 {
     public function run(): void
     {
-        $courseId = 1;
-        for ($i = 1; $i <= 40; $i++) {
-            if ($i > 4 && $i % 4 == 0) {
-                $courseId++;
+        $sectionCountPerCourse = 4;
+        $sectionId = 1;
+
+        for ($courseId = 1; $courseId <= 10; $courseId++) {
+            for ($i = 1; $i <= $sectionCountPerCourse; $i++) {
+                Section::factory()->create([
+                    'title' => "Section $sectionId",
+                    'course_id' => $courseId,
+                ]);
+                $sectionId++;
             }
-            Section::factory()->create([
-                'title' => "Section $i",
-                'course_id' => $courseId,
-            ]);
         }
     }
 }

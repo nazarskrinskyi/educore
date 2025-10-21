@@ -7,11 +7,13 @@ use App\Http\Resources\CourseResource;
 use App\Http\Resources\LessonResource;
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\CourseUser;
 use App\Models\Lesson;
 use App\Repositories\Course\CourseRepositoryInterface;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use RuntimeException;
 
 class CourseController extends Controller
 {
@@ -54,6 +56,24 @@ class CourseController extends Controller
         return Inertia::render('Courses/Show', [
             'course' => (new CourseResource($course))->resolve(),
         ]);
+    }
+
+    public function enroll(Course $course): Response
+    {
+        $userId = auth()->id();
+
+        $course->owned = $userId &&
+            ($this->courseRepository->isUserHasCourse($userId, $course->id) || $course->is_free);
+
+        if ($course->owned && $this->courseRepository->isDoesntExist($userId, $course->id)) {
+            $this->courseRepository->createCourseUser($userId, [], $course);
+
+            return Inertia::render('Courses/Show', [
+                'course' => (new CourseResource($course))->resolve(),
+            ]);
+        }
+
+        throw new RuntimeException('You cannot enroll in this course');
     }
 
     public function enrollShow(Course $course, Lesson $lesson): Response

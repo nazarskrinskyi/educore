@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->string('video_path')->nullable();
             $table->string('image_path')->nullable();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('is_published')->default(false);
             $table->integer('views')->default(0);
             $table->timestamps();

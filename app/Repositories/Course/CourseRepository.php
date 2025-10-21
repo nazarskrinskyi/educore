@@ -39,9 +39,7 @@ class CourseRepository implements CourseRepositoryInterface
             'sections.lessons.tests',
             'reviews.user',
             'users',
-        ])->whereHas('users', function ($query) {
-            $query->where('users.id', auth()->id());
-        })->where('slug', $slug)->firstOrFail();
+        ])->where('slug', $slug)->firstOrFail();
     }
 
     public function isUserHasCourse(int $userId, int $courseId): bool
@@ -51,9 +49,26 @@ class CourseRepository implements CourseRepositoryInterface
             ->exists();
     }
 
-    public function createCourseUser(int $userId, array $cart): void
+    public function isDoesntExist(int $userId, int $courseId): bool
     {
-        foreach ($cart as $item) {
+        return CourseUser::where('user_id', $userId)->where('course_id', $courseId)->doesntExist();
+    }
+
+    public function createCourseUser(int $userId, array $cart = [], ?Course $course = null): void
+    {
+        if ($course) {
+            CourseUser::updateOrCreate(
+                [
+                    'user_id' => $userId,
+                    'course_id' => $course->id,
+                    'enrolled_at' => now(),
+                    'progress_percent' => 0,
+                ]
+            );
+            return;
+        }
+
+       foreach ($cart as $item) {
             $courseId = $item['id'];
 
             $course = Course::find($courseId);

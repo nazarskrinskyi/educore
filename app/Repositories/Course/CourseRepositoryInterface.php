@@ -17,7 +17,9 @@ interface CourseRepositoryInterface
 
     public function isUserHasCourse(int $userId, int $courseId): bool;
 
-    public function createCourseUser(int $userId, array $cart): void;
+    public function isDoesntExist(int $userId, int $courseId): bool;
+
+    public function createCourseUser(int $userId, array $cart = [], ?Course $course = null): void;
 
     public function getCourseById(int $courseId): ?Course;
 }

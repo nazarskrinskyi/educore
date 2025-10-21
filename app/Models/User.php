@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RoleEnum;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -50,11 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Certificate::class);
     }
 
-    public function points(): HasMany
-    {
-        return $this->hasMany(UserPoint::class);
-    }
-
     public function loginHistory(): HasMany
     {
         return $this->hasMany(LoginHistory::class);
@@ -67,7 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === RoleEnum::ADMIN->getValue();
     }
 
     public function orders(): HasMany

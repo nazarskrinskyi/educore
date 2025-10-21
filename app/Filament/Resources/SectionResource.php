@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SectionResource\Pages;
+use App\Models\Course;
 use App\Models\Section;
 use Filament\Forms;
 use Filament\Tables;
@@ -23,6 +24,9 @@ class SectionResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('course_id')
                     ->relationship('course', 'title')
+                    ->options(function () {
+                        return Course::where('user_id', auth()->id())->pluck('title', 'id')->toArray();
+                    })
                     ->required(),
             ]);
     }

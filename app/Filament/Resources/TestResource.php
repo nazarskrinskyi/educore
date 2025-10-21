@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TestResource\Pages;
+use App\Models\Course;
+use App\Models\Lesson;
 use App\Models\Test;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
@@ -24,8 +26,12 @@ class TestResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('lesson_id')->relationship('lesson','title'),
-            Select::make('course_id')->relationship('course','title'),
+            Select::make('lesson_id')->relationship('lesson','title')->options(function () {
+                return Lesson::where('user_id', auth()->id())->pluck('title', 'id')->toArray();
+            }),
+            Select::make('course_id')->relationship('course','title')->options(function () {
+                return Course::where('user_id', auth()->id())->pluck('title', 'id')->toArray();
+            }),
             TextInput::make('title')->required(),
             Hidden::make('user_id')->default(auth()->id()),
             TextInput::make('slug')->required(),

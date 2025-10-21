@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\LessonResource\Pages;
 use App\Models\Lesson;
+use App\Models\Section;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -25,7 +26,9 @@ class LessonResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('section_id')->relationship('section','title')->required(),
+            Select::make('section_id')->options(function () {
+                return Section::where('course.user_id', auth()->id())->pluck('title', 'id')->toArray();
+            })->relationship('section','title')->required(),
             TextInput::make('title')->required(),
             TextInput::make('slug')->required(),
             Hidden::make('user_id')->default(auth()->id()),

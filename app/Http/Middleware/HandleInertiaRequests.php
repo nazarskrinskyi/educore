@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'is_admin' => $request->user()?->isAdmin(),
             ],
             'flash' => [
                 'successContactMessage' => $request->session()->get('successContactMessage'),

@@ -93,6 +93,7 @@ const cart = computed(() => Object.values(page.props.cart ?? {}))
                             <!-- Profile Links -->
                             <div class="flex flex-col space-y-2">
                                 <DropdownLink @click="showingNavigationDropdown=false" :href="route('profile.edit')">Profile</DropdownLink>
+                                <DropdownLink @click="showingNavigationDropdown=false" :href="route('admin')" v-if="$page.props.auth.is_admin">Admin</DropdownLink>
                                 <DropdownLink @click="showingNavigationDropdown=false" :href="route('logout')" method="post" as="button">Log Out</DropdownLink>
                             </div>
                         </div>

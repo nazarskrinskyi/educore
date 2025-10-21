@@ -8,6 +8,7 @@ services:
         container_name: laravel-app
         volumes:
             - .:/var/www/html
+            - ~/.docker_laravel_history:/root/.bash_history
             - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
         extra_hosts:
             - 'host.docker.internal:host-gateway'
@@ -17,8 +18,6 @@ services:
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
             PHP_IDE_CONFIG: serverName=educore
         working_dir: /var/www/html

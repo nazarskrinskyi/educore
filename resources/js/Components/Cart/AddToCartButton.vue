@@ -1,23 +1,32 @@
 <script setup>
-import {router} from "@inertiajs/vue3";
-import {computed} from "vue";
+import { router } from "@inertiajs/vue3";
+import { computed } from "vue";
 
-const {course, cart} = defineProps({
-    course: {type: Object, required: true},
-    cart: {type: Object, default: () => ({})},
+const { course, cart } = defineProps({
+    course: { type: Object, required: true },
+    cart: { type: Object, default: () => ({}) },
 });
 
 const isInCart = computed(() => !!cart[course.id]);
 
-function addToCart(e) {
-    e.stopPropagation()
+function handleClick(e) {
+    e.stopPropagation();
 
-    if (isInCart.value) return;
+    if (course.owned) return;
 
-    router.post(route("cart.add"), {course_id: course.id}, {
-        preserveScroll: true,
-        preserveState: true,
-    });
+    if (course.is_free) {
+        router.post(route("courses.enroll", { course: course.id }), {}, {
+            preserveScroll: true,
+            preserveState: true,
+        });
+    } else {
+        if (isInCart.value || course.in_cart) return;
+
+        router.post(route("cart.add"), { course_id: course.id }, {
+            preserveScroll: true,
+            preserveState: true,
+        });
+    }
 }
 </script>
 
@@ -27,15 +36,14 @@ function addToCart(e) {
     </div>
     <div v-else>
         <button
-            @click="addToCart"
-            :disabled="course.is_free || course.in_cart"
+            @click="handleClick"
             class="px-4 py-2 rounded text-white"
             :class="{
-                        'bg-blue-600 hover:bg-blue-700': !course.is_free && !course.in_cart,
-                        'bg-gray-400 cursor-not-allowed': course.is_free || course.in_cart
-                    }"
+                'bg-blue-600 hover:bg-blue-700': !course.in_cart,
+                'bg-gray-400 cursor-not-allowed': course.in_cart
+            }"
         >
-            {{ course.is_free ? 'Безкоштовний' : (course.in_cart ? 'У корзині' : 'Купити') }}
+            {{ course.is_free ? 'Почати Курс' : (course.in_cart ? 'У корзині' : 'Купити') }}
         </button>
     </div>
 </template>

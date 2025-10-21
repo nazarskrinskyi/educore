@@ -29,7 +29,7 @@ class Test extends Model
         return $this->belongsTo(Lesson::class);
     }
 
-    public function test_attempts(): HasMany
+    public function testAttempts(): HasMany
     {
         return $this->hasMany(TestAttempt::class);
     }
@@ -54,19 +54,19 @@ class Test extends Model
         return $this->image_path ? Storage::url($this->image_path) : '';
     }
 
-    public function is_passed(): bool
+    public function isPassed(): bool
     {
         return $this->results()->where('user_id', auth()->id())->exists();
     }
 
-    public function is_successfully_passed(): bool
+    public function isSuccessfullyPassed(): bool
     {
         return $this->results()->where('user_id', auth()->id())->where('passed', true)->exists();
     }
 
-    public function get_test_attempts(): Collection
+    public function getTestAttempts(): Collection
     {
-        return $this->test_attempts()->where('user_id', auth()->id())->get();
+        return $this->testAttempts()->where('user_id', auth()->id())->get();
     }
 
     public function user(): BelongsTo

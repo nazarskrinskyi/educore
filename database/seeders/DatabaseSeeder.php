@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             QuestionSeeder::class,
             AnswerSeeder::class,
             TagSeeder::class,
-            BadgeSeeder::class,
             CertificateSeeder::class,
             PromoCodeSeeder::class,
         ]);

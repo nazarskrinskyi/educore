@@ -120,7 +120,7 @@ class CartController extends Controller
             $cart = $this->cartService->getCart();
             $this->cartService->storeOrder($validated['payment_intent_id'], $cart);
             $this->courseService->enrollUser($cart);
-            //$this->courseService->notifyInstructors($cart);
+            $this->courseService->notifyInstructors($cart);
 
             Session::forget(CartEnum::CART_SESSION_KEY->value);
 

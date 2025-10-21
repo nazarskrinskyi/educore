@@ -33,9 +33,7 @@ class AnswerResource extends Resource
                 ->reactive()
                 ->required()
                 ->options(function () {
-                    return Question::whereHas('test.course', fn ($q) => $q->where('user_id', auth()->id()))
-                        ->pluck('question_text', 'id')
-                        ->toArray();
+                    return Question::where('user_id', auth()->id())->pluck('question_text', 'id')->toArray();
                 }),
 
             Textarea::make('answer_text')

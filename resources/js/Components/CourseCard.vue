@@ -81,7 +81,7 @@ function goToCourse(course) {
             <!-- price + add to cart -->
             <div class="flex items-center justify-between mt-1">
                 <p class="font-semibold text-gray-900">
-                    UAH {{ course.is_free ? 'Free' : course.price_formatted }}
+                    {{ course.is_free ? 'Free' : 'UAH ' + course.price_formatted }}
                 </p>
                 <AddToCartButton :course="toRaw(course)" :cart="cart"/>
             </div>

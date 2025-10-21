@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\QuestionTypeEnum;
 use App\Filament\Resources\QuestionResource\Pages;
 use App\Models\Question;
+use App\Models\Test;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -24,7 +25,9 @@ class QuestionResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('test_id')->relationship('test','title')->required(),
+            Select::make('test_id')->options(function () {
+                return Test::where('user_id', auth()->id())->pluck('title', 'id')->toArray();
+            })->relationship('test','title')->required(),
             Textarea::make('question_text')->required(),
             Select::make('question_type')
                 ->options(

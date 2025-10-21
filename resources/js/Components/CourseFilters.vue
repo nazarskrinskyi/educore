@@ -33,10 +33,10 @@ function applyFilters() {
 }
 
 watch([priceMin, priceMax], ([min, max]) => {
-    if (min > max - 10) priceMin.value = max - 10
-    if (max < min + 10) priceMax.value = min + 10
-    applyFilters()
-})
+    priceMin.value = Math.max(props.priceRange.min, Math.min(min, max - 1));
+    priceMax.value = Math.min(props.priceRange.max, Math.max(max, min + 1));
+    applyFilters();
+});
 
 watch([free, category, difficulty, sort], applyFilters)
 
@@ -128,7 +128,7 @@ const rangeProgress = computed(() => {
                             v-model="priceMin"
                             :min="props.priceRange.min"
                             :max="props.priceRange.max"
-                            step="10"
+                            step="1"
                             class="range-thumb"
                         />
                         <input
@@ -136,7 +136,7 @@ const rangeProgress = computed(() => {
                             v-model="priceMax"
                             :min="props.priceRange.min"
                             :max="props.priceRange.max"
-                            step="10"
+                            step="1"
                             class="range-thumb"
                         />
                     </div>

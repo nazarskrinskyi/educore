@@ -28,6 +28,7 @@ Route::get('api/auth/google/callback', [GoogleAuthController::class, 'callback']
 Route::middleware('verified')->group(function () {
     Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
     Route::get('/courses/{course:slug}/lessons/{lesson:slug}', [CourseController::class, 'enrollShow'])->name('courses.player');
+    Route::post('/courses/{course}', [CourseController::class, 'enroll'])->name('courses.enroll');
 
     Route::post('/courses/reviews/store', [CourseReviewController::class, 'store'])->name('courses.reviews.store');
     Route::put('/courses/reviews/{review:id}', [CourseReviewController::class, 'update'])->name('courses.reviews.update');

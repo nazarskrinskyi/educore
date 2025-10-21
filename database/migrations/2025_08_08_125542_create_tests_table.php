@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('lesson_id')->constrained()->cascadeOnDelete();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('image_path')->nullable();
