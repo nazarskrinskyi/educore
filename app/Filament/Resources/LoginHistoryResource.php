@@ -14,6 +14,11 @@ class LoginHistoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
     protected static ?string $navigationGroup = 'Користувачі та доступи';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->isAdmin();
+    }
+
     public static function table(Table $table): Table
     {
         return $table->columns([

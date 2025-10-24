@@ -18,7 +18,7 @@ class CourseUserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('enrolled_at', 'desc') // 👈 specify a column that exists
+            ->defaultSort('enrolled_at', 'desc')
             ->columns([
                 TextColumn::make('course.title')->label('Course'),
                 TextColumn::make('user.name')->label('User'),

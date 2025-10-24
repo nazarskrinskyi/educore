@@ -18,6 +18,11 @@ return new class extends Migration
         });
     }
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->canManageSettings();
+    }
+
     public function down(): void
     {
         Schema::dropIfExists('categories');

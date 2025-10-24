@@ -28,13 +28,14 @@ class AnswerResource extends Resource
         return $form->schema([
             Select::make('question_id')
                 ->label('Question')
-                ->relationship('question', 'question_text')
+                ->relationship(
+                    name: 'question',
+                    titleAttribute: 'question_text',
+                    modifyQueryUsing: fn ($query) => $query->where('user_id', auth()->id())
+                )
                 ->searchable()
                 ->reactive()
-                ->required()
-                ->options(function () {
-                    return Question::where('user_id', auth()->id())->pluck('question_text', 'id')->toArray();
-                }),
+                ->required(),
 
             Textarea::make('answer_text')
                 ->label('Answer Text'),

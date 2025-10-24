@@ -16,12 +16,14 @@ class AnswerSeeder extends Seeder
                 case QuestionTypeEnum::MultipleChoice->value:
                     Answer::factory()->create([
                         'question_id' => $question->id,
+                        'user_id' => 1,
                         'answer_text' => 'Correct Answer ' . $key + 1,
                         'is_correct' => true,
                     ]);
 
                     Answer::factory(3)->create([
                         'question_id' => $question->id,
+                        'user_id' => 1,
                         'answer_text' => 'Wrong Answer ' . $key + 1,
                         'is_correct' => false,
                     ]);
@@ -30,12 +32,14 @@ class AnswerSeeder extends Seeder
                 case QuestionTypeEnum::MultipleAnswer->value:
                     Answer::factory(2)->create([
                         'question_id' => $question->id,
+                        'user_id' => 1,
                         'answer_text' => 'Correct Answer ' . $key + 1,
                         'is_correct' => true,
                     ]);
 
                     Answer::factory(2)->create([
                         'question_id' => $question->id,
+                        'user_id' => 1,
                         'answer_text' => 'Wrong Answer ' . $key + 1,
                         'is_correct' => false,
                     ]);
@@ -44,12 +48,14 @@ class AnswerSeeder extends Seeder
                 case QuestionTypeEnum::TrueFalse->value:
                     Answer::create([
                         'question_id' => $question->id,
+                        'user_id' => 1,
                         'bool' => true,
                         'is_correct' => true,
                     ]);
 
                     Answer::create([
                         'question_id' => $question->id,
+                        'user_id' => 1,
                         'bool' => false,
                         'is_correct' => false,
                     ]);
@@ -58,6 +64,7 @@ class AnswerSeeder extends Seeder
                 case QuestionTypeEnum::ShortAnswer->value:
                     Answer::create([
                         'question_id' => $question->id,
+                        'user_id' => 1,
                         'answer_text' => 'Sample short answer',
                         'is_correct' => true,
                     ]);

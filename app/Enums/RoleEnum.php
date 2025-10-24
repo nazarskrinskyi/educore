@@ -7,7 +7,6 @@ enum RoleEnum: string
     case STUDENT = 'student';
     case INSTRUCTOR = 'instructor';
     case ADMIN = 'admin';
-    case MODERATOR = 'moderator';
 
     /**
      * @return string

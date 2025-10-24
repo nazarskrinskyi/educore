@@ -15,6 +15,11 @@ class WishlistResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-heart';
     protected static ?string $navigationGroup = 'Курси та контент';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->isAdmin();
+    }
+
     public static function table(Table $table): Table
     {
         return $table->columns([

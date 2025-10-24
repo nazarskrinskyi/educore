@@ -23,10 +23,11 @@ class SectionResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('course_id')
-                    ->relationship('course', 'title')
-                    ->options(function () {
-                        return Course::where('user_id', auth()->id())->pluck('title', 'id')->toArray();
-                    })
+                    ->relationship(
+                        name: 'course',
+                        titleAttribute: 'title',
+                        modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+                    )
                     ->required(),
             ]);
     }

@@ -26,9 +26,12 @@ class LessonResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('section_id')->options(function () {
-                return Section::where('course.user_id', auth()->id())->pluck('title', 'id')->toArray();
-            })->relationship('section','title')->required(),
+            Select::make('section_id')
+                ->relationship(
+                    name: 'section',
+                    titleAttribute: 'title',
+                    modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+                )->required(),
             TextInput::make('title')->required(),
             TextInput::make('slug')->required(),
             Hidden::make('user_id')->default(auth()->id()),

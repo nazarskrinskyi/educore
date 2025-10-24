@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('question_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->text('answer_text')->nullable();
             $table->string('answer_image')->nullable();
             $table->string('answer_video')->nullable();

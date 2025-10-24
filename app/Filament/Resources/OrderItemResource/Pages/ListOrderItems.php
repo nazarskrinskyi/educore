@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\CourseUserResource\Pages;
+namespace App\Filament\Resources\OrderItemResource\Pages;
 
-use App\Filament\Resources\CourseUserResource;
+use App\Filament\Resources\OrderItemResource;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 
-class ListCourseUsers extends ListRecords
+class ListOrderItems extends ListRecords
 {
-    protected static string $resource = CourseUserResource::class;
+    protected static string $resource = OrderItemResource::class;
 
     protected function getTableQuery(): Builder
     {
@@ -16,7 +16,7 @@ class ListCourseUsers extends ListRecords
             return parent::getTableQuery();
         }
 
-        return parent::getTableQuery()->whereHas('course', function ($query) {
+        return parent::getTableQuery()->whereHas('section.course', function ($query) {
             $query->where('user_id', auth()->id());
         });
     }

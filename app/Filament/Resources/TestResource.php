@@ -26,12 +26,16 @@ class TestResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('lesson_id')->relationship('lesson','title')->options(function () {
-                return Lesson::where('user_id', auth()->id())->pluck('title', 'id')->toArray();
-            }),
-            Select::make('course_id')->relationship('course','title')->options(function () {
-                return Course::where('user_id', auth()->id())->pluck('title', 'id')->toArray();
-            }),
+            Select::make('lesson_id')->relationship(
+                name: 'lesson',
+                titleAttribute: 'title',
+                modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+            ),
+            Select::make('course_id')->relationship(
+                name: 'course',
+                titleAttribute: 'title',
+                modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+            ),
             TextInput::make('title')->required(),
             Hidden::make('user_id')->default(auth()->id()),
             TextInput::make('slug')->required(),

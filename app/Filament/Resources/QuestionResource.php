@@ -25,9 +25,12 @@ class QuestionResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('test_id')->options(function () {
-                return Test::where('user_id', auth()->id())->pluck('title', 'id')->toArray();
-            })->relationship('test','title')->required(),
+            Select::make('test_id')
+                ->relationship(
+                    name: 'test',
+                    titleAttribute: 'title',
+                    modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+                )->required(),
             Textarea::make('question_text')->required(),
             Select::make('question_type')
                 ->options(

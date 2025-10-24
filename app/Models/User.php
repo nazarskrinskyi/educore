@@ -66,6 +66,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role === RoleEnum::ADMIN->getValue();
     }
 
+    public function isInstructor(): bool
+    {
+        return $this->role === RoleEnum::INSTRUCTOR->getValue();
+    }
+
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);

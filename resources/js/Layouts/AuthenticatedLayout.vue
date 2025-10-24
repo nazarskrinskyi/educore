@@ -50,6 +50,7 @@ const cart = computed(() => Object.values(page.props.cart ?? {}))
                                 </template>
                                 <template #content>
                                     <DropdownLink :href="route('profile.edit')">Profile</DropdownLink>
+                                    <DropdownLink :href="route('filament.admin.pages.dashboard')" v-if="$page.props.auth.is_admin">Admin</DropdownLink>
                                     <DropdownLink :href="route('logout')" method="post" as="button">Log Out</DropdownLink>
                                 </template>
                             </Dropdown>

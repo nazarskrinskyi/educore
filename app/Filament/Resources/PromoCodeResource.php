@@ -18,6 +18,11 @@ class PromoCodeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
     protected static ?string $navigationGroup = 'Фінанси';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->isAdmin();
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([

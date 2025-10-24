@@ -10,7 +10,7 @@ class AdminAccessOnly
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->isAdmin()) {
+        if (!auth()->check() || (!auth()->user()->isAdmin() && !auth()->user()->isInstructor())) {
             abort(403);
         }
 

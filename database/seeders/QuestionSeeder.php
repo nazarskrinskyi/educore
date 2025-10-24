@@ -18,6 +18,7 @@ class QuestionSeeder extends Seeder
             for ($i = 1; $i <= 4; $i++) {
                 Question::factory()->create([
                     'test_id' => $testId,
+                    'user_id' => 1,
                     'question_text' => "Question $questionNumber",
                     'question_type' => rand(1, 4),
                     'image_path' => null,

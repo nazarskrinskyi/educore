@@ -18,6 +18,11 @@ class OrderResource extends Resource
 
     protected static ?string $navigationGroup = 'Замовлення';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->isAdmin();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
