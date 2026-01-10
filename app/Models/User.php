@@ -24,26 +24,44 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasApiTokens, HasFactory, Notifiable, Billable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'telegram_username'
+        "name",
+        "email",
+        "password",
+        "role",
+        "telegram_username",
+        "locale",
     ];
 
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = [
+        "password",
+        "remember_token",
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            "email_verified_at" => "datetime",
+            "password" => "hashed",
+            "role" => RoleEnum::class,
+        ];
+    }
 
     public function courses(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class, 'course_user')
-            ->withPivot(['enrolled_at', 'progress_percent'])
+        return $this->belongsToMany(Course::class, "course_user")
+            ->withPivot(["enrolled_at", "progress_percent"])
             ->withTimestamps();
     }
 
     public function lessons(): BelongsToMany
     {
-        return $this->belongsToMany(Lesson::class, 'lesson_user')->withPivot('completed_at');
+        return $this->belongsToMany(Lesson::class, "lesson_user")
+            ->withPivot("completed_at");
     }
 
     public function reviews(): HasMany
     {
-        return $this->hasMany(Review::class, 'user_id');
+        return $this->hasMany(Review::class, "user_id");
     }
 
     public function certificates(): HasMany
@@ -61,18 +79,32 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Wishlist::class);
     }
 
-    public function isAdmin(): bool
-    {
-        return $this->role === RoleEnum::ADMIN->getValue();
-    }
-
-    public function isInstructor(): bool
-    {
-        return $this->role === RoleEnum::INSTRUCTOR->getValue();
-    }
-
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Check if user has admin role
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === RoleEnum::ADMIN;
+    }
+
+    /**
+     * Check if user has instructor role
+     */
+    public function isInstructor(): bool
+    {
+        return $this->role === RoleEnum::INSTRUCTOR;
+    }
+
+    /**
+     * Check if user has student role
+     */
+    public function isStudent(): bool
+    {
+        return $this->role === RoleEnum::STUDENT;
     }
 }

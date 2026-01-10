@@ -3,22 +3,18 @@
 namespace App\Filament\Resources\ReviewResource\Pages;
 
 use App\Filament\Resources\ReviewResource;
+use App\Filament\Traits\HasInstructorAccessViaRelation;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Database\Eloquent\Builder;
 
 class ListReviews extends ListRecords
 {
+    use HasInstructorAccessViaRelation;
+
     protected static string $resource = ReviewResource::class;
 
-    protected function getTableQuery(): Builder
+    protected function getInstructorRelationship(): string
     {
-        if (auth()->user()->isAdmin()) {
-            return parent::getTableQuery();
-        }
-
-        return parent::getTableQuery()->whereHas('course', function ($query) {
-            $query->where('user_id', auth()->id());
-        });
+        return 'course';
     }
 
     protected function getHeaderActions(): array

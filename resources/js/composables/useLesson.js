@@ -1,10 +1,19 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
+/**
+ * Composable for managing lesson functionality
+ * @param {Object} initialLesson - The lesson object
+ * @returns {Object} Lesson state and methods
+ */
 export function useLesson(initialLesson) {
     const completed = ref(!!initialLesson.completed_at)
     const activeTab = ref('overview')
 
+    /**
+     * Toggle lesson completion status
+     * @param {Object} lessonItem - The lesson to toggle
+     */
     function toggleCompletion(lessonItem) {
         router.post(
             route('lessons.toggle', lessonItem.id),
@@ -13,30 +22,50 @@ export function useLesson(initialLesson) {
                 preserveScroll: true,
                 onSuccess: () => {
                     lessonItem.completed = !lessonItem.completed
+                },
+                onError: (errors) => {
+                    console.error('Failed to toggle lesson completion:', errors)
                 }
             }
         )
     }
 
+    /**
+     * Mark lesson as completed
+     */
     function markCompleted() {
+        if (completed.value) return
+
         router.post(route('lessons.complete', initialLesson.id), {}, {
             preserveScroll: true,
             onSuccess: () => {
                 completed.value = true
+            },
+            onError: (errors) => {
+                console.error('Failed to mark lesson as completed:', errors)
             }
         })
     }
 
+    /**
+     * Handle video progress and auto-complete at 90%
+     * @param {Event} e - Video progress event
+     */
     function onVideoProgress(e) {
         const video = e.target
-        if (!completed.value && video.currentTime / video.duration > 0.9) {
-            markCompleted()
+        if (!completed.value && video.duration > 0) {
+            const progress = video.currentTime / video.duration
+            if (progress > 0.9) {
+                markCompleted()
+            }
         }
     }
 
     return {
+        completed,
         activeTab,
         toggleCompletion,
+        markCompleted,
         onVideoProgress
     }
 }

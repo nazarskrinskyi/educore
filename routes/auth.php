@@ -9,20 +9,54 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\Student\RegisteredStudentController;
+use App\Http\Controllers\Auth\Student\AuthenticatedStudentController;
+use App\Http\Controllers\Auth\Instructor\RegisteredInstructorController;
+use App\Http\Controllers\Auth\Instructor\AuthenticatedInstructorController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register');
+    // Legacy routes - redirect to student routes for backward compatibility
+    Route::get('register', function () {
+        return redirect()->route('student.register');
+    })->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::get('login', function () {
+        return redirect()->route('student.login');
+    })->name('login');
 
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+    // Student Authentication Routes
+    Route::prefix('student')->group(function () {
+        Route::get('register', [RegisteredStudentController::class, 'create'])
+            ->name('student.register');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+        Route::post('register', [RegisteredStudentController::class, 'store'])
+            ->name('student.register');
 
+        Route::get('login', [AuthenticatedStudentController::class, 'create'])
+            ->name('student.login');
+
+        Route::post('login', [AuthenticatedStudentController::class, 'store'])
+            ->name('student.login');
+    });
+
+    // Instructor Authentication Routes
+    Route::prefix('instructor')->group(function () {
+        Route::get('register', [RegisteredInstructorController::class, 'create'])
+            ->name('instructor.register');
+
+        Route::post('register', [RegisteredInstructorController::class, 'store'])
+            ->name('instructor.register');
+
+        Route::get('login', [AuthenticatedInstructorController::class, 'create'])
+            ->name('instructor.login');
+
+        Route::post('login', [AuthenticatedInstructorController::class, 'store'])
+            ->name('instructor.login');
+    });
+
+    // Password Reset Routes (shared by all users)
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 

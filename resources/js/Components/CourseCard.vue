@@ -1,6 +1,6 @@
 <script setup>
-import {computed, toRaw} from 'vue'
-import {Link, router} from '@inertiajs/vue3'
+import { computed, toRaw } from 'vue'
+import { Link, router } from '@inertiajs/vue3'
 import AddToCartButton from '@/Components/Cart/AddToCartButton.vue'
 import Stars from "@/Components/Stars.vue";
 
@@ -22,9 +22,15 @@ import Stars from "@/Components/Stars.vue";
 
 const props = defineProps({
     /** @type {Course} */
-    course: {type: Object, required: true},
+    course: {
+        type: Object,
+        required: true,
+    },
     /** cart map or array; passed to AddToCartButton */
-    cart: {type: [Object, Array], default: () => ({})},
+    cart: {
+        type: [Object, Array],
+        default: () => ({}),
+    },
 })
 
 const isBestseller = computed(() => {
@@ -36,55 +42,79 @@ const isBestseller = computed(() => {
 function goToCourse(course) {
     router.visit(route('courses.show', course.slug))
 }
+
+function handleKeyPress(event, course) {
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        goToCourse(course)
+    }
+}
 </script>
 
 <template>
-    <div class="border rounded-2xl shadow-sm hover:shadow-md overflow-hidden bg-white transition group"
-         @click="goToCourse(course)">
-        <!-- image -->
-        <img :src="course.image_url" alt="course image" class="w-full h-48 object-cover"/>
+    <article
+        class="border rounded-2xl shadow-sm hover:shadow-lg overflow-hidden bg-white transition-all duration-300 group cursor-pointer focus-within:ring-2 focus-within:ring-purple-500"
+        @click="goToCourse(course)"
+        @keypress="handleKeyPress($event, course)"
+        tabindex="0"
+        role="button"
+        :aria-label="`View course: ${course.title}`"
+    >
+        <!-- Image -->
+        <div class="relative overflow-hidden">
+            <img
+                :src="course.image_url"
+                :alt="`${course.title} course thumbnail`"
+                class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+            />
+            <div v-if="isBestseller" class="absolute top-2 right-2">
+                <span class="inline-flex items-center text-xs font-semibold px-2 py-1 rounded-full bg-amber-500 text-white shadow-md">
+                    ⭐ Bestseller
+                </span>
+            </div>
+        </div>
 
         <div class="p-4">
-            <!-- title -->
-            <Link class="font-bold text-lg leading-tight mb-1 group-hover:text-blue-600 line-clamp-2"
-                  :href="course.slug">
+            <!-- Title -->
+            <h3 class="font-bold text-lg leading-tight mb-2 group-hover:text-purple-600 line-clamp-2 transition-colors duration-200">
                 {{ course.title }}
-            </Link>
+            </h3>
 
-            <!-- tags -->
-            <div class="flex flex-wrap gap-1.5 mb-2">
+            <!-- Tags -->
+            <div v-if="course.tags && course.tags.length > 0" class="flex flex-wrap gap-1.5 mb-3">
                 <Link
-                    v-for="tag in (course.tags || [])"
+                    v-for="tag in course.tags"
                     :href="tag.slug || '#'"
                     :key="tag.id || tag.name"
-                    class="bg-gray-200 text-gray-800 text-[11px] px-2 py-0.5 rounded"
+                    class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md hover:bg-purple-100 hover:text-purple-700 transition-colors duration-200"
+                    @click.stop
                 >
                     {{ tag.name }}
                 </Link>
             </div>
 
-            <!-- instructor & category -->
-            <p class="text-gray-500 text-sm mb-2">
-                by {{ course?.instructor?.name || '—' }}
-                <span class="text-gray-400">•</span>
-                {{ course?.category?.name || '—' }}
+            <!-- Instructor & Category -->
+            <p class="text-gray-600 text-sm mb-3">
+                <span class="font-medium">{{ course?.instructor?.name || 'Unknown Instructor' }}</span>
+                <span class="text-gray-400 mx-1">•</span>
+                <span>{{ course?.category?.name || 'Uncategorized' }}</span>
             </p>
 
-            <!-- rating + reviews (score) -->
-            <div class="flex items-center gap-2 text-sm mb-2">
-                <Stars :size="14" :rating="Number(course.rating || 0)"/>
-                <span class="text-gray-500">({{ course.reviews_count || 0 }} відгуків)</span>
-                <span v-if="isBestseller"
-                      class="ml-1 inline-flex items-center text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 ring-1 ring-amber-200">Лідер продажів</span>
+            <!-- Rating + Reviews -->
+            <div class="flex items-center gap-2 text-sm mb-3">
+                <Stars :size="16" :rating="Number(course.rating || 0)" />
+                <span class="font-medium text-gray-700">{{ Number(course.rating || 0).toFixed(1) }}</span>
+                <span class="text-gray-500">({{ course.reviews_count || 0 }} reviews)</span>
             </div>
 
-            <!-- price + add to cart -->
-            <div class="flex items-center justify-between mt-1">
-                <p class="font-semibold text-gray-900">
-                    {{ course.is_free ? 'Free' : 'UAH ' + course.price_formatted }}
+            <!-- Price + Add to Cart -->
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                <p class="font-bold text-xl text-gray-900">
+                    {{ course.is_free ? 'Free' : `₴${course.price_formatted}` }}
                 </p>
-                <AddToCartButton :course="toRaw(course)" :cart="cart"/>
+                <AddToCartButton :course="toRaw(course)" :cart="cart" @click.stop />
             </div>
         </div>
-    </div>
+    </article>
 </template>

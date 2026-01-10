@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -19,6 +20,11 @@ class GoogleAuthController extends Controller
      */
     public function redirect(): RedirectResponse
     {
+        // Store the intended role in session if provided
+        if (request()->has('role')) {
+            session(['oauth_intended_role' => request()->get('role')]);
+        }
+
         return Socialite::driver('google')->redirect();
     }
 
@@ -34,17 +40,37 @@ class GoogleAuthController extends Controller
 
         if ($existingUser) {
             Auth::login($existingUser);
+
+            // Redirect based on user role
+            if ($existingUser->role === RoleEnum::INSTRUCTOR || $existingUser->role === RoleEnum::ADMIN) {
+                return redirect()->route('admin.index');
+            }
+
+            return redirect()->route('dashboard');
         } else {
+            // Get the intended role from session, default to student
+            $intendedRole = session('oauth_intended_role', 'student');
+            $role = $intendedRole === 'instructor' ? RoleEnum::INSTRUCTOR : RoleEnum::STUDENT;
+
+            // Clear the session
+            session()->forget('oauth_intended_role');
+
             $newUser = User::updateOrCreate([
                 'email' => $user->email
             ], [
                 'name' => $user->name,
                 'password' => bcrypt(Str::random()),
-                'email_verified_at' => now()
+                'email_verified_at' => now(),
+                'role' => $role->value,
             ]);
             Auth::login($newUser);
-        }
 
-        return redirect()->route('dashboard');
+            // Redirect based on role
+            if ($role === RoleEnum::INSTRUCTOR) {
+                return redirect()->route('admin.index');
+            }
+
+            return redirect()->route('dashboard');
+        }
     }
 }

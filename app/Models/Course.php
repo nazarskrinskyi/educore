@@ -36,11 +36,39 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'slug', 'description', 'price', 'category_id', 'user_id',
-        'image_path', 'video_path', 'is_published', 'views', 'is_free', 'level', 'duration'
+        'title',
+        'slug',
+        'description',
+        'price',
+        'category_id',
+        'user_id',
+        'image_path',
+        'video_path',
+        'is_published',
+        'views',
+        'is_free',
+        'level',
+        'duration',
     ];
 
-    protected $appends = ['price_formatted', 'image_url', 'video_url'];
+    protected $appends = [
+        'price_formatted',
+        'image_url',
+        'video_url',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'integer',
+            'category_id' => 'integer',
+            'user_id' => 'integer',
+            'is_published' => 'boolean',
+            'is_free' => 'boolean',
+            'views' => 'integer',
+            'duration' => 'integer',
+        ];
+    }
 
     public function lessons(): HasManyThrough
     {

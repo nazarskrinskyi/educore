@@ -11,7 +11,17 @@ class Section extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'course_id'];
+    protected $fillable = [
+        'title',
+        'course_id',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'course_id' => 'integer',
+        ];
+    }
 
     public function course(): BelongsTo
     {

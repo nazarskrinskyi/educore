@@ -11,7 +11,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Order extends Model
 {
-    protected $fillable = ['user_id','stripe_payment_id','amount','status'];
+    protected $fillable = [
+        'user_id',
+        'stripe_payment_id',
+        'amount',
+        'status',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'amount' => 'integer',
+        ];
+    }
 
     public function user(): BelongsTo
     {
