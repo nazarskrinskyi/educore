@@ -12,6 +12,8 @@ class TagSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        // Tag seeder is intentionally empty
+        // Tags can be added through the application interface as needed
+        // or you can implement tag seeding logic here if required
     }
 }

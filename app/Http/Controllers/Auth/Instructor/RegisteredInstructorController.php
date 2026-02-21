@@ -50,6 +50,6 @@ class RegisteredInstructorController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('admin.index')->with('success', 'Welcome! Your instructor account has been created successfully.');
+        return redirect()->route('filament.admin.pages.dashboard')->with('success', 'Welcome! Your instructor account has been created successfully.');
     }
 }

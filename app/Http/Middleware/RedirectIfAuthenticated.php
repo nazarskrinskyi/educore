@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
 
                 // Redirect based on user role
                 if ($user->role === RoleEnum::ADMIN || $user->role === RoleEnum::INSTRUCTOR) {
-                    return redirect()->route('admin.index');
+                    return redirect()->route('filament.admin.pages.dashboard');
                 }
 
                 // Default to dashboard for students

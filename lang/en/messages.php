@@ -89,4 +89,33 @@ return [
         'not_registered' => "Don't have an account?",
         'name' => 'Name',
     ],
+
+    // Language
+    'language' => [
+        'switch' => 'Switch Language',
+        'english' => 'English',
+        'ukrainian' => 'Ukrainian',
+    ],
+
+    // Dashboard
+    'dashboard' => [
+        'title' => 'Welcome Back!',
+        'subtitle' => 'Your Learning Journey Continues',
+        'platforms_title' => 'Platforms',
+        'platforms_heading' => 'We Serve In Extensive Traits',
+        'platforms_description' => 'Educore is a holistic system empowering the entire education ecosystem through innovative digital transformation.',
+        'platforms_cta_primary' => 'Get A Quote',
+        'platforms_cta_secondary' => 'Learn More',
+        'about_title' => 'About Educore System',
+        'about_description' => 'Educore is an innovative all-in-one educational management system built to streamline operations.',
+        'about_button' => 'EXPLORE MORE',
+        'features_title' => 'Educore Core Features',
+        'features_description' => 'Our system covers all critical aspects of educational management.',
+        'features_button' => 'EXPLORE MORE',
+        'certifications_title' => 'Certifications',
+        'certifications_heading' => 'Trusted Certifications & Partnerships',
+        'certifications_description' => 'Educore holds industry-recognized certifications and partnerships.',
+        'certifications_button' => 'View All CERTIFICATIONS',
+        'edit_page' => 'Edit Page',
+    ],
 ];

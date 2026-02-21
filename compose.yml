@@ -55,6 +55,24 @@ services:
         networks:
             - app-network
 
+    redis:
+        image: redis:alpine
+        container_name: redis-cache
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        networks:
+            - app-network
+
+    mailhog:
+        image: mailhog/mailhog:latest
+        container_name: mailhog-server
+        restart: unless-stopped
+        ports:
+            - "1025:1025"
+            - "8025:8025"
+        networks:
+            - app-network
 volumes:
     db_data:
 

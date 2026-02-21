@@ -9,16 +9,29 @@ class SectionSeeder extends Seeder
 {
     public function run(): void
     {
-        $sectionCountPerCourse = 4;
-        $sectionId = 1;
+        // Verify courses exist
+        $courses = \App\Models\Course::all();
+        if ($courses->isEmpty()) {
+            throw new \Exception('No courses found. Please ensure courses are seeded first.');
+        }
 
-        for ($courseId = 1; $courseId <= 10; $courseId++) {
-            for ($i = 1; $i <= $sectionCountPerCourse; $i++) {
-                Section::factory()->create([
-                    'title' => "Section $sectionId",
-                    'course_id' => $courseId,
+        // Clear existing sections to avoid duplicates on re-seeding
+        Section::query()->delete();
+
+        $sectionCountPerCourse = 4;
+        $sectionTitles = [
+            'Introduction and Fundamentals',
+            'Core Concepts and Principles',
+            'Advanced Techniques',
+            'Real-World Projects and Practice',
+        ];
+
+        foreach ($courses as $course) {
+            for ($i = 0; $i < $sectionCountPerCourse; $i++) {
+                Section::create([
+                    'title' => $sectionTitles[$i] ?? "Section " . ($i + 1),
+                    'course_id' => $course->id,
                 ]);
-                $sectionId++;
             }
         }
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('page_configurations', function (Blueprint $table) {
             $table->id();
-            $table->string('page_name')->unique(); // 'home', 'dashboard', etc.
+            $table->string('page_name')->index(); // 'welcome', 'dashboard', etc.
             $table->string('section_key')->index(); // 'hero', 'platforms', 'about', etc.
             $table->json('content'); // Flexible JSON content for each section
             $table->integer('order')->default(0); // Display order

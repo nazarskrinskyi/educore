@@ -11,6 +11,8 @@ class CertificateSeeder extends Seeder
      */
     public function run(): void
     {
-
+        // Certificate seeder is intentionally empty
+        // Certificates are generated when users complete courses
+        // and should not be pre-seeded with dummy data
     }
 }

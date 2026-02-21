@@ -89,4 +89,33 @@ return [
         'not_registered' => 'Немає акаунту?',
         'name' => 'Ім\'я',
     ],
+
+    // Language
+    'language' => [
+        'switch' => 'Змінити мову',
+        'english' => 'Англійська',
+        'ukrainian' => 'Українська',
+    ],
+
+    // Dashboard
+    'dashboard' => [
+        'title' => 'Ласкаво просимо назад!',
+        'subtitle' => 'Ваша навчальна подорож продовжується',
+        'platforms_title' => 'Платформи',
+        'platforms_heading' => 'Ми обслуговуємо широкий спектр напрямків',
+        'platforms_description' => 'Educore - це цілісна система, яка надає можливості всій освітній екосистемі через інноваційну цифрову трансформацію.',
+        'platforms_cta_primary' => 'Отримати пропозицію',
+        'platforms_cta_secondary' => 'Дізнатися більше',
+        'about_title' => 'Про систему Educore',
+        'about_description' => 'Educore - це інноваційна комплексна система управління освітою, створена для оптимізації операцій.',
+        'about_button' => 'ДІЗНАТИСЯ БІЛЬШЕ',
+        'features_title' => 'Основні функції Educore',
+        'features_description' => 'Наша система охоплює всі критичні аспекти управління освітою.',
+        'features_button' => 'ДІЗНАТИСЯ БІЛЬШЕ',
+        'certifications_title' => 'Сертифікати',
+        'certifications_heading' => 'Надійні сертифікати та партнерства',
+        'certifications_description' => 'Educore має визнані в галузі сертифікати та партнерства.',
+        'certifications_button' => 'Переглянути всі СЕРТИФІКАТИ',
+        'edit_page' => 'Редагувати сторінку',
+    ],
 ];

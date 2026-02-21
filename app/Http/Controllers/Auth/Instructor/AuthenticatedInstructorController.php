@@ -37,7 +37,7 @@ class AuthenticatedInstructorController extends Controller
             $request->user()->sendEmailVerificationNotification();
         }
 
-        return redirect()->intended(route('admin.index', absolute: false));
+        return redirect()->intended(route('filament.admin.pages.dashboard', absolute: false));
     }
 
     /**

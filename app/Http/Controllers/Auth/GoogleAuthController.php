@@ -43,7 +43,7 @@ class GoogleAuthController extends Controller
 
             // Redirect based on user role
             if ($existingUser->role === RoleEnum::INSTRUCTOR || $existingUser->role === RoleEnum::ADMIN) {
-                return redirect()->route('admin.index');
+                return redirect()->route('filament.admin.pages.dashboard');
             }
 
             return redirect()->route('dashboard');
@@ -67,7 +67,7 @@ class GoogleAuthController extends Controller
 
             // Redirect based on role
             if ($role === RoleEnum::INSTRUCTOR) {
-                return redirect()->route('admin.index');
+                return redirect()->route('filament.admin.pages.dashboard');
             }
 
             return redirect()->route('dashboard');
