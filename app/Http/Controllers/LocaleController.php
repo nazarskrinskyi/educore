@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Inertia\Inertia;
 
 class LocaleController extends Controller
 {
     /**
      * Switch the application locale
      *
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function switch(Request $request)
@@ -41,7 +39,7 @@ class LocaleController extends Controller
         }
 
         // Add locale prefix
-        $newPath = '/' . $locale . ($pathWithoutLocale === '/' ? '' : $pathWithoutLocale);
+        $newPath = '/'.$locale.($pathWithoutLocale === '/' ? '' : $pathWithoutLocale);
 
         // Use a regular redirect with a full page reload
         return redirect($newPath);

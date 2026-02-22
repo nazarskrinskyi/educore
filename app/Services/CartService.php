@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 readonly class CartService
 {
-    public function __construct(private OrderRepositoryInterface $orderRepository)
-    {
-    }
+    public function __construct(private OrderRepositoryInterface $orderRepository) {}
 
     /**
      * Get the current cart from session
@@ -46,7 +44,7 @@ readonly class CartService
             'duration' => $course->duration,
             'is_free' => $course->is_free,
             'lessons' => $course->sections->map(fn($section) => $section?->lessons()->count())->sum(),
-            'level' => CourseLevelEnum::from((int)$course->level)->name
+            'level' => CourseLevelEnum::from((int) $course->level)->name,
         ];
     }
 

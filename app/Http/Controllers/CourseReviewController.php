@@ -11,9 +11,7 @@ use Illuminate\Http\RedirectResponse;
 
 class CourseReviewController extends Controller
 {
-    public function __construct(private readonly CourseReviewRepositoryInterface $courseReviewRepository)
-    {
-    }
+    public function __construct(private readonly CourseReviewRepositoryInterface $courseReviewRepository) {}
 
     public function store(CourseRequest $validated): RedirectResponse
     {

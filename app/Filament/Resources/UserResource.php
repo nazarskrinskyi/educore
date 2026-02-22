@@ -9,8 +9,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 
@@ -40,7 +40,7 @@ class UserResource extends Resource
             TextInput::make('telegram_username')->maxLength(100),
             TextInput::make('password')
                 ->password()
-                ->dehydrateStateUsing(fn ($state) => $state ? Hash::make($state) : null)
+                ->dehydrateStateUsing(fn($state) => $state ? Hash::make($state) : null)
                 ->label('Password (leave empty to keep)'),
         ]);
     }

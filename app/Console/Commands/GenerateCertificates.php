@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SendCertificateNotification;
-use App\Models\Course;
 use App\Models\User;
 use App\Services\CourseProgressService;
 use Illuminate\Console\Command;
@@ -30,6 +29,7 @@ class GenerateCertificates extends Command
         }
 
         $this->info('🎉 Генерація сертифікатів завершена!');
+
         return 0;
     }
 }

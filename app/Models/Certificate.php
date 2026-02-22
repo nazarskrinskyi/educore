@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use App\Jobs\SendCertificateNotification;
-use Illuminate\Database\Eloquent\Model;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 /**
  * @method static where(string $string, mixed $id)
@@ -46,7 +45,7 @@ class Certificate extends Model
             'date' => now()->format('d.m.Y'),
         ]);
 
-        $filename = 'certificates/' . $user->id . '_' . $course->id . '_' . time() . '.pdf';
+        $filename = 'certificates/'.$user->id.'_'.$course->id.'_'.time().'.pdf';
         Storage::disk('public')->put($filename, $pdf->output());
 
         $certificate->certificate_path = $filename;

@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static min(string $string)
  * @method static max(string $string)
  * @method static whereDate(string $string, \Illuminate\Support\Carbon $subDay)
+ *
  * @property int|mixed $price
  * @property mixed|string $video_path
  * @property mixed|string $image_path
@@ -140,17 +141,24 @@ class Course extends Model
     public function scopeFilter(Builder $query, Request $request): Builder
     {
         return $query
-            ->when($request->search, fn($q) =>
-                $q->where(fn($sub) =>
+            ->when(
+                $request->search,
+                fn($q) =>
+                $q->where(
+                    fn($sub) =>
                 $sub->where('title', 'like', "%$request->search%")
-                    ->orWhere('description', 'like', "%$request->search%")
-                )
+                    ->orWhere('description', 'like', "%$request->search%"),
+                ),
             )
-            ->when($request->difficulty, fn($q) =>
-                $q->where('level', $request->difficulty)
+            ->when(
+                $request->difficulty,
+                fn($q) =>
+                $q->where('level', $request->difficulty),
             )
-            ->when($request->category, fn($q) =>
-                $q->where('category_id', $request->category)
+            ->when(
+                $request->category,
+                fn($q) =>
+                $q->where('category_id', $request->category),
             )
             ->when($request->sorting, function ($q) use ($request) {
                 match ($request->sorting) {
@@ -162,14 +170,20 @@ class Course extends Model
                     default => null,
                 };
             })
-            ->when($request->has('price_min') && $request->price_min !== '', fn($q) =>
-                $q->where('price', '>=', $request->price_min * 100)
+            ->when(
+                $request->has('price_min') && $request->price_min !== '',
+                fn($q) =>
+                $q->where('price', '>=', $request->price_min * 100),
             )
-            ->when($request->has('price_max') && $request->price_max !== '', fn($q) =>
-                $q->where('price', '<=', $request->price_max * 100)
+            ->when(
+                $request->has('price_max') && $request->price_max !== '',
+                fn($q) =>
+                $q->where('price', '<=', $request->price_max * 100),
             )
-            ->when($request->boolean('is_free'), fn($q) =>
-                $q->where('is_free', true)
+            ->when(
+                $request->boolean('is_free'),
+                fn($q) =>
+                $q->where('is_free', true),
             );
     }
 }

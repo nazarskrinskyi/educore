@@ -25,7 +25,7 @@ class EditPageConfiguration extends EditRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         // Ensure content is properly formatted for the form
-        if (isset($data['content']) && is_string($data['content'])) {
+        if (isset($data['content']) && \is_string($data['content'])) {
             $data['content'] = json_decode($data['content'], true);
         }
 
@@ -35,7 +35,7 @@ class EditPageConfiguration extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         // Ensure content is stored as JSON
-        if (isset($data['content']) && is_array($data['content'])) {
+        if (isset($data['content']) && \is_array($data['content'])) {
             // Remove empty values from arrays
             $data['content'] = $this->cleanEmptyValues($data['content']);
         }
@@ -46,7 +46,7 @@ class EditPageConfiguration extends EditRecord
     private function cleanEmptyValues(array $data): array
     {
         foreach ($data as $key => $value) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $data[$key] = $this->cleanEmptyValues($value);
                 if (empty($data[$key])) {
                     unset($data[$key]);

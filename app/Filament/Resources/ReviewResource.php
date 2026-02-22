@@ -6,8 +6,8 @@ use App\Filament\Resources\ReviewResource\Pages;
 use App\Models\Review;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class ReviewResource extends Resource
 {

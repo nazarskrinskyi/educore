@@ -31,12 +31,12 @@ class LessonSeeder extends Seeder
                 $lessonTitle = "{$section->title} - Part {$i}";
                 Lesson::create([
                     'title' => $lessonTitle,
-                    'slug' => \Illuminate\Support\Str::slug($lessonTitle) . "-{$lessonId}",
+                    'slug' => \Illuminate\Support\Str::slug($lessonTitle)."-{$lessonId}",
                     'content' => "This lesson covers important concepts in {$section->title}. You will learn practical skills and theoretical knowledge that can be applied in real-world scenarios. Detailed content and explanation for lesson {$lessonId}.",
                     'section_id' => $section->id,
                     'user_id' => $adminUser->id,
                     'image_path' => "https://picsum.photos/seed/lesson{$lessonId}/600/400",
-                    'video_path' => "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
+                    'video_path' => 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
                     'is_published' => true,
                     'views' => rand(500, 5000),
                 ]);

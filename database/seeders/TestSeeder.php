@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Test;
 use App\Models\Lesson;
+use App\Models\Test;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
@@ -28,11 +28,13 @@ class TestSeeder extends Seeder
             // Verify section and course relationships exist
             if (!$lesson->section) {
                 \Log::warning("Lesson {$lesson->id} has no section. Skipping test creation.");
+
                 continue;
             }
 
             if (!$lesson->section->course) {
                 \Log::warning("Section {$lesson->section->id} has no course. Skipping test creation for lesson {$lesson->id}.");
+
                 continue;
             }
 

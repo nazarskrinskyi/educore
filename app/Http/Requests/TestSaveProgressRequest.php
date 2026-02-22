@@ -10,8 +10,6 @@ class TestSaveProgressRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -20,8 +18,6 @@ class TestSaveProgressRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -40,7 +36,7 @@ class TestSaveProgressRequest extends FormRequest
     {
         if ($this->has('answers')) {
             $answers = collect($this->input('answers'))->map(function ($answer) {
-                if (!empty($answer['selected_answer_ids']) && is_string($answer['selected_answer_ids'])) {
+                if (!empty($answer['selected_answer_ids']) && \is_string($answer['selected_answer_ids'])) {
                     $clean = trim($answer['selected_answer_ids'], '"');
                     $clean = str_replace('\"', '"', $clean);
 
@@ -56,8 +52,6 @@ class TestSaveProgressRequest extends FormRequest
 
     /**
      * Get the validation attributes that apply to the request.
-     *
-     * @return array
      */
     public function attributes(): array
     {
@@ -68,8 +62,6 @@ class TestSaveProgressRequest extends FormRequest
 
     /**
      * Get the validation messages that apply to the request.
-     *
-     * @return array
      */
     public function messages(): array
     {

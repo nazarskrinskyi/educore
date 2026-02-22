@@ -10,8 +10,6 @@ class TestSubmitRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -20,8 +18,6 @@ class TestSubmitRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -42,10 +38,11 @@ class TestSubmitRequest extends FormRequest
     {
         if ($this->has('answers')) {
             $answers = collect($this->input('answers'))->map(function ($answer) {
-                if (!empty($answer['selected_answer_ids']) && is_string($answer['selected_answer_ids'])) {
+                if (!empty($answer['selected_answer_ids']) && \is_string($answer['selected_answer_ids'])) {
                     $decoded = json_decode($answer['selected_answer_ids'], true);
-                    $answer['selected_answer_ids'] = is_array($decoded) ? $decoded : [];
+                    $answer['selected_answer_ids'] = \is_array($decoded) ? $decoded : [];
                 }
+
                 return $answer;
             });
 
@@ -55,8 +52,6 @@ class TestSubmitRequest extends FormRequest
 
     /**
      * Get the validation attributes that apply to the request.
-     *
-     * @return array
      */
     public function attributes(): array
     {
@@ -67,8 +62,6 @@ class TestSubmitRequest extends FormRequest
 
     /**
      * Get the validation messages that apply to the request.
-     *
-     * @return array
      */
     public function messages(): array
     {

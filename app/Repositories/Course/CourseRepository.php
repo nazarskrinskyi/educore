@@ -63,12 +63,13 @@ class CourseRepository implements CourseRepositoryInterface
                     'course_id' => $course->id,
                     'enrolled_at' => now(),
                     'progress_percent' => 0,
-                ]
+                ],
             );
+
             return;
         }
 
-       foreach ($cart as $item) {
+        foreach ($cart as $item) {
             $courseId = $item['id'];
 
             $course = Course::find($courseId);
@@ -82,7 +83,7 @@ class CourseRepository implements CourseRepositoryInterface
                     'course_id' => $course->id,
                     'enrolled_at' => now(),
                     'progress_percent' => 0,
-                ]
+                ],
             );
         }
     }

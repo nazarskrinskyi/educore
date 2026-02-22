@@ -31,7 +31,7 @@ class CertificateController extends Controller
             fpassthru($stream);
         }, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $certificate->course->title . '_certificate.pdf"',
+            'Content-Disposition' => 'inline; filename="'.$certificate->course->title.'_certificate.pdf"',
         ]);
     }
 }

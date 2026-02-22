@@ -11,9 +11,7 @@ use Illuminate\Http\RedirectResponse;
 
 class LessonCommentController extends Controller
 {
-    public function __construct(private readonly LessonCommentRepositoryInterface $lessonCommentRepository)
-    {
-    }
+    public function __construct(private readonly LessonCommentRepositoryInterface $lessonCommentRepository) {}
 
     public function store(LessonCommentRequest $validated): RedirectResponse
     {

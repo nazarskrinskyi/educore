@@ -35,7 +35,7 @@ class OrderItem extends Model
             'id',           // Foreign key on orders table
             'id',           // Foreign key on users table
             'order_id',     // Local key on order_items table
-            'user_id'       // Local key on orders table
+            'user_id',       // Local key on orders table
         );
     }
 }

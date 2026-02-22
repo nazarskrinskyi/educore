@@ -27,7 +27,7 @@ class CourseResource extends JsonResource
             'reviews_count' => $this->reviews()->count(),
             'instructor' => ['name' => $this->instructor?->name ?? '—'],
             'category' => ['name' => $this->category?->name ?? '—'],
-            'in_cart' => session()->has('cart.' . $this->id),
+            'in_cart' => session()->has('cart.'.$this->id),
             'owned' => $request->user() ? CourseUser::where('course_id', $this->id)
                 ->where('user_id', $request->user()->id)
                 ->exists() : false,

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\LessonResource\Pages;
 use App\Models\Lesson;
-use App\Models\Section;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -14,8 +13,8 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class LessonResource extends Resource
 {
@@ -30,7 +29,7 @@ class LessonResource extends Resource
                 ->relationship(
                     name: 'section',
                     titleAttribute: 'title',
-                    modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+                    modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id()),
                 )->required(),
             TextInput::make('title')->required(),
             TextInput::make('slug')->required(),

@@ -4,18 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AnswerResource\Pages;
 use App\Models\Answer;
-use App\Enums\QuestionTypeEnum;
-use App\Models\Question;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class AnswerResource extends Resource
 {
@@ -31,7 +29,7 @@ class AnswerResource extends Resource
                 ->relationship(
                     name: 'question',
                     titleAttribute: 'question_text',
-                    modifyQueryUsing: fn ($query) => $query->where('user_id', auth()->id())
+                    modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id()),
                 )
                 ->searchable()
                 ->reactive()
@@ -43,8 +41,8 @@ class AnswerResource extends Resource
             Hidden::make('user_id')
                 ->default(auth()->id()),
 
-           Toggle::make('bool')
-                ->label('True/False Value'),
+            Toggle::make('bool')
+                 ->label('True/False Value'),
 
             Toggle::make('is_correct')
                 ->label('Is Correct'),
@@ -57,7 +55,7 @@ class AnswerResource extends Resource
             FileUpload::make('answer_video_path')
                 ->directory('answers/videos')
                 ->maxSize(102400)
-                ->label('Answer Video')
+                ->label('Answer Video'),
         ]);
     }
 
@@ -70,7 +68,7 @@ class AnswerResource extends Resource
             TextColumn::make('is_correct')->label('Correct'),
         ])->actions([
             Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make()
+            Tables\Actions\DeleteAction::make(),
         ]);
     }
 

@@ -20,9 +20,8 @@ class TestController extends Controller
 {
     public function __construct(
         private readonly TestService $testService,
-        private readonly TestRepositoryInterface $testRepository
-    ) {
-    }
+        private readonly TestRepositoryInterface $testRepository,
+    ) {}
 
     public function show(Test $test): Response
     {
@@ -39,7 +38,7 @@ class TestController extends Controller
     {
         $attempt = $this->testRepository->getOneNotCompletedWithAnswersByUserIdAndTestId(
             auth()->id(),
-            $test->id
+            $test->id,
         );
 
         if (!$attempt) {
@@ -80,6 +79,7 @@ class TestController extends Controller
             return redirect()->route('tests.result', ['test' => $test->id]);
         } catch (Throwable $e) {
             report($e);
+
             return back()->withErrors(['submit' => 'Failed to submit test. Please try again.']);
         }
     }

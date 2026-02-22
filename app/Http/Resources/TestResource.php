@@ -37,16 +37,16 @@ class TestResource extends JsonResource
                     'video_url' => $question->video_url,
                     'audio_url' => $question->audio_url,
                     'is_correct' => $answer->is_correct,
-                ])
+                ]),
             ]),
             'lesson' => [
                 'slug' => $this->lesson->slug,
-                'title' => $this->lesson->title
+                'title' => $this->lesson->title,
             ],
             'course' => [
                 'slug' => $this->course->slug,
-                'title' => $this->course->title
-            ]
+                'title' => $this->course->title,
+            ],
         ];
     }
 }

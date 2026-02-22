@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Enums\QuestionTypeEnum;
 use App\Filament\Resources\QuestionResource\Pages;
 use App\Models\Question;
-use App\Models\Test;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -13,8 +12,8 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class QuestionResource extends Resource
 {
@@ -29,14 +28,14 @@ class QuestionResource extends Resource
                 ->relationship(
                     name: 'test',
                     titleAttribute: 'title',
-                    modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+                    modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id()),
                 )->required(),
             Textarea::make('question_text')->required(),
             Select::make('question_type')
                 ->options(
                     collect(QuestionTypeEnum::cases())
                         ->mapWithKeys(fn($case) => [$case->value => $case->name])
-                        ->toArray()
+                        ->toArray(),
                 )
                 ->label('Question Type')
                 ->required(),

@@ -6,8 +6,8 @@ use App\Filament\Resources\CertificateResource\Pages;
 use App\Models\Certificate;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class CertificateResource extends Resource
 {

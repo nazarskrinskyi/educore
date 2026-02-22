@@ -51,7 +51,7 @@ class PageConfiguration extends Model
                 'content' => $content,
                 'order' => $order,
                 'is_active' => true,
-            ]
+            ],
         );
     }
 }

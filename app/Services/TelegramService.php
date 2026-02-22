@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Exception;
-use TelegramBot\Api\BotApi;
 use Illuminate\Support\Facades\Log;
+use TelegramBot\Api\BotApi;
 use Throwable;
 
 final class TelegramService
@@ -21,6 +21,7 @@ final class TelegramService
 
     /**
      * Send message with full control (throws exceptions).
+     *
      * @throws Throwable
      */
     public function send(int|string $chatId, string $message, string $parseMode = 'HTML'): void

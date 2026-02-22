@@ -54,4 +54,3 @@ enum RoleEnum: string
         return $this === self::INSTRUCTOR;
     }
 }
-

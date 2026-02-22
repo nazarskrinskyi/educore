@@ -13,7 +13,10 @@ use Illuminate\Queue\SerializesModels;
 
 class SendTelegramMessage implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public int|string $chatId;
     public string $message;

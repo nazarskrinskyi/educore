@@ -22,7 +22,7 @@ class SendCourseReminders extends Command
             if ($progress > 0) {
                 $telegram->safeSend(
                     $user->telegram_chat_id,
-                    "📚 Привіт, $user->name! У вас є незавершені курси на EduCore. Продовжуйте навчання сьогодні 💪"
+                    "📚 Привіт, $user->name! У вас є незавершені курси на EduCore. Продовжуйте навчання сьогодні 💪",
                 );
             }
         }

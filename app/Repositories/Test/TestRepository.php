@@ -23,7 +23,7 @@ class TestRepository implements TestRepositoryInterface
     {
         return TestAttempt::firstOrCreate(
             ['user_id' => $userId, 'test_id' => $testId, 'is_completed' => false],
-            ['elapsed_seconds' => 0]
+            ['elapsed_seconds' => 0],
         );
     }
 
@@ -43,7 +43,7 @@ class TestRepository implements TestRepositoryInterface
                 'selected_answer_ids' => isset($data['selected_answer_ids']) ? json_encode($data['selected_answer_ids']) : null,
                 'bool' => $data['bool'] ?? null,
                 'text' => $data['text'] ?? null,
-            ]
+            ],
         );
     }
 
@@ -54,7 +54,7 @@ class TestRepository implements TestRepositoryInterface
                 'test_id' => $testId,
                 'user_id' => $userId,
             ],
-            $data
+            $data,
         );
     }
 

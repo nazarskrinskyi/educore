@@ -13,9 +13,7 @@ use Throwable;
 
 readonly class TestService
 {
-    public function __construct(private TestRepositoryInterface $testRepository)
-    {
-    }
+    public function __construct(private TestRepositoryInterface $testRepository) {}
 
     public function saveAttempt(array $data, TestAttempt $attempt): void
     {
@@ -40,7 +38,7 @@ readonly class TestService
             $questionScore = $question->score ?? 1;
             $totalScore += $questionScore;
 
-            $awarded = $this->evaluateAnswer($question, (array)$submitted, $questionScore);
+            $awarded = $this->evaluateAnswer($question, (array) $submitted, $questionScore);
 
             $earnedScore += $awarded;
 
@@ -58,6 +56,7 @@ readonly class TestService
         $passed  = $percent >= ($test->pass_percentage ?? 70);
 
         DB::beginTransaction();
+
         try {
             $data =  [
                 'score'        => $percent,
@@ -78,6 +77,7 @@ readonly class TestService
             ];
         } catch (Throwable $e) {
             DB::rollBack();
+
             throw $e;
         }
     }

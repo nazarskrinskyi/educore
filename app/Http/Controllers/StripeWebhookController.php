@@ -6,8 +6,8 @@ use App\Models\Order;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Stripe\Webhook;
 use Stripe\PaymentIntent;
+use Stripe\Webhook;
 
 class StripeWebhookController extends Controller
 {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\User;
-use App\Models\Certificate;
 
 class CourseProgressService
 {
@@ -34,14 +34,18 @@ class CourseProgressService
         $tests   = $course->lessons()->with('tests')->get()->pluck('tests')->flatten();
 
         $totalItems = $lessons->count() + $tests->count();
-        if ($totalItems === 0) return 0;
+        if ($totalItems === 0) {
+            return 0;
+        }
 
-        $completedLessons = $lessons->filter(fn($lesson) =>
-        $lesson->users()->where('user_id', $user->id)->exists()
+        $completedLessons = $lessons->filter(
+            fn($lesson) =>
+        $lesson->users()->where('user_id', $user->id)->exists(),
         )->count();
 
-        $completedTests = $tests->filter(fn($test) =>
-        $test->results()->where('user_id', $user->id)->where('passed', true)->exists()
+        $completedTests = $tests->filter(
+            fn($test) =>
+        $test->results()->where('user_id', $user->id)->where('passed', true)->exists(),
         )->count();
 
         return round((($completedLessons + $completedTests) / $totalItems) * 100, 2);

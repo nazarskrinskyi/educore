@@ -15,7 +15,7 @@ use Throwable;
 final class TelegramController extends Controller
 {
     public function __construct(
-        private readonly TelegramService $telegram
+        private readonly TelegramService $telegram,
     ) {}
 
     /**
@@ -64,6 +64,7 @@ final class TelegramController extends Controller
         // Виконуємо команду якщо вона існує
         if (isset($commands[$text])) {
             $commands[$text]();
+
             return response()->json(['ok' => true]);
         }
 
@@ -75,7 +76,7 @@ final class TelegramController extends Controller
         // За замовчуванням — невідома команда
         $this->telegram->safeSend(
             $chatId,
-            "🤖 Невідома команда.\n\nДоступні команди:\n/start — почати роботу\n/help — довідка"
+            "🤖 Невідома команда.\n\nДоступні команди:\n/start — почати роботу\n/help — довідка",
         );
 
         return response()->json(['ok' => true]);
@@ -85,14 +86,14 @@ final class TelegramController extends Controller
     {
         $this->telegram->safeSend(
             $chatId,
-            "👋 Вітаємо в <b>EduCore</b>!\n\nБудь ласка, введіть ваш email, щоб ми могли прив’язати ваш акаунт."
+            "👋 Вітаємо в <b>EduCore</b>!\n\nБудь ласка, введіть ваш email, щоб ми могли прив’язати ваш акаунт.",
         );
     }
 
     private function sendCoursesList(int|string $chatId): void
     {
         $courses = Course::where('is_published', true)->pluck('title');
-        $message = "🎓 Доступні курси:\n" . $courses->map(fn($title) => "• $title")->implode("\n");
+        $message = "🎓 Доступні курси:\n".$courses->map(fn($title) => "• $title")->implode("\n");
         $this->telegram->safeSend($chatId, $message);
     }
 
@@ -101,14 +102,15 @@ final class TelegramController extends Controller
         $user = User::where('telegram_chat_id', $chatId)->first();
         if (!$user) {
             $this->telegram->safeSend($chatId, '❌ Користувача не знайдено.');
+
             return;
         }
 
         $progressLines = $user->courses->map(
-            fn($course) => "• $course->title: {$course->pivot->progress_percent}%"
+            fn($course) => "• $course->title: {$course->pivot->progress_percent}%",
         );
 
-        $message = "📊 Ваш прогрес:\n" . $progressLines->implode("\n");
+        $message = "📊 Ваш прогрес:\n".$progressLines->implode("\n");
         $this->telegram->safeSend($chatId, $message);
     }
 
@@ -116,11 +118,11 @@ final class TelegramController extends Controller
     {
         $this->telegram->safeSend(
             $chatId,
-            "🤖 Команди бота EduCore:\n" .
-            "/start — Прив’язати акаунт\n" .
-            "/progress — Ваш прогрес у курсах\n" .
-            "/courses — Список доступних курсів\n" .
-            "/help — Допомога"
+            "🤖 Команди бота EduCore:\n".
+            "/start — Прив’язати акаунт\n".
+            "/progress — Ваш прогрес у курсах\n".
+            "/courses — Список доступних курсів\n".
+            '/help — Допомога',
         );
     }
 
@@ -130,11 +132,12 @@ final class TelegramController extends Controller
 
         if (!$user) {
             $this->telegram->safeSend($chatId, '❌ Користувача з таким email не знайдено.');
+
             return response()->json(['ok' => true]);
         }
 
         $user->update(['telegram_chat_id' => $chatId]);
-        $this->telegram->safeSend($chatId, "✅ Ваш Telegram успішно прив’язано до акаунта EduCore!");
+        $this->telegram->safeSend($chatId, '✅ Ваш Telegram успішно прив’язано до акаунта EduCore!');
 
         return response()->json(['ok' => true]);
     }

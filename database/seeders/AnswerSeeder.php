@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\QuestionTypeEnum;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Database\Seeder;
-use App\Enums\QuestionTypeEnum;
 
 class AnswerSeeder extends Seeder
 {
@@ -32,7 +32,7 @@ class AnswerSeeder extends Seeder
                     Answer::create([
                         'question_id' => $question->id,
                         'user_id' => $adminUser->id,
-                        'answer_text' => 'Correct Answer ' . ($key + 1),
+                        'answer_text' => 'Correct Answer '.($key + 1),
                         'is_correct' => true,
                     ]);
 
@@ -41,10 +41,11 @@ class AnswerSeeder extends Seeder
                         Answer::create([
                             'question_id' => $question->id,
                             'user_id' => $adminUser->id,
-                            'answer_text' => 'Wrong Answer ' . ($key + 1) . ' Option ' . $i,
+                            'answer_text' => 'Wrong Answer '.($key + 1).' Option '.$i,
                             'is_correct' => false,
                         ]);
                     }
+
                     break;
 
                 case QuestionTypeEnum::MultipleAnswer->value:
@@ -53,7 +54,7 @@ class AnswerSeeder extends Seeder
                         Answer::create([
                             'question_id' => $question->id,
                             'user_id' => $adminUser->id,
-                            'answer_text' => 'Correct Answer ' . ($key + 1) . ' Option ' . $i,
+                            'answer_text' => 'Correct Answer '.($key + 1).' Option '.$i,
                             'is_correct' => true,
                         ]);
                     }
@@ -63,10 +64,11 @@ class AnswerSeeder extends Seeder
                         Answer::create([
                             'question_id' => $question->id,
                             'user_id' => $adminUser->id,
-                            'answer_text' => 'Wrong Answer ' . ($key + 1) . ' Option ' . $i,
+                            'answer_text' => 'Wrong Answer '.($key + 1).' Option '.$i,
                             'is_correct' => false,
                         ]);
                     }
+
                     break;
 
                 case QuestionTypeEnum::TrueFalse->value:
@@ -85,6 +87,7 @@ class AnswerSeeder extends Seeder
                         'bool' => false,
                         'is_correct' => false,
                     ]);
+
                     break;
 
                 case QuestionTypeEnum::ShortAnswer->value:
@@ -92,13 +95,15 @@ class AnswerSeeder extends Seeder
                     Answer::create([
                         'question_id' => $question->id,
                         'user_id' => $adminUser->id,
-                        'answer_text' => 'Sample short answer for question ' . ($key + 1),
+                        'answer_text' => 'Sample short answer for question '.($key + 1),
                         'is_correct' => true,
                     ]);
+
                     break;
 
                 default:
                     \Log::warning("Unknown question type {$question->question_type} for question {$question->id}. Skipping answer creation.");
+
                     break;
             }
         }

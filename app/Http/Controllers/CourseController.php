@@ -7,7 +7,6 @@ use App\Http\Resources\CourseResource;
 use App\Http\Resources\LessonResource;
 use App\Models\Category;
 use App\Models\Course;
-use App\Models\CourseUser;
 use App\Models\Lesson;
 use App\Repositories\Course\CourseRepositoryInterface;
 use Illuminate\Http\Request;
@@ -17,9 +16,7 @@ use RuntimeException;
 
 class CourseController extends Controller
 {
-    public function __construct(private readonly CourseRepositoryInterface $courseRepository)
-    {
-    }
+    public function __construct(private readonly CourseRepositoryInterface $courseRepository) {}
 
     public function index(Request $request): Response
     {
@@ -37,7 +34,7 @@ class CourseController extends Controller
                 'min' => $minPrice,
                 'max' => $maxPrice,
             ],
-            'difficulties' => CourseLevelEnum::getValuesWithNames()
+            'difficulties' => CourseLevelEnum::getValuesWithNames(),
         ]);
     }
 
@@ -45,9 +42,9 @@ class CourseController extends Controller
     {
         $course = $this->courseRepository->getOneWithAllRelationsBySlug($slug);
 
-        $course->in_cart = session()->has('cart.' . $course->id);
+        $course->in_cart = session()->has('cart.'.$course->id);
 
-        $viewedKey = 'viewed_courses.' . $course->id;
+        $viewedKey = 'viewed_courses.'.$course->id;
         if (!session()->has($viewedKey)) {
             $course->increment('views');
             session()->put($viewedKey, now());
@@ -82,7 +79,7 @@ class CourseController extends Controller
 
         $course->owned = auth()->user() && $this->courseRepository->isUserHasCourse(auth()->id(), $course->id);
 
-        $viewedKey = 'viewed_lessons.' . $lesson->id;
+        $viewedKey = 'viewed_lessons.'.$lesson->id;
         if (!session()->has($viewedKey)) {
             $lesson->increment('views');
             session()->put($viewedKey, now());

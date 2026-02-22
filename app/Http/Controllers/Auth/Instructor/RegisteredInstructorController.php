@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth\Instructor;
 
-use App\Http\Controllers\Controller;
 use App\Enums\RoleEnum;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;

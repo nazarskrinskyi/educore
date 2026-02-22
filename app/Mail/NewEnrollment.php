@@ -9,11 +9,10 @@ use Illuminate\Queue\SerializesModels;
 
 class NewEnrollment extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
-    public function __construct(private readonly Course $course)
-    {
-    }
+    public function __construct(private readonly Course $course) {}
 
     public function build(): NewEnrollment
     {

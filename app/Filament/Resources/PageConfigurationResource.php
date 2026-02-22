@@ -5,19 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PageConfigurationResource\Pages;
 use App\Models\PageConfiguration;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Repeater;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class PageConfigurationResource extends Resource
 {
@@ -71,12 +69,12 @@ class PageConfigurationResource extends Resource
                             ->helperText('Edit the JSON content below. Use the visual editor for common fields.')
                             ->rows(10)
                             ->columnSpanFull()
-                            ->formatStateUsing(fn ($record) => $record ? json_encode($record->content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '')
+                            ->formatStateUsing(fn($record) => $record ? json_encode($record->content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '')
                             ->dehydrated(false)
                             ->disabled(),
 
                         Forms\Components\Hidden::make('content')
-                            ->dehydrateStateUsing(fn ($state) => is_string($state) ? json_decode($state, true) : $state),
+                            ->dehydrateStateUsing(fn($state) => \is_string($state) ? json_decode($state, true) : $state),
                     ]),
 
                 Section::make('Visual Content Editor')
@@ -175,7 +173,7 @@ class PageConfigurationResource extends Resource
                             ->simple(
                                 TextInput::make('highlight')
                                     ->label('Highlight')
-                                    ->required()
+                                    ->required(),
                             )
                             ->columnSpanFull(),
 
@@ -184,7 +182,7 @@ class PageConfigurationResource extends Resource
                             ->simple(
                                 TextInput::make('image_url')
                                     ->label('Image URL')
-                                    ->required()
+                                    ->required(),
                             )
                             ->columnSpanFull(),
 
@@ -205,7 +203,7 @@ class PageConfigurationResource extends Resource
                                     ->label('Tags')
                                     ->simple(
                                         TextInput::make('tag')
-                                            ->label('Tag')
+                                            ->label('Tag'),
                                     )
                                     ->columns(1),
                             ])
@@ -225,7 +223,7 @@ class PageConfigurationResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'welcome' => 'success',
                         'dashboard' => 'info',
                         'about' => 'warning',

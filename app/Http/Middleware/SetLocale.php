@@ -14,7 +14,7 @@ class SetLocale
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -22,7 +22,7 @@ class SetLocale
         $locale = $request->segment(1);
 
         // Check if the first segment is a valid locale
-        if (!in_array($locale, ['en', 'uk'])) {
+        if (!\in_array($locale, ['en', 'uk'])) {
             // If not, get from session or config
             $locale = Session::get('locale', config('app.locale'));
         } else {
@@ -31,7 +31,7 @@ class SetLocale
         }
 
         // Ensure the locale is supported
-        if (!in_array($locale, ['en', 'uk'])) {
+        if (!\in_array($locale, ['en', 'uk'])) {
             $locale = config('app.locale');
         }
 

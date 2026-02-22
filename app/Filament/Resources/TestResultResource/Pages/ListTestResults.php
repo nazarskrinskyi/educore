@@ -4,7 +4,6 @@ namespace App\Filament\Resources\TestResultResource\Pages;
 
 use App\Filament\Resources\TestResultResource;
 use App\Filament\Traits\HasInstructorAccess;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTestResults extends ListRecords

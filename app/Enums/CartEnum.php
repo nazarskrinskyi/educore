@@ -14,9 +14,6 @@ enum CartEnum: string
 
     case ORDER_STATUS_FAILED = 'failed';
 
-    /**
-     * @return string
-     */
     public function getValue(): string
     {
         return $this->value;

@@ -14,7 +14,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @var string
      */
-    protected $rootView = "app";
+    protected $rootView = 'app';
 
     /**
      * Determine the current asset version.
@@ -32,25 +32,26 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $locale = App::getLocale();
-        
+
         return [
             ...parent::share($request),
-            "auth" => [
-                "user" => $request->user(),
-                "is_admin" => $request->user()?->isAdmin(),
+            'auth' => [
+                'user' => $request->user(),
+                'is_admin' => $request->user()?->isAdmin(),
             ],
-            "flash" => [
-                "successContactMessage" => $request->session()->get("successContactMessage"),
+            'flash' => [
+                'successContactMessage' => $request->session()->get('successContactMessage'),
             ],
-            "cart" => function () {
-                return Session::get("cart", []);
+            'cart' => function () {
+                return Session::get('cart', []);
             },
-            "locale" => $locale,
-            "translations" => function () use ($locale) {
+            'locale' => $locale,
+            'translations' => function () use ($locale) {
                 $translationFile = lang_path("{$locale}/messages.php");
                 if (file_exists($translationFile)) {
                     return require $translationFile;
                 }
+
                 return [];
             },
         ];

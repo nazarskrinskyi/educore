@@ -30,6 +30,7 @@ class GoogleAuthController extends Controller
 
     /**
      * Handle the callback from Google.
+     *
      * @throws Throwable
      */
     public function callback(): RedirectResponse
@@ -56,7 +57,7 @@ class GoogleAuthController extends Controller
             session()->forget('oauth_intended_role');
 
             $newUser = User::updateOrCreate([
-                'email' => $user->email
+                'email' => $user->email,
             ], [
                 'name' => $user->name,
                 'password' => bcrypt(Str::random()),

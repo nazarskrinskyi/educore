@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @method static firstOrCreate(array $array, int[] $array1)
  * @method static where(array $array)
+ *
  * @property mixed $elapsed_seconds
  * @property mixed|true $is_completed
  */

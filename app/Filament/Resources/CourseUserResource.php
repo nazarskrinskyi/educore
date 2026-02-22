@@ -5,9 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CourseUserResource\Pages;
 use App\Models\CourseUser;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class CourseUserResource extends Resource
 {

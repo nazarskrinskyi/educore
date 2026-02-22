@@ -3,11 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SectionResource\Pages;
-use App\Models\Course;
 use App\Models\Section;
 use Filament\Forms;
-use Filament\Tables;
 use Filament\Resources\Resource;
+use Filament\Tables;
 
 class SectionResource extends Resource
 {
@@ -26,7 +25,7 @@ class SectionResource extends Resource
                     ->relationship(
                         name: 'course',
                         titleAttribute: 'title',
-                        modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+                        modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id()),
                     )
                     ->required(),
             ]);
@@ -62,4 +61,3 @@ class SectionResource extends Resource
         ];
     }
 }
-

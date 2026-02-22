@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Models\User;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Log;
 
 class SendNewCoursesNotification implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public function handle(): void
     {
@@ -24,7 +27,9 @@ class SendNewCoursesNotification implements ShouldQueue
 
         Log::info("Sending new courses notification to {$users->count()} users. Found {$newCourses->count()} new courses.");
 
-        if ($newCourses->isEmpty()) return;
+        if ($newCourses->isEmpty()) {
+            return;
+        }
 
         foreach ($users as $user) {
             $user->load('courses');
@@ -33,7 +38,7 @@ class SendNewCoursesNotification implements ShouldQueue
             $message = "🎓 Привіт, $user->name!\n";
             $message .= "Нові курси доступні на EduCore:\n";
             foreach ($newCourses as $course) {
-                if (!in_array($course->id, $userCourses)) {
+                if (!\in_array($course->id, $userCourses)) {
                     $message .= "• $course->title\n";
                 }
             }

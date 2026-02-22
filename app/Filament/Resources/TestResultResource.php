@@ -6,8 +6,8 @@ use App\Filament\Resources\TestResultResource\Pages;
 use App\Models\TestResult;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class TestResultResource extends Resource
 {

@@ -13,8 +13,8 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class CourseResource extends Resource
@@ -70,7 +70,7 @@ class CourseResource extends Resource
                 ->options(
                     collect(CourseLevelEnum::cases())
                         ->mapWithKeys(fn($case) => [$case->value => $case->name])
-                        ->toArray()
+                        ->toArray(),
                 )
                 ->label('Difficulty Level')
                 ->required(),
@@ -95,7 +95,7 @@ class CourseResource extends Resource
             TextColumn::make('title')->searchable()->limit(30),
             TextColumn::make('category.name')->label('Category'),
             TextColumn::make('instructor.name')->label('Instructor'),
-            TextColumn::make('price')->money('UAH')->formatStateUsing(fn ($state) => $state / 100),
+            TextColumn::make('price')->money('UAH')->formatStateUsing(fn($state) => $state / 100),
             TextColumn::make('created_at')->dateTime(),
         ])->actions([
             Tables\Actions\EditAction::make(),

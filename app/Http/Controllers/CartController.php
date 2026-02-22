@@ -8,23 +8,21 @@ use App\Enums\CartEnum;
 use App\Models\Course;
 use App\Services\CartService;
 use App\Services\CourseService;
-use Inertia\Inertia;
-use Illuminate\Http\{JsonResponse, Request, RedirectResponse};
+use Illuminate\Http\{JsonResponse, RedirectResponse, Request};
 use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
-use Stripe\Stripe;
-use Stripe\PaymentIntent;
 use Stripe\Exception\ApiErrorException;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 use Throwable;
 
 class CartController extends Controller
 {
     public function __construct(
         private readonly CartService   $cartService,
-        private readonly CourseService $courseService
-    )
-    {
-    }
+        private readonly CourseService $courseService,
+    ) {}
 
     /**
      * Display the shopping cart
@@ -32,7 +30,7 @@ class CartController extends Controller
     public function index(): InertiaResponse
     {
         return Inertia::render('Cart/Index', [
-            'cart' => $this->cartService->getCart()
+            'cart' => $this->cartService->getCart(),
         ]);
     }
 
@@ -80,6 +78,7 @@ class CartController extends Controller
 
     /**
      * Show the checkout page with Stripe payment intent
+     *
      * @throws ApiErrorException
      */
     public function checkout(): InertiaResponse|RedirectResponse
@@ -93,7 +92,7 @@ class CartController extends Controller
 
         Stripe::setApiKey(config('services.stripe.secret'));
         $paymentIntent = PaymentIntent::create([
-            'amount' => (int)($total * 100),
+            'amount' => (int) ($total * 100),
             'currency' => CartEnum::CURRENCY->value,
             'metadata' => [
                 'user_id' => auth()->id() ?? null,
@@ -120,7 +119,7 @@ class CartController extends Controller
             $cart = $this->cartService->getCart();
             $this->cartService->storeOrder($validated['payment_intent_id'], $cart);
             $this->courseService->enrollUser($cart);
-//            $this->courseService->notifyInstructors($cart);
+            //            $this->courseService->notifyInstructors($cart);
 
             Session::forget(CartEnum::CART_SESSION_KEY->value);
 

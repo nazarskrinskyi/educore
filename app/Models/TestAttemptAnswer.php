@@ -14,11 +14,11 @@ class TestAttemptAnswer extends Model
 
     protected $fillable = [
         'test_attempt_id', 'question_id', 'selected_answer_id',
-        'selected_answer_ids', 'bool', 'text'
+        'selected_answer_ids', 'bool', 'text',
     ];
 
     protected $casts = [
-        'selected_answer_ids' => 'array'
+        'selected_answer_ids' => 'array',
     ];
 
     public function attempt(): BelongsTo

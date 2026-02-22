@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use Illuminate\Auth\Events\Login;
 use App\Models\LoginHistory;
+use Illuminate\Auth\Events\Login;
 
 class LogSuccessfulLogin
 {
@@ -13,8 +13,7 @@ class LogSuccessfulLogin
             'user_id'     => $event->user->id,
             'ip_address'  => request()->ip(),
             'user_agent'  => request()->header('User-Agent'),
-            'logged_in_at'=> now(),
+            'logged_in_at' => now(),
         ]);
     }
 }
-

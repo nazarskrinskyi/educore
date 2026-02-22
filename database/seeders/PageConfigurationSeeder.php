@@ -26,7 +26,7 @@ class PageConfigurationSeeder extends Seeder
                 ],
                 'order' => 1,
                 'is_active' => true,
-            ]
+            ],
         );
 
         PageConfiguration::updateOrCreate(
@@ -70,7 +70,7 @@ class PageConfigurationSeeder extends Seeder
                 ],
                 'order' => 2,
                 'is_active' => true,
-            ]
+            ],
         );
 
         PageConfiguration::updateOrCreate(
@@ -87,7 +87,7 @@ class PageConfigurationSeeder extends Seeder
                 ],
                 'order' => 3,
                 'is_active' => true,
-            ]
+            ],
         );
 
         // Dashboard Page Configurations
@@ -106,7 +106,7 @@ class PageConfigurationSeeder extends Seeder
                 ],
                 'order' => 1,
                 'is_active' => true,
-            ]
+            ],
         );
 
         PageConfiguration::updateOrCreate(
@@ -138,7 +138,7 @@ class PageConfigurationSeeder extends Seeder
                 ],
                 'order' => 2,
                 'is_active' => true,
-            ]
+            ],
         );
 
         PageConfiguration::updateOrCreate(
@@ -161,7 +161,7 @@ class PageConfigurationSeeder extends Seeder
                 ],
                 'order' => 3,
                 'is_active' => true,
-            ]
+            ],
         );
 
         PageConfiguration::updateOrCreate(
@@ -183,7 +183,7 @@ class PageConfigurationSeeder extends Seeder
                 ],
                 'order' => 4,
                 'is_active' => true,
-            ]
+            ],
         );
 
         PageConfiguration::updateOrCreate(
@@ -229,7 +229,7 @@ class PageConfigurationSeeder extends Seeder
                 ],
                 'order' => 5,
                 'is_active' => true,
-            ]
+            ],
         );
     }
 }

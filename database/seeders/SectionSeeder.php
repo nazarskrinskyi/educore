@@ -29,7 +29,7 @@ class SectionSeeder extends Seeder
         foreach ($courses as $course) {
             for ($i = 0; $i < $sectionCountPerCourse; $i++) {
                 Section::create([
-                    'title' => $sectionTitles[$i] ?? "Section " . ($i + 1),
+                    'title' => $sectionTitles[$i] ?? 'Section '.($i + 1),
                     'course_id' => $course->id,
                 ]);
             }

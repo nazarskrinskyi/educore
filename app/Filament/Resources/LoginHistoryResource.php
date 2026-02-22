@@ -5,8 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LoginHistoryResource\Pages;
 use App\Models\LoginHistory;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class LoginHistoryResource extends Resource
 {

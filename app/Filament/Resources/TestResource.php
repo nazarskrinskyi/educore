@@ -3,8 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TestResource\Pages;
-use App\Models\Course;
-use App\Models\Lesson;
 use App\Models\Test;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
@@ -14,8 +12,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class TestResource extends Resource
 {
@@ -29,12 +27,12 @@ class TestResource extends Resource
             Select::make('lesson_id')->relationship(
                 name: 'lesson',
                 titleAttribute: 'title',
-                modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+                modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id()),
             ),
             Select::make('course_id')->relationship(
                 name: 'course',
                 titleAttribute: 'title',
-                modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id())
+                modifyQueryUsing: fn($query) => $query->where('user_id', auth()->id()),
             ),
             TextInput::make('title')->required(),
             Hidden::make('user_id')->default(auth()->id()),

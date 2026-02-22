@@ -17,51 +17,55 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static updateOrCreate(array $array, array $array1)
  * @method static whereNotNull(string $string)
  * @method static find(int|string|null $id)
+ *
  * @property mixed $id
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, Billable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+    use Billable;
 
     protected $fillable = [
-        "name",
-        "email",
-        "password",
-        "role",
-        "telegram_username",
-        "locale",
+        'name',
+        'email',
+        'password',
+        'role',
+        'telegram_username',
+        'locale',
     ];
 
     protected $hidden = [
-        "password",
-        "remember_token",
+        'password',
+        'remember_token',
     ];
 
     protected function casts(): array
     {
         return [
-            "email_verified_at" => "datetime",
-            "password" => "hashed",
-            "role" => RoleEnum::class,
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'role' => RoleEnum::class,
         ];
     }
 
     public function courses(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class, "course_user")
-            ->withPivot(["enrolled_at", "progress_percent"])
+        return $this->belongsToMany(Course::class, 'course_user')
+            ->withPivot(['enrolled_at', 'progress_percent'])
             ->withTimestamps();
     }
 
     public function lessons(): BelongsToMany
     {
-        return $this->belongsToMany(Lesson::class, "lesson_user")
-            ->withPivot("completed_at");
+        return $this->belongsToMany(Lesson::class, 'lesson_user')
+            ->withPivot('completed_at');
     }
 
     public function reviews(): HasMany
     {
-        return $this->hasMany(Review::class, "user_id");
+        return $this->hasMany(Review::class, 'user_id');
     }
 
     public function certificates(): HasMany

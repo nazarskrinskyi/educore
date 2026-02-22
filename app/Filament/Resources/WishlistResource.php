@@ -6,8 +6,8 @@ use App\Filament\Resources\WishlistResource\Pages;
 use App\Models\Wishlist;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class WishlistResource extends Resource
 {
