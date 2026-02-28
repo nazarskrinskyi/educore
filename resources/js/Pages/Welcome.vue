@@ -126,13 +126,13 @@ const getFeatureIcon = (iconName) => {
                                         :href="route('student.login')"
                                         class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-t-lg transition-colors"
                                     >
-                                        Student Login
+                                        {{ t('welcome.student_login', 'Student Login') }}
                                     </Link>
                                     <Link
                                         :href="route('instructor.login')"
                                         class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-b-lg transition-colors"
                                     >
-                                        Instructor Login
+                                        {{ t('welcome.instructor_login', 'Instructor Login') }}
                                     </Link>
                                 </div>
                             </div>
@@ -147,13 +147,13 @@ const getFeatureIcon = (iconName) => {
                                         :href="route('student.register')"
                                         class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-t-lg transition-colors"
                                     >
-                                        Register as Student
+                                        {{ t('welcome.register_student', 'Register as Student') }}
                                     </Link>
                                     <Link
                                         :href="route('instructor.register')"
                                         class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-b-lg transition-colors"
                                     >
-                                        Register as Instructor
+                                        {{ t('welcome.register_instructor', 'Register as Instructor') }}
                                     </Link>
                                 </div>
                             </div>
@@ -174,19 +174,6 @@ const getFeatureIcon = (iconName) => {
 
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <!-- Admin Edit Button -->
-                    <div v-if="$page.props.auth.is_admin" class="mb-4 flex justify-center">
-                        <Link
-                            :href="route('filament.admin.resources.page-configurations.edit', { record: 'welcome-hero' })"
-                            class="inline-flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-sm text-white hover:bg-gray-700 transition-colors"
-                        >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                            Edit Hero Section
-                        </Link>
-                    </div>
-
                     <h1
                         class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl transition-all duration-1000"
                         :class="{ 'opacity-0 translate-y-4': !isVisible, 'opacity-100 translate-y-0': isVisible }"
@@ -215,7 +202,7 @@ const getFeatureIcon = (iconName) => {
                                 class="group w-full sm:w-auto rounded-lg px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
                             >
                                 <span class="flex items-center justify-center gap-2">
-                                    {{ t('auth.register', 'Register') }} as Student
+                                    {{ t('welcome.register_student', 'Register as Student') }}
                                     <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                                     </svg>
@@ -226,7 +213,7 @@ const getFeatureIcon = (iconName) => {
                                 class="group w-full sm:w-auto rounded-lg px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
                             >
                                 <span class="flex items-center justify-center gap-2">
-                                    {{ t('auth.register', 'Register') }} as Instructor
+                                    {{ t('welcome.register_instructor', 'Register as Instructor') }}
                                     <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                                     </svg>
@@ -252,19 +239,6 @@ const getFeatureIcon = (iconName) => {
             </div>
 
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-                <!-- Admin Edit Button -->
-                <div v-if="$page.props.auth.is_admin" class="mb-4 flex justify-center">
-                    <Link
-                        :href="route('filament.admin.resources.page-configurations.edit', { record: 'welcome-features' })"
-                        class="inline-flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-sm text-white hover:bg-gray-700 transition-colors"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                        Edit Features Section
-                    </Link>
-                </div>
-
                 <div class="text-center mb-16">
                     <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl mb-2">
                         {{ features.title }}
@@ -314,18 +288,6 @@ const getFeatureIcon = (iconName) => {
             </div>
 
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-                <!-- Admin Edit Button -->
-                <div v-if="$page.props.auth.is_admin" class="mb-4 flex justify-center">
-                    <Link
-                        :href="route('filament.admin.resources.page-configurations.edit', { record: 'welcome-stats' })"
-                        class="inline-flex items-center gap-2 rounded-lg bg-white/20 backdrop-blur-sm px-4 py-2 text-sm text-white hover:bg-white/30 transition-colors"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                        Edit Stats Section
-                    </Link>
-                </div>
 
                 <h2 class="text-3xl font-bold text-center text-white mb-4">
                     {{ stats.title }}
@@ -382,7 +344,7 @@ const getFeatureIcon = (iconName) => {
                             :href="route('student.register')"
                             class="group inline-flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
                         >
-                            Register as Student
+                            {{ t('welcome.register_student', 'Register as Student') }}
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -391,19 +353,19 @@ const getFeatureIcon = (iconName) => {
                             :href="route('instructor.register')"
                             class="group inline-flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
                         >
-                            Register as Instructor
+                            {{ t('welcome.register_instructor', 'Register as Instructor') }}
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
                         </Link>
                     </div>
                     <div v-else class="text-gray-600">
-                        <p class="text-lg">Welcome back! Visit your dashboard to continue your learning journey.</p>
+                        <p class="text-lg">{{ t('welcome.welcome_back', 'Welcome back! Visit your dashboard to continue your learning journey.') }}</p>
                         <Link
                             :href="route('dashboard', { locale: $page.props.locale })"
                             class="inline-flex items-center justify-center gap-2 mt-6 rounded-xl px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                         >
-                            {{ t('nav.dashboard', 'Go to Dashboard') }}
+                            {{ t('welcome.go_to_dashboard', 'Go to Dashboard') }}
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>

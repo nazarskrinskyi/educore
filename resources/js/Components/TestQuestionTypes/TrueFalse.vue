@@ -14,8 +14,8 @@ function pick(val) {
     emit('update', { question_id: props.question.id, selected_answer_id: id ?? null, bool: val })
 }
 
-const isTrueSelected = computed(() => Boolean(props.value?.bool) === true)
-const isFalseSelected = computed(() => Boolean(props.value?.bool) === false)
+const isTrueSelected = computed(() => props.value?.bool === true)
+const isFalseSelected = computed(() => props.value?.bool === false)
 </script>
 
 <template>

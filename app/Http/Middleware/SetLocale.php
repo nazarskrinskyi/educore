@@ -12,28 +12,21 @@ use Symfony\Component\HttpFoundation\Response;
 class SetLocale
 {
     /**
+     * Supported locales
+     */
+    private const SUPPORTED_LOCALES = ['en', 'uk'];
+
+    /**
      * Handle an incoming request.
      *
      * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Get locale from URL segment, session, or config default
-        $locale = $request->segment(1);
+        $locale = $this->determineLocale($request);
 
-        // Check if the first segment is a valid locale
-        if (!\in_array($locale, ['en', 'uk'])) {
-            // If not, get from session or config
-            $locale = Session::get('locale', config('app.locale'));
-        } else {
-            // Store the locale from URL in session
-            Session::put('locale', $locale);
-        }
-
-        // Ensure the locale is supported
-        if (!\in_array($locale, ['en', 'uk'])) {
-            $locale = config('app.locale');
-        }
+        // Store locale in session
+        Session::put('locale', $locale);
 
         // Set the application locale
         App::setLocale($locale);
@@ -42,5 +35,44 @@ class SetLocale
         URL::defaults(['locale' => $locale]);
 
         return $next($request);
+    }
+
+    /**
+     * Determine the locale from request
+     *
+     * @param Request $request
+     * @return string
+     */
+    private function determineLocale(Request $request): string
+    {
+        // First, check if the first URL segment is a valid locale
+        $urlLocale = $request->segment(1);
+
+        if ($this->isValidLocale($urlLocale)) {
+            return $urlLocale;
+        }
+
+        // Second, check session
+        $sessionLocale = Session::get('locale');
+
+        if ($this->isValidLocale($sessionLocale)) {
+            return $sessionLocale;
+        }
+
+        // Finally, fall back to config default
+        $defaultLocale = config('app.locale', 'en');
+
+        return $this->isValidLocale($defaultLocale) ? $defaultLocale : 'en';
+    }
+
+    /**
+     * Check if locale is valid
+     *
+     * @param mixed $locale
+     * @return bool
+     */
+    private function isValidLocale(mixed $locale): bool
+    {
+        return is_string($locale) && in_array($locale, self::SUPPORTED_LOCALES, true);
     }
 }

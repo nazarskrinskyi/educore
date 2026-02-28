@@ -21,7 +21,8 @@ export function useLocale() {
             locale: newLocale,
         }, {
             preserveState: false,
-            preserveScroll: false,
+            preserveScroll: true,
+            replace: false,
         });
     };
 

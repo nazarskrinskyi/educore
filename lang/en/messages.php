@@ -20,15 +20,21 @@ return [
     'welcome' => [
         'title' => 'Welcome to EduCore',
         'subtitle' => 'Transform Your Educational Institution',
-        'description' => 'The complete educational management system for modern learning institutions.',
+        'description' => 'The complete educational management system for modern learning institutions. Streamline operations, enhance communication, and empower your educational ecosystem.',
         'cta_primary' => 'Get Started',
         'cta_secondary' => 'Learn More',
         'features_title' => 'Why Choose EduCore?',
         'features_subtitle' => 'Comprehensive Features for Modern Education',
         'stats_title' => 'Trusted by Institutions Worldwide',
         'cta_section_title' => 'Ready to Transform Your Institution?',
-        'cta_section_description' => 'Join hundreds of educational institutions already using EduCore to streamline their operations.',
+        'cta_section_description' => 'Join hundreds of educational institutions already using EduCore to streamline their operations and enhance learning experiences.',
         'cta_section_button' => 'Start Your Free Trial',
+        'register_student' => 'Register as Student',
+        'register_instructor' => 'Register as Instructor',
+        'student_login' => 'Student Login',
+        'instructor_login' => 'Instructor Login',
+        'welcome_back' => 'Welcome back! Visit your dashboard to continue your learning journey.',
+        'go_to_dashboard' => 'Go to Dashboard',
     ],
 
     // Footer
@@ -47,6 +53,43 @@ return [
         'rights_reserved' => 'All rights reserved.',
     ],
 
+    // About Page
+    'about' => [
+        'title' => 'About EduCore Platform',
+        'description' => 'EduCore is a modern fullstack platform for online learning, built on Laravel 11 and Vue 3. We combine technology, convenience, and motivation for learning to make the educational process simple and inspiring.',
+        'our_mission' => 'Our Mission',
+        'mission_text' => 'We strive to make quality education accessible to everyone. EduCore helps people learn at a convenient time, anywhere, and at their own pace.',
+        'our_approach' => 'Our Approach',
+        'approach_text' => 'We build the platform on cutting-edge technologies — Laravel, Inertia.js, Vue 3, and Tailwind CSS — to create a fast, stable, and pleasant interface for every user.',
+        'our_team' => 'Our Team',
+        'team_text' => 'We are developers, teachers, designers, and mentors united by a common goal: to create the most convenient platform for online education.',
+        'our_story' => 'Our Story',
+        'story_text' => 'The idea of EduCore was born from the desire to unite learning, technology, and community. We started with a few small courses and grew into a full-fledged educational ecosystem where every student can learn effectively, and teachers have convenient tools for creating content.',
+        'our_advantages' => 'Our Advantages',
+        'advantage_videos' => 'Video lessons and interactive tests',
+        'advantage_certificates' => 'Certificates upon course completion',
+        'advantage_bot' => 'Telegram bot for reminders and updates',
+        'advantage_interface' => 'Simple and intuitive interface',
+        'advantage_performance' => 'Fast performance thanks to caching and optimization',
+    ],
+
+    // Contact Page
+    'contact' => [
+        'title' => 'Contact Us',
+        'description' => 'We are open to cooperation, suggestions, and new ideas. Your feedback helps us develop EduCore.',
+        'name' => 'Name',
+        'name_placeholder' => 'Your name',
+        'email' => 'Email',
+        'email_placeholder' => 'you@example.com',
+        'subject' => 'Subject',
+        'subject_placeholder' => 'Subject of your inquiry',
+        'message' => 'Message',
+        'message_placeholder' => 'Your message...',
+        'send' => 'Send',
+        'success_message' => 'Message sent!',
+        'error_name_length' => 'Name must contain at least 2 characters.',
+    ],
+
     // Profile
     'profile' => [
         'edit' => 'Edit Profile',
@@ -57,11 +100,45 @@ return [
 
     // Courses
     'courses' => [
+        'title' => 'Courses',
         'all_courses' => 'All Courses',
         'my_courses' => 'My Courses',
         'enroll' => 'Enroll',
         'start_learning' => 'Start Learning',
         'continue_learning' => 'Continue Learning',
+        'course_description' => 'Course Description',
+        'course_content' => 'Course Content',
+        'lessons' => 'lessons',
+        'tags' => 'Tags',
+        'course_details' => 'Course Details',
+        'level' => 'Level',
+        'duration' => 'Duration',
+        'students' => 'Students',
+        'views' => 'Views',
+        'reviews' => 'reviews',
+        'students_enrolled' => 'students enrolled',
+        'instructor' => 'Instructor',
+        'free' => 'Free',
+        'go_to_course' => 'Go to Course',
+        'money_back_guarantee' => '30-Day Money-Back Guarantee',
+        'bestseller' => 'Bestseller',
+        'unknown_instructor' => 'Unknown Instructor',
+        'uncategorized' => 'Uncategorized',
+    ],
+
+    // Course Filters
+    'filters' => [
+        'search_courses' => 'Search courses...',
+        'all_categories' => 'All Categories',
+        'sort_by' => 'Sort by',
+        'rating_asc' => 'Rating: Worst → Best',
+        'rating_desc' => 'Rating: Best → Worst',
+        'price_asc' => 'Price: Low → High',
+        'price_desc' => 'Price: High → Low',
+        'newest' => 'Newest',
+        'all_levels' => 'All Levels',
+        'price_range' => 'Price Range',
+        'free_only' => 'Free only',
     ],
 
     // Common
@@ -88,6 +165,8 @@ return [
         'already_registered' => 'Already registered?',
         'not_registered' => "Don't have an account?",
         'name' => 'Name',
+        'login_with_google' => 'Login with Google',
+        'register_with_google' => 'Register with Google',
     ],
 
     // Language

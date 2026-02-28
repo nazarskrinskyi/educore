@@ -10,7 +10,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LessonCommentController;
 use App\Http\Controllers\LessonCompletionController;
 use App\Http\Controllers\LocaleController;
-use App\Http\Controllers\PageConfigurationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
@@ -26,10 +25,11 @@ Route::get('/', function () {
     return redirect("/$locale");
 });
 
+// Google Auth (non-localized)
 Route::get('api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
-// Role selection page
+// Role selection page (non-localized)
 Route::get('/auth/choose-role', function () {
     return Inertia::render('Auth/ChooseRole');
 })->middleware('guest')->name('auth.choose-role');

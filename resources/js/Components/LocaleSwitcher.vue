@@ -3,8 +3,9 @@ import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 
 const page = usePage();
-const currentLocale = computed(() => page.props.locale || 'en');
+const currentLocale = computed(() => page.props.locale || 'uk');
 const isOpen = ref(false);
+const isSwitching = ref(false);
 
 const locales = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -15,36 +16,31 @@ const currentLocaleData = computed(() => {
     return locales.find(l => l.code === currentLocale.value) || locales[1];
 });
 
-const switchLocale = (locale) => {
-    if (locale !== currentLocale.value) {
-        // Use a form to submit the locale change
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = route('locale.switch');
-
-        // Add CSRF token
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        form.appendChild(csrfInput);
-
-        // Add locale input
-        const localeInput = document.createElement('input');
-        localeInput.type = 'hidden';
-        localeInput.name = 'locale';
-        localeInput.value = locale;
-        form.appendChild(localeInput);
-
-        document.body.appendChild(form);
-        form.submit();
-    } else {
+const switchLocale = (newLocale) => {
+    if (newLocale === currentLocale.value || isSwitching.value) {
         isOpen.value = false;
+        return;
     }
+
+    isOpen.value = false;
+    isSwitching.value = true;
+
+    router.post('/locale/switch', {
+        locale: newLocale,
+    }, {
+        preserveState: false,
+        preserveScroll: true,
+        replace: false,
+        onFinish: () => {
+            isSwitching.value = false;
+        }
+    });
 };
 
 const toggleDropdown = () => {
-    isOpen.value = !isOpen.value;
+    if (!isSwitching.value) {
+        isOpen.value = !isOpen.value;
+    }
 };
 
 const closeDropdown = () => {
@@ -58,12 +54,15 @@ const closeDropdown = () => {
         <button
             @click="toggleDropdown"
             class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200"
+            :class="{ 'opacity-50 cursor-not-allowed': isSwitching }"
+            :disabled="isSwitching"
             :aria-expanded="isOpen"
             aria-haspopup="true"
         >
             <span class="text-lg">{{ currentLocaleData.flag }}</span>
             <span class="hidden sm:inline">{{ currentLocaleData.name }}</span>
             <svg
+                v-if="!isSwitching"
                 class="w-4 h-4 transition-transform duration-200"
                 :class="{ 'rotate-180': isOpen }"
                 fill="none"
@@ -71,6 +70,15 @@ const closeDropdown = () => {
                 viewBox="0 0 24 24"
             >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+            <svg
+                v-else
+                class="w-4 h-4 animate-spin"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
         </button>
 

@@ -24,6 +24,7 @@ function linkClass(routeName: string) {
         <Link
             :href="route('profile.show.courses')"
             :class="linkClass('profile.show.courses')"
+            v-if="$page.props.auth.is_student"
         >
             Courses
         </Link>
@@ -31,6 +32,7 @@ function linkClass(routeName: string) {
         <Link
             :href="route('profile.show.tests')"
             :class="linkClass('profile.show.tests')"
+            v-if="$page.props.auth.is_student"
         >
             Tests
         </Link>

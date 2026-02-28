@@ -31,13 +31,13 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $locale = App::getLocale();
-
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
                 'is_admin' => $request->user()?->isAdmin(),
+                'is_instructor' => $request->user()?->isInstructor(),
+                'is_student' => $request->user()?->isStudent(),
             ],
             'flash' => [
                 'successContactMessage' => $request->session()->get('successContactMessage'),
@@ -45,8 +45,9 @@ class HandleInertiaRequests extends Middleware
             'cart' => function () {
                 return Session::get('cart', []);
             },
-            'locale' => $locale,
-            'translations' => function () use ($locale) {
+            'locale' => fn () => App::getLocale(),
+            'translations' => function () {
+                $locale = App::getLocale();
                 $translationFile = lang_path("{$locale}/messages.php");
                 if (file_exists($translationFile)) {
                     return require $translationFile;

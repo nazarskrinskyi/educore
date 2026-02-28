@@ -29,6 +29,11 @@ class PageConfigurationResource extends Resource
 
     protected static ?string $navigationLabel = 'Page Configurations';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->isAdmin();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -53,9 +58,9 @@ class PageConfigurationResource extends Resource
                             ->live() // Triggers a UI refresh for the content fields below
                             ->unique(
                                 ignoreRecord: true,
-                                modifyRuleUsing: fn (Unique $rule, Get $get) => $rule->where('page_name', $get('page_name'))
+                                modifyRuleUsing: fn(Unique $rule, Get $get) => $rule->where('page_name', $get('page_name')),
                             )
-                            ->options(fn (Get $get): array => match ($get('page_name')) {
+                            ->options(fn(Get $get): array => match ($get('page_name')) {
                                 'welcome' => [
                                     'hero' => 'Hero',
                                     'features' => 'Features',
@@ -101,27 +106,29 @@ class PageConfigurationResource extends Resource
                         TextInput::make('content.title')
                             ->label('Title')
                             ->maxLength(255)
-                            ->visible(fn (Get $get) => in_array($get('section_key'), ['hero', 'features', 'stats', 'platforms', 'about', 'certifications'])),
+                            ->visible(fn(Get $get) => \in_array($get('section_key'), ['hero', 'features', 'stats', 'platforms', 'about', 'certifications'])),
 
                         TextInput::make('content.subtitle')
                             ->label('Subtitle')
                             ->maxLength(255)
-                            ->visible(fn (Get $get) =>
-                                ($get('page_name') === 'welcome' && in_array($get('section_key'), ['hero', 'features'])) ||
-                                ($get('page_name') === 'dashboard' && $get('section_key') === 'hero')
+                            ->visible(
+                                fn(Get $get) =>
+                                ($get('page_name') === 'welcome' && \in_array($get('section_key'), ['hero', 'features'])) ||
+                                ($get('page_name') === 'dashboard' && $get('section_key') === 'hero'),
                             ),
 
                         TextInput::make('content.heading')
                             ->label('Heading')
                             ->maxLength(255)
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['platforms', 'certifications'])),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && \in_array($get('section_key'), ['platforms', 'certifications'])),
 
                         Forms\Components\Textarea::make('content.description')
                             ->label('Description')
                             ->rows(3)
-                            ->visible(fn (Get $get) =>
+                            ->visible(
+                                fn(Get $get) =>
                                 ($get('page_name') === 'welcome' && $get('section_key') === 'hero') ||
-                                ($get('page_name') === 'dashboard' && in_array($get('section_key'), ['platforms', 'about', 'features', 'certifications']))
+                                ($get('page_name') === 'dashboard' && \in_array($get('section_key'), ['platforms', 'about', 'features', 'certifications'])),
                             ),
 
                         // --- CALL TO ACTIONS & BUTTONS ---
@@ -129,38 +136,38 @@ class PageConfigurationResource extends Resource
                         TextInput::make('content.cta_primary')
                             ->label('Primary CTA Button Text')
                             ->maxLength(100)
-                            ->visible(fn (Get $get) => in_array($get('section_key'), ['hero', 'platforms']) && in_array($get('page_name'), ['welcome', 'dashboard'])),
+                            ->visible(fn(Get $get) => \in_array($get('section_key'), ['hero', 'platforms']) && \in_array($get('page_name'), ['welcome', 'dashboard'])),
 
                         TextInput::make('content.cta_secondary')
                             ->label('Secondary CTA Button Text')
                             ->maxLength(100)
-                            ->visible(fn (Get $get) => in_array($get('section_key'), ['hero', 'platforms']) && in_array($get('page_name'), ['welcome', 'dashboard'])),
+                            ->visible(fn(Get $get) => \in_array($get('section_key'), ['hero', 'platforms']) && \in_array($get('page_name'), ['welcome', 'dashboard'])),
 
                         TextInput::make('content.button_text')
                             ->label('Button Text')
                             ->maxLength(100)
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['about', 'features', 'certifications'])),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && \in_array($get('section_key'), ['about', 'features', 'certifications'])),
 
                         // --- MEDIA & ANIMATION ---
 
                         TextInput::make('content.image')
                             ->label('Image URL')
                             ->maxLength(255)
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['about', 'features'])),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && \in_array($get('section_key'), ['about', 'features'])),
 
                         TextInput::make('content.background_image')
                             ->label('Background Image URL')
                             ->maxLength(255)
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['about', 'features'])),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && \in_array($get('section_key'), ['about', 'features'])),
 
                         TextInput::make('content.animation')
                             ->label('Animation Class')
                             ->maxLength(100)
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['about', 'features'])),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && \in_array($get('section_key'), ['about', 'features'])),
 
                         Toggle::make('content.show_carousel')
                             ->label('Show Carousel')
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'hero'),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'hero'),
 
                         // --- REPEATERS / ARRAYS ---
 
@@ -168,7 +175,7 @@ class PageConfigurationResource extends Resource
                             ->label('Carousel Images')
                             ->simple(TextInput::make('image_url')->label('Image URL')->required())
                             ->columnSpanFull()
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'hero'),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'hero'),
 
                         Repeater::make('content.complex_features')
                             ->label('Features')
@@ -179,13 +186,13 @@ class PageConfigurationResource extends Resource
                             ])
                             ->collapsible()
                             ->columnSpanFull()
-                            ->visible(fn (Get $get) => $get('page_name') === 'welcome' && in_array($get('section_key'), ['features'])),
+                            ->visible(fn(Get $get) => $get('page_name') === 'welcome' && \in_array($get('section_key'), ['features'])),
 
                         Repeater::make('content.features')
                             ->label('Features')
                             ->simple(TextInput::make('feature')->label('Feature')->required())
                             ->columnSpanFull()
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'features'),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'features'),
 
                         Repeater::make('content.stats')
                             ->label('Statistics')
@@ -195,7 +202,7 @@ class PageConfigurationResource extends Resource
                             ])
                             ->columns(2)
                             ->columnSpanFull()
-                            ->visible(fn (Get $get) => $get('page_name') === 'welcome' && $get('section_key') === 'stats'),
+                            ->visible(fn(Get $get) => $get('page_name') === 'welcome' && $get('section_key') === 'stats'),
 
                         Repeater::make('content.platforms')
                             ->label('Platforms')
@@ -206,13 +213,13 @@ class PageConfigurationResource extends Resource
                             ])
                             ->collapsible()
                             ->columnSpanFull()
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'platforms'),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'platforms'),
 
                         Repeater::make('content.highlights')
                             ->label('Highlights')
                             ->simple(TextInput::make('highlight')->label('Highlight')->required())
                             ->columnSpanFull()
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'about'),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'about'),
 
                         Repeater::make('content.certificates')
                             ->label('Certificates')
@@ -227,7 +234,7 @@ class PageConfigurationResource extends Resource
                             ])
                             ->collapsible()
                             ->columnSpanFull()
-                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'certifications'),
+                            ->visible(fn(Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'certifications'),
                     ])
                     ->columns(2),
 

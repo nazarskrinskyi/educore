@@ -3,6 +3,11 @@ import { Head, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PopupMessage from "@/Components/PopupMessage.vue";
+import { usePage } from '@inertiajs/vue3';
+import {useTranslations} from "@/composables/useTranslations.js";
+
+const page = usePage();
+const { t } = useTranslations();
 
 const form = useForm({
     name: "",
@@ -50,7 +55,7 @@ const submit = () => {
 
                 <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">📬 Зв’яжіться з нами</h1>
                 <p class="text-gray-700 text-lg mb-10">
-                    Ми відкриті до співпраці, пропозицій і нових ідей. Ваш відгук допомагає нам розвивати EduCore.
+                    {{ t('contact.description') }}
                 </p>
 
                 <form
@@ -63,7 +68,7 @@ const submit = () => {
                             v-model="form.name"
                             type="text"
                             id="name"
-                            placeholder="Ваше ім’я"
+                            :placeholder="t('contact.name_placeholder')"
                             class="w-full border border-gray-300/50 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                             required
                         />
@@ -75,7 +80,7 @@ const submit = () => {
                             v-model="form.email"
                             type="email"
                             id="email"
-                            placeholder="you@example.com"
+                            :placeholder="t('contact.email_placeholder')"
                             class="w-full border border-gray-300/50 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                             required
                         />
@@ -87,7 +92,7 @@ const submit = () => {
                             v-model="form.subject"
                             type="text"
                             id="subject"
-                            placeholder="Тема вашого звернення"
+                            :placeholder="t('contact.subject_placeholder')"
                             class="w-full border border-gray-300/50 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                         />
                     </div>
@@ -98,7 +103,7 @@ const submit = () => {
                             v-model="form.message"
                             id="message"
                             rows="5"
-                            placeholder="Ваше повідомлення..."
+                            :placeholder="t('contact.message_placeholder')"
                             class="w-full border border-gray-300/50 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
                             required
                         ></textarea>

@@ -1,8 +1,9 @@
 <script setup>
 import CircleProgress from 'vue3-circle-progress'
 import 'vue3-circle-progress/dist/circle-progress.css'
-import {ref, onMounted, watch} from 'vue'
+import {ref, onMounted, onUnmounted} from 'vue'
 import axios from 'axios'
+import { mitt } from '@/utils/eventBus'
 
 const props = defineProps({ courseId: Number })
 const progress = ref(0)
@@ -16,7 +17,16 @@ const fetchProgress = async () => {
     }
 }
 
-onMounted(fetchProgress)
+onMounted(() => {
+    fetchProgress()
+    // Listen for lesson completion events
+    mitt.on('lesson-completed', fetchProgress)
+})
+
+onUnmounted(() => {
+    // Clean up event listener
+    mitt.off('lesson-completed', fetchProgress)
+})
 </script>
 
 <template>

@@ -9,6 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import AnimatedImage from "@/Components/AnimatedImage.vue";
 import ExploreMore from "@/Components/ExploreMore.vue";
 import CertificateCard from "@/Components/CertificateCard.vue";
+import {useTranslations} from "@/composables/useTranslations.js";
 
 const props = defineProps({
     pageConfig: {
@@ -21,9 +22,7 @@ const props = defineProps({
 const page = usePage();
 
 // Get translations
-const t = computed(() => {
-    return page.props.translations?.dashboard || {};
-});
+const { t } = useTranslations();
 
 // Animation state
 const isVisible = ref(false);
@@ -79,7 +78,6 @@ const certifications = computed(() => props.pageConfig.certifications || {
     button_text: t.value.button_text,
 });
 
-console.log(hero.value, platforms.value, about.value, features.value, certifications.value);
 </script>
 
 <template>
@@ -87,8 +85,8 @@ console.log(hero.value, platforms.value, about.value, features.value, certificat
 
     <AuthenticatedLayout>
         <!-- Admin Edit Button -->
-        <div v-if="$page.props.auth.is_admin" class="fixed bottom-6 right-6 z-50">
-            <Link
+        <div v-if="$page.props.auth.is_student === false" class="fixed bottom-6 right-6 z-50">
+            <a
                 :href="route('filament.admin.pages.dashboard')"
                 class="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
@@ -96,7 +94,7 @@ console.log(hero.value, platforms.value, about.value, features.value, certificat
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                 </svg>
                 {{ 'Admin' }}
-            </Link>
+            </a>
         </div>
 
         <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
@@ -156,7 +154,7 @@ console.log(hero.value, platforms.value, about.value, features.value, certificat
                                     {{ platforms.description }}
                                 </p>
                                 <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                                    <Link :href="route('contact')">
+                                    <Link :href="$route('contact')">
                                         <PrimaryButton class="w-full sm:w-auto group flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300">
                                             {{ platforms.cta_primary }}
                                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,7 +162,7 @@ console.log(hero.value, platforms.value, about.value, features.value, certificat
                                             </svg>
                                         </PrimaryButton>
                                     </Link>
-                                    <Link :href="route('about')">
+                                    <Link :href="$route('about')">
                                         <PrimaryButton class="w-full sm:w-auto group flex items-center justify-center gap-2 bg-white text-purple-600 border-2 border-purple-600 hover:bg-purple-50 hover:text-purple-700 shadow-md hover:shadow-lg transition-all duration-300">
                                             {{ platforms.cta_secondary }}
                                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

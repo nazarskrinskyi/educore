@@ -37,9 +37,9 @@ const closeMenu = () => {
                         <div class="hidden sm:flex sm:space-x-8 sm:ms-10 items-center">
                             <NavLink :href="route('dashboard')" :active="route().current('dashboard')">Home</NavLink>
                             <NavLink :href="route('about')" :active="route().current('about')">About</NavLink>
-                            <NavLink :href="route('courses.index')" :active="route().current('courses.index')">Courses</NavLink>
+                            <NavLink :href="route('courses.index')" :active="route().current('courses.index')" v-if="$page.props.auth.is_student">Courses</NavLink>
                             <NavLink :href="route('contact')" :active="route().current('contact')">Contact</NavLink>
-                            <Cart :cart="cart" />
+                            <Cart :cart="cart" v-if="$page.props.auth.is_student"/>
                         </div>
 
                         <!-- Desktop Profile Dropdown & Language Switcher -->
@@ -56,7 +56,7 @@ const closeMenu = () => {
                                 </template>
                                 <template #content>
                                     <DropdownLink :href="route('profile.edit')">Profile</DropdownLink>
-                                    <DropdownLink :href="route('filament.admin.pages.dashboard')" v-if="$page.props.auth.is_admin">Admin</DropdownLink>
+                                    <DropdownLink :href="route('filament.admin.pages.dashboard')" v-if="$page.props.auth.is_student === false">Admin</DropdownLink>
                                     <DropdownLink :href="route('logout')" method="post" as="button">Log Out</DropdownLink>
                                 </template>
                             </Dropdown>
@@ -191,7 +191,7 @@ const closeMenu = () => {
                             <li><Link :href="route('courses.index')" class="hover:text-purple-600 transition-colors">Courses</Link></li>
                             <li><Link :href="route('contact')" class="hover:text-purple-600 transition-colors">Contact Us</Link></li>
                             <li><Link :href="route('profile.edit')" class="hover:text-purple-600 transition-colors">My Profile</Link></li>
-                            <li><Link v-if="$page.props.auth.is_admin" :href="route('filament.admin.pages.dashboard')" class="hover:text-purple-600 transition-colors">Admin Panel</Link></li>
+                            <li><Link v-if="$page.props.auth.is_student === false" :href="route('filament.admin.pages.dashboard')" class="hover:text-purple-600 transition-colors">Admin Panel</Link></li>
                         </ul>
                     </div>
 

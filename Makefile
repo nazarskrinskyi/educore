@@ -1,56 +1,36 @@
-# ==============================================================================
-# Useful Laravel Commands
-# ==============================================================================
-
 .PHONY: help install dev up down migrate migrate-fresh seed test cc shell cs-fix
 
-# Show this help message
-help:
-	@echo "Available commands:"
-	@echo "  make install       - Install Composer and NPM dependencies"
-	@echo "  make dev           - Run the local development server (Composer script)"
-	@echo "  make migrate       - Run database migrations"
-	@echo "  make migrate-fresh - Drop all tables and re-run all migrations"
-	@echo "  make seed          - Run database seeders"
-	@echo "  make test          - Run Pest/PHPUnit tests"
-	@echo "  make cc            - Clear all Laravel caches (config, route, view, etc.)"
-	@echo "  make shell         - Open a Laravel Tinker shell"
-	@echo "  make cs-fix        - Run PHP CS Fixer to format code"
+# Change 'app' to whatever your php service is named in docker-compose.yml
+CONTAINER=app
 
 # Setup & Installation
 install:
-	composer install
-	npm install
-	npm run build
-
-# Development Servers
-dev:
-	composer run dev
+	docker compose exec $(CONTAINER) composer install
+	docker compose exec $(CONTAINER) npm install
+	docker compose exec $(CONTAINER) npm run build
 
 # Database
 migrate:
-	php artisan migrate
+	docker compose exec $(CONTAINER) php artisan migrate
 
 migrate-fresh:
-	php artisan migrate:fresh --seed
+	docker compose exec $(CONTAINER) php artisan migrate:fresh --seed
 
 seed:
-	php artisan db:seed
+	docker compose exec $(CONTAINER) php artisan db:seed
 
-# Testing & Linting
-test:
-	composer run test
-
+# Quality Tools
 cs-fix:
-	./vendor/bin/php-cs-fixer fix
+	docker compose exec $(CONTAINER) ./vendor/bin/php-cs-fixer fix
 
 # Utilities
 cc:
-	php artisan optimize:clear
-	php artisan cache:clear
-	php artisan config:clear
-	php artisan view:clear
-	php artisan route:clear
+	docker compose exec $(CONTAINER) php artisan optimize:clear
+	docker compose exec $(CONTAINER) php artisan cache:clear
+	docker compose exec $(CONTAINER) php artisan config:clear
+	docker compose exec $(CONTAINER) php artisan view:clear
+	docker compose exec $(CONTAINER) php artisan route:clear
 
+# Helper to get into the container shell
 shell:
-	php artisan tinker
+	docker compose exec $(CONTAINER) bash

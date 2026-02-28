@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
+import { mitt } from '@/utils/eventBus'
 
 /**
  * Composable for managing lesson functionality
@@ -22,6 +23,8 @@ export function useLesson(initialLesson) {
                 preserveScroll: true,
                 onSuccess: () => {
                     lessonItem.completed = !lessonItem.completed
+                    // Emit event to update progress
+                    mitt.emit('lesson-completed')
                 },
                 onError: (errors) => {
                     console.error('Failed to toggle lesson completion:', errors)
@@ -40,6 +43,8 @@ export function useLesson(initialLesson) {
             preserveScroll: true,
             onSuccess: () => {
                 completed.value = true
+                // Emit event to update progress
+                mitt.emit('lesson-completed')
             },
             onError: (errors) => {
                 console.error('Failed to mark lesson as completed:', errors)
