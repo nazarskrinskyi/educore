@@ -5,7 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Carousel from "@/Components/Carousel.vue";
 import Card from "@/Components/Card.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import EducoreWorkflow from "@/Components/EducoreWorkflow.vue";
+// import EducoreWorkflow from "@/Components/EducoreWorkflow.vue";
 import AnimatedImage from "@/Components/AnimatedImage.vue";
 import ExploreMore from "@/Components/ExploreMore.vue";
 import CertificateCard from "@/Components/CertificateCard.vue";
@@ -13,6 +13,7 @@ import CertificateCard from "@/Components/CertificateCard.vue";
 const props = defineProps({
     pageConfig: {
         type: Object,
+        validator: (value) => Object.keys(value).length > 0,
         default: () => ({}),
     },
 });
@@ -35,50 +36,50 @@ onMounted(() => {
 
 // Computed properties with fallback data
 const hero = computed(() => props.pageConfig.hero || {
-    title: t.value.title || 'Welcome Back!',
-    subtitle: t.value.subtitle || 'Your Learning Journey Continues',
-    show_carousel: true,
-    carousel_images: ['/images/carousel-1.jpg', '/images/carousel-2.jpg', '/images/carousel-3.jpg'],
+    title: t.value.title,
+    subtitle: t.value.subtitle,
+    show_carousel: t.value.show_carousel,
+    carousel_images: t.value.carousel_images,
 });
 
 const platforms = computed(() => props.pageConfig.platforms || {
-    title: t.value.platforms_title || 'Platforms',
-    heading: t.value.platforms_heading || 'We Serve In Extensive Traits',
-    description: t.value.platforms_description || 'Educore is a holistic system empowering the entire education ecosystem through innovative digital transformation.',
-    cta_primary: t.value.platforms_cta_primary || 'Get A Quote',
-    cta_secondary: t.value.platforms_cta_secondary || 'Learn More',
-    platforms: [
-        { name: 'School Management', image: '/images/platform-school.jpg', description: 'Complete K-12 school management solution' },
-        { name: 'University System', image: '/images/platform-university.jpg', description: 'Advanced higher education management' },
-        { name: 'Learning Center', image: '/images/platform-learning.jpg', description: 'Training and development platform' },
-    ],
+    title: t.value.title,
+    heading: t.value.heading,
+    description: t.value.description,
+    cta_primary: t.value.cta_primary,
+    cta_secondary: t.value.cta_secondary,
+    platforms: t.value.platforms,
 });
 
 const about = computed(() => props.pageConfig.about || {
-    title: t.value.about_title || 'About Educore System',
-    description: t.value.about_description || 'Educore is an innovative all-in-one educational management system built to streamline operations.',
-    highlights: ['Unified Dashboard', 'Smart Attendance', 'AI-based Analytics', 'Cloud Security', 'Parent Portal', '24/7 Support'],
-    image: '/images/about-educore.png',
-    animation: '/images/about-animation.gif',
-    button_text: t.value.about_button || 'EXPLORE MORE',
+    title: t.value.title,
+    description: t.value.description,
+    highlights: t.value.highlights,
+    image: t.value.image,
+    background_image: t.value.background_image,
+    animation: t.value.animation,
+    button_text: t.value.button_text,
 });
 
 const features = computed(() => props.pageConfig.features || {
-    title: t.value.features_title || 'Educore Core Features',
-    description: t.value.features_description || 'Our system covers all critical aspects of educational management.',
-    features: ['Automated Workflows', 'Digital Classrooms', 'Financial Management', 'Secure Data Storage', 'Custom Reporting'],
-    image: '/images/core-features.png',
-    animation: '/images/features-animation.gif',
-    button_text: t.value.features_button || 'EXPLORE MORE',
+    title: t.value.title,
+    description: t.value.description,
+    features: t.value.features,
+    image: t.value.image,
+    background_image: t.value.background_image,
+    animation: t.value.animation,
+    button_text: t.value.button_text,
 });
 
 const certifications = computed(() => props.pageConfig.certifications || {
-    title: t.value.certifications_title || 'Certifications',
-    heading: t.value.certifications_heading || 'Trusted Certifications & Partnerships',
-    description: t.value.certifications_description || 'Educore holds industry-recognized certifications and partnerships.',
-    certificates: [],
-    button_text: t.value.certifications_button || 'View All CERTIFICATIONS',
+    title: t.value.title,
+    heading: t.value.heading,
+    description: t.value.description,
+    certificates: t.value.certificates,
+    button_text: t.value.button_text,
 });
+
+console.log(hero.value, platforms.value, about.value, features.value, certifications.value);
 </script>
 
 <template>
@@ -88,13 +89,13 @@ const certifications = computed(() => props.pageConfig.certifications || {
         <!-- Admin Edit Button -->
         <div v-if="$page.props.auth.is_admin" class="fixed bottom-6 right-6 z-50">
             <Link
-                :href="route('admin.page-configurations.edit', 'dashboard')"
+                :href="route('filament.admin.pages.dashboard')"
                 class="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                 </svg>
-                {{ t.edit_page || 'Edit Page' }}
+                {{ 'Admin' }}
             </Link>
         </div>
 
@@ -190,9 +191,9 @@ const certifications = computed(() => props.pageConfig.certifications || {
                 </section>
 
                 <!-- Workflow -->
-                <section class="relative">
-                    <EducoreWorkflow />
-                </section>
+<!--                <section class="relative">-->
+<!--                    <EducoreWorkflow />-->
+<!--                </section>-->
 
                 <!-- About Section -->
                 <section class="relative overflow-hidden py-16 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-3xl shadow-xl">
@@ -210,7 +211,7 @@ const certifications = computed(() => props.pageConfig.certifications || {
                             <div class="flex-1 flex justify-center">
                                 <div class="transform transition-all duration-500 hover:scale-105">
                                     <AnimatedImage
-                                        :background="'/images/AboutBgEllipse.png'"
+                                        :background="about.background_image"
                                         :background-image="about.image"
                                         :gif-image="about.animation"
                                     />
@@ -236,7 +237,7 @@ const certifications = computed(() => props.pageConfig.certifications || {
                             <div class="flex-1 flex justify-center">
                                 <div class="transform transition-all duration-500 hover:scale-105">
                                     <AnimatedImage
-                                        :background="'/images/AboutBgEllipse.png'"
+                                        :background="features.background_image"
                                         :background-image="features.image"
                                         :gif-image="features.animation"
                                     />

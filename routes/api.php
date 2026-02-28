@@ -12,15 +12,17 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('contact', [ContactMessageController::class, 'store'])->name('contact.store');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('contact', [ContactMessageController::class, 'store'])->name('contact.store');
 
-Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
-Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
+    Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
+    Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
 
-Route::get('courses/{course}/progress', [CourseProgressController::class, 'show']);
+    Route::get('courses/{course}/progress', [CourseProgressController::class, 'show']);
 
-Route::get('cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::post('cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-Route::get('checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-Route::post('checkout/order', [CartController::class, 'storeOrder'])->name('checkout.order');
+    Route::get('cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('checkout/order', [CartController::class, 'storeOrder'])->name('checkout.order');
+});

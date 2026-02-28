@@ -1,8 +1,7 @@
 <script setup>
-import { Link, Head, usePage } from '@inertiajs/vue3';
+import { Link, Head } from '@inertiajs/vue3';
 import { computed, ref, onMounted } from 'vue';
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import LocaleSwitcher from "@/Components/LocaleSwitcher.vue";
 import { useTranslations } from '@/composables/useTranslations';
 
@@ -32,7 +31,6 @@ const props = defineProps({
 });
 
 const { t } = useTranslations();
-const page = usePage();
 
 const hero = computed(() => props.pageConfig.hero || {
     title: t('welcome.title', 'Welcome to EduCore'),

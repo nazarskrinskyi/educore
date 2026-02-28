@@ -115,7 +115,7 @@ const {
                         :model-id="course.id"
                         type="courses"
                         :owned="course.owned"
-                        :user-id="$page.props.auth.user.id"
+                        :user-id="$page.props.auth.user?.id ?? null"
                     />
                 </div>
 

@@ -47,7 +47,7 @@ Route::prefix('{locale}')->where(['locale' => 'en|uk'])->group(function () {
 
 Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
 
-Route::middleware('verified')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/courses/{course:slug}/lessons/{lesson:slug}', [CourseController::class, 'enrollShow'])->name('courses.player');
     Route::post('/courses/{course}', [CourseController::class, 'enroll'])->name('courses.enroll');
 
@@ -87,13 +87,6 @@ Route::middleware('verified')->group(function () {
     Route::get('/profile/show-courses', [ProfileController::class, 'showCourses'])->name('profile.show.courses');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/page-configurations', [PageConfigurationController::class, 'index'])->name('page-configurations.index');
-    Route::get('/page-configurations/{pageName}/edit', [PageConfigurationController::class, 'edit'])->name('page-configurations.edit');
-    Route::post('/page-configurations', [PageConfigurationController::class, 'store'])->name('page-configurations.store');
-    Route::put('/page-configurations/{pageConfiguration}', [PageConfigurationController::class, 'update'])->name('page-configurations.update');
-    Route::post('/page-configurations/bulk-update', [PageConfigurationController::class, 'bulkUpdate'])->name('page-configurations.bulk-update');
-    Route::delete('/page-configurations/{pageConfiguration}', [PageConfigurationController::class, 'destroy'])->name('page-configurations.destroy');
 });
 
 require __DIR__.'/auth.php';

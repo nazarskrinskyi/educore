@@ -11,11 +11,13 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rules\Unique;
 
 class PageConfigurationResource extends Resource
 {
@@ -42,13 +44,36 @@ class PageConfigurationResource extends Resource
                                 'contact' => 'Contact Page',
                             ])
                             ->required()
+                            ->live() // Triggers a UI refresh when changed
                             ->searchable(),
 
-                        TextInput::make('section_key')
+                        Select::make('section_key')
                             ->label('Section Key')
                             ->required()
-                            ->helperText('Unique identifier for this section (e.g., hero, features, stats)')
-                            ->maxLength(255),
+                            ->live() // Triggers a UI refresh for the content fields below
+                            ->unique(
+                                ignoreRecord: true,
+                                modifyRuleUsing: fn (Unique $rule, Get $get) => $rule->where('page_name', $get('page_name'))
+                            )
+                            ->options(fn (Get $get): array => match ($get('page_name')) {
+                                'welcome' => [
+                                    'hero' => 'Hero',
+                                    'features' => 'Features',
+                                    'stats' => 'Statistics',
+                                ],
+                                'dashboard' => [
+                                    'hero' => 'Hero',
+                                    'platforms' => 'Platforms',
+                                    'about' => 'About',
+                                    'features' => 'Features',
+                                    'certifications' => 'Certifications',
+                                ],
+                                default => [
+                                    'hero' => 'Hero',
+                                    'content' => 'Main Content',
+                                ],
+                            })
+                            ->helperText('Select the section to configure its specific fields.'),
 
                         TextInput::make('order')
                             ->label('Display Order')
@@ -64,153 +89,159 @@ class PageConfigurationResource extends Resource
 
                 Section::make('Content Configuration')
                     ->schema([
-                        Forms\Components\Textarea::make('content_preview')
-                            ->label('Content (JSON)')
-                            ->helperText('Edit the JSON content below. Use the visual editor for common fields.')
-                            ->rows(10)
-                            ->columnSpanFull()
-                            ->formatStateUsing(fn($record) => $record ? json_encode($record->content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '')
-                            ->dehydrated(false)
-                            ->disabled(),
-
                         Forms\Components\Hidden::make('content')
                             ->dehydrateStateUsing(fn($state) => \is_string($state) ? json_decode($state, true) : $state),
                     ]),
 
                 Section::make('Visual Content Editor')
-                    ->description('Common fields for easy editing. Advanced users can edit JSON directly.')
+                    ->description('Fields dynamically display based on the selected Page and Section Key.')
                     ->schema([
+                        // --- STANDARD TEXT FIELDS ---
+
                         TextInput::make('content.title')
                             ->label('Title')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->visible(fn (Get $get) => in_array($get('section_key'), ['hero', 'features', 'stats', 'platforms', 'about', 'certifications'])),
 
                         TextInput::make('content.subtitle')
                             ->label('Subtitle')
-                            ->maxLength(255),
-
-                        Forms\Components\Textarea::make('content.description')
-                            ->label('Description')
-                            ->rows(3),
+                            ->maxLength(255)
+                            ->visible(fn (Get $get) =>
+                                ($get('page_name') === 'welcome' && in_array($get('section_key'), ['hero', 'features'])) ||
+                                ($get('page_name') === 'dashboard' && $get('section_key') === 'hero')
+                            ),
 
                         TextInput::make('content.heading')
                             ->label('Heading')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['platforms', 'certifications'])),
+
+                        Forms\Components\Textarea::make('content.description')
+                            ->label('Description')
+                            ->rows(3)
+                            ->visible(fn (Get $get) =>
+                                ($get('page_name') === 'welcome' && $get('section_key') === 'hero') ||
+                                ($get('page_name') === 'dashboard' && in_array($get('section_key'), ['platforms', 'about', 'features', 'certifications']))
+                            ),
+
+                        // --- CALL TO ACTIONS & BUTTONS ---
 
                         TextInput::make('content.cta_primary')
                             ->label('Primary CTA Button Text')
-                            ->maxLength(100),
+                            ->maxLength(100)
+                            ->visible(fn (Get $get) => in_array($get('section_key'), ['hero', 'platforms']) && in_array($get('page_name'), ['welcome', 'dashboard'])),
 
                         TextInput::make('content.cta_secondary')
                             ->label('Secondary CTA Button Text')
-                            ->maxLength(100),
+                            ->maxLength(100)
+                            ->visible(fn (Get $get) => in_array($get('section_key'), ['hero', 'platforms']) && in_array($get('page_name'), ['welcome', 'dashboard'])),
 
                         TextInput::make('content.button_text')
                             ->label('Button Text')
-                            ->maxLength(100),
+                            ->maxLength(100)
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['about', 'features', 'certifications'])),
+
+                        // --- MEDIA & ANIMATION ---
 
                         TextInput::make('content.image')
                             ->label('Image URL')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['about', 'features'])),
 
                         TextInput::make('content.background_image')
                             ->label('Background Image URL')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['about', 'features'])),
+
+                        TextInput::make('content.animation')
+                            ->label('Animation Class')
+                            ->maxLength(100)
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && in_array($get('section_key'), ['about', 'features'])),
 
                         Toggle::make('content.show_carousel')
-                            ->label('Show Carousel'),
+                            ->label('Show Carousel')
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'hero'),
 
-                        Repeater::make('content.features')
-                            ->label('Features List')
+                        // --- REPEATERS / ARRAYS ---
+
+                        Repeater::make('content.carousel_images')
+                            ->label('Carousel Images')
+                            ->simple(TextInput::make('image_url')->label('Image URL')->required())
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'hero'),
+
+                        Repeater::make('content.complex_features')
+                            ->label('Features')
                             ->schema([
-                                TextInput::make('icon')
-                                    ->label('Icon Name')
-                                    ->maxLength(100),
-                                TextInput::make('title')
-                                    ->label('Feature Title')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\Textarea::make('description')
-                                    ->label('Feature Description')
-                                    ->rows(2),
+                                TextInput::make('icon')->label('Icon Name')->maxLength(100),
+                                TextInput::make('title')->label('Feature Title')->required()->maxLength(255),
+                                Forms\Components\Textarea::make('description')->label('Feature Description')->rows(2),
                             ])
                             ->collapsible()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('page_name') === 'welcome' && in_array($get('section_key'), ['features'])),
+
+                        Repeater::make('content.features')
+                            ->label('Features')
+                            ->simple(TextInput::make('feature')->label('Feature')->required())
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'features'),
 
                         Repeater::make('content.stats')
                             ->label('Statistics')
                             ->schema([
-                                TextInput::make('value')
-                                    ->label('Stat Value')
-                                    ->required()
-                                    ->maxLength(50),
-                                TextInput::make('label')
-                                    ->label('Stat Label')
-                                    ->required()
-                                    ->maxLength(100),
+                                TextInput::make('value')->label('Stat Value')->required()->maxLength(50),
+                                TextInput::make('label')->label('Stat Label')->required()->maxLength(100),
                             ])
                             ->columns(2)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('page_name') === 'welcome' && $get('section_key') === 'stats'),
 
                         Repeater::make('content.platforms')
                             ->label('Platforms')
                             ->schema([
-                                TextInput::make('name')
-                                    ->label('Platform Name')
-                                    ->required()
-                                    ->maxLength(255),
-                                TextInput::make('image')
-                                    ->label('Image URL')
-                                    ->maxLength(255),
-                                Forms\Components\Textarea::make('description')
-                                    ->label('Description')
-                                    ->rows(2),
+                                TextInput::make('name')->label('Platform Name')->required()->maxLength(255),
+                                TextInput::make('image')->label('Image URL')->maxLength(255),
+                                Forms\Components\Textarea::make('description')->label('Description')->rows(2),
                             ])
                             ->collapsible()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'platforms'),
 
                         Repeater::make('content.highlights')
                             ->label('Highlights')
-                            ->simple(
-                                TextInput::make('highlight')
-                                    ->label('Highlight')
-                                    ->required(),
-                            )
-                            ->columnSpanFull(),
-
-                        Repeater::make('content.carousel_images')
-                            ->label('Carousel Images')
-                            ->simple(
-                                TextInput::make('image_url')
-                                    ->label('Image URL')
-                                    ->required(),
-                            )
-                            ->columnSpanFull(),
+                            ->simple(TextInput::make('highlight')->label('Highlight')->required())
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'about'),
 
                         Repeater::make('content.certificates')
                             ->label('Certificates')
                             ->schema([
-                                TextInput::make('title')
-                                    ->label('Certificate Title')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\Textarea::make('description')
-                                    ->label('Description')
-                                    ->rows(2),
-                                TextInput::make('image')
-                                    ->label('Image URL')
-                                    ->maxLength(255),
+                                TextInput::make('title')->label('Certificate Title')->required()->maxLength(255),
+                                Forms\Components\Textarea::make('description')->label('Description')->rows(2),
+                                TextInput::make('image')->label('Image URL')->maxLength(255),
                                 Repeater::make('tags')
                                     ->label('Tags')
-                                    ->simple(
-                                        TextInput::make('tag')
-                                            ->label('Tag'),
-                                    )
+                                    ->simple(TextInput::make('tag')->label('Tag'))
                                     ->columns(1),
                             ])
                             ->collapsible()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get) => $get('page_name') === 'dashboard' && $get('section_key') === 'certifications'),
                     ])
                     ->columns(2),
+
+                // Optional: Keep the Raw JSON preview at the bottom if admins still want to verify it
+                Section::make('Raw Content (JSON Preview)')
+                    ->schema([
+                        Forms\Components\Textarea::make('content_preview')
+                            ->label('Data Structure')
+                            ->rows(6)
+                            ->columnSpanFull()
+                            ->formatStateUsing(fn($record) => $record ? json_encode($record->content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '')
+                            ->dehydrated(false)
+                            ->disabled(),
+                    ])->collapsed(),
             ]);
     }
 

@@ -72,7 +72,7 @@ const { activeTab, toggleCompletion, onVideoProgress } = useLesson(props.lesson)
                         :model-id="lesson.id"
                         type="lessons"
                         :owned="course.owned"
-                        :user-id="$page.props.auth.user.id"
+                        :user-id="$page.props.auth.user?.id ?? null"
                         :is_rated="false"
                     />
                 </div>
@@ -98,8 +98,8 @@ const { activeTab, toggleCompletion, onVideoProgress } = useLesson(props.lesson)
         <div class="w-80 bg-white border-l overflow-y-auto">
             <div class="p-4 border-b flex items-center justify-between">
                 <!-- Course Title -->
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                    {{ props.course.title }}
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Course % Progress:
                 </h2>
 
                 <!-- Progress Circle -->
