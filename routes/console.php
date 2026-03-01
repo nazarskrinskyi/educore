@@ -13,8 +13,11 @@ Schedule::command('reminders:telegram')
     ->everyMinute()
     ->timezone('Europe/Kiev')
     ->evenInMaintenanceMode()
-    ->withoutOverlapping();
+    ->withoutOverlapping()
+    ->runInBackground();
 
 Schedule::job(new SendNewCoursesNotification())->everyMinute();
 
-Schedule::command('certificates:generate')->everyMinute();
+Schedule::command('certificates:generate')
+    ->everyTwentySeconds()
+    ->runInBackground();

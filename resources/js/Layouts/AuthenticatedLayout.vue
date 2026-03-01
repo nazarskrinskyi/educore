@@ -9,6 +9,9 @@ import MapCard from "@/Components/MapCard.vue";
 import ScrollToTop from "@/Components/ScrollToTop.vue";
 import Cart from "@/Components/Cart/Cart.vue";
 import LocaleSwitcher from "@/Components/LocaleSwitcher.vue";
+import {useTranslations} from "@/composables/useTranslations.js";
+
+const { t } = useTranslations();
 
 const showingNavigationDropdown = ref(false);
 const page = usePage();
@@ -35,10 +38,10 @@ const closeMenu = () => {
 
                         <!-- Desktop Navigation -->
                         <div class="hidden sm:flex sm:space-x-8 sm:ms-10 items-center">
-                            <NavLink :href="route('dashboard')" :active="route().current('dashboard')">Home</NavLink>
-                            <NavLink :href="route('about')" :active="route().current('about')">About</NavLink>
-                            <NavLink :href="route('courses.index')" :active="route().current('courses.index')" v-if="$page.props.auth.is_student">Courses</NavLink>
-                            <NavLink :href="route('contact')" :active="route().current('contact')">Contact</NavLink>
+                            <NavLink :href="route('dashboard')" :active="route().current('dashboard')">{{ t('nav.home', 'Home') }}</NavLink>
+                            <NavLink :href="route('about')" :active="route().current('about')">{{ t('nav.about', 'About') }}</NavLink>
+                            <NavLink :href="route('courses.index')" :active="route().current('courses.index')" v-if="$page.props.auth.is_student">{{ t('nav.courses', 'Courses') }}</NavLink>
+                            <NavLink :href="route('contact')" :active="route().current('contact')">{{ t('nav.contact', 'Contact') }}</NavLink>
                             <Cart :cart="cart" v-if="$page.props.auth.is_student"/>
                         </div>
 

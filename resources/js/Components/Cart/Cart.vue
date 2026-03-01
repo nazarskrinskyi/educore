@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import Stars from "@/Components/Stars.vue";
+import {useTranslations} from "@/composables/useTranslations.js";
 
 const { cart } = defineProps({
     cart: { type: Array, default: () => [] }
@@ -12,6 +13,8 @@ const cartCount = computed(() => cart.length)
 const total = computed(() =>
     cart.reduce((sum, i) => Number(sum) + Number(i.price), 0)
 )
+
+const { t } = useTranslations()
 
 function removeFromCart(id) {
     router.post(route('cart.remove', id), {}, { preserveScroll: true })
@@ -25,7 +28,7 @@ function removeFromCart(id) {
             @click="open = !open"
             class="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700"
         >
-            🛒 <span>Корзина ({{ cartCount }})</span>
+            🛒 <span>{{ t('cart.title', 'Cart') }} ({{ cartCount }})</span>
         </button>
 
         <!-- Popup -->
@@ -35,7 +38,7 @@ function removeFromCart(id) {
         >
             <!-- Заголовок -->
             <div class="px-4 py-3 border-b font-semibold text-gray-800">
-                Корзина ({{ cartCount }})
+                {{ t('cart.title', 'Cart') }} ({{ cartCount }})
             </div>
 
             <div v-if="cart.length" class="max-h-[400px] overflow-y-auto">
@@ -89,7 +92,7 @@ function removeFromCart(id) {
                     :href="route('cart.checkout')"
                     class="block mt-3 bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition"
                 >
-                    Перейти до оформлення
+                    {{ t('cart.checkout', 'Checkout') }}
                 </Link>
             </div>
         </div>

@@ -33,6 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'telegram_username',
+        'telegram_chat_id',
         'locale',
     ];
 

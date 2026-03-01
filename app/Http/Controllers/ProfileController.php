@@ -43,6 +43,30 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function showCertificates(): Response
+    {
+        $certificates = auth()->user()->certificates()
+            ->with(['course', 'user'])
+            ->orderBy('issued_at', 'desc')
+            ->get()
+            ->map(function ($certificate) {
+                return [
+                    'id' => $certificate->id,
+                    'certificate_number' => $certificate->certificate_number,
+                    'issued_at' => $certificate->issued_at->format('d.m.Y'),
+                    'course_title' => $certificate->course->title,
+                    'course_description' => $certificate->course->description,
+                    'user_name' => $certificate->user->name,
+                    'view_url' => route('certificates.show', $certificate->id),
+                    'download_url' => route('certificates.show', $certificate->id),
+                ];
+            });
+
+        return Inertia::render('Profile/UserCertificates', [
+            'certificates' => $certificates,
+        ]);
+    }
+
     /**
      * Display the user's profile form.
      */

@@ -85,6 +85,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/show-tests', [ProfileController::class, 'showTests'])->name('profile.show.tests');
     Route::get('/profile/show-courses', [ProfileController::class, 'showCourses'])->name('profile.show.courses');
+    Route::get('/profile/show-certificates', [ProfileController::class, 'showCertificates'])->name('profile.show.certificates');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

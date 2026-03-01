@@ -35,7 +35,15 @@ class LessonCompletionController extends Controller
         $user->lessons()->syncWithoutDetaching([$lesson->id => ['completed_at' => now()]]);
 
         $course = $lesson->section->course;
-        app(CourseProgressService::class)->updateProgress($user, $course);
+        $progressService = app(CourseProgressService::class);
+        $progressService->updateProgress($user, $course);
+
+        // Check if course is completed and certificate was generated
+        $certificate = $progressService->completeCourse($user, $course);
+
+        if ($certificate) {
+            return redirect()->route('certificates.show', ['id' => $certificate->id]);
+        }
 
         return back();
     }

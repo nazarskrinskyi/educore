@@ -46,10 +46,7 @@ const { t } = useTranslations();
                 <div class="mt-16 text-gray-700 leading-relaxed max-w-4xl mx-auto">
                     <h2 class="text-2xl font-semibold text-indigo-700 mb-4">📖 {{ t('about.our_story', 'Our Story') }}</h2>
                     <p>
-                        Ідея EduCore народилася з бажання об’єднати навчання, технології та спільноту.
-                        Ми почали з кількох невеликих курсів і виросли у повноцінну освітню екосистему,
-                        де кожен студент може навчатися ефективно, а викладачі мають зручні інструменти
-                        для створення контенту.
+                        {{ t('about.story_text') }}
                     </p>
 
                     <h2 class="text-2xl font-semibold text-indigo-700 mt-8 mb-4">🚀 {{ t('about.our_advantages', 'Our Advantages') }}</h2>

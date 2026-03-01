@@ -36,6 +36,14 @@ function linkClass(routeName: string) {
         >
             Tests
         </Link>
+
+        <Link
+            :href="route('profile.show.certificates')"
+            :class="linkClass('profile.show.certificates')"
+            v-if="$page.props.auth.is_student"
+        >
+            Certificates
+        </Link>
     </nav>
 </template>
 

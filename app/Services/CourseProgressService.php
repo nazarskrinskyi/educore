@@ -52,7 +52,7 @@ class CourseProgressService
     }
 
     /**
-     * Update progress for a user in a course and generate a certificate if 100% is reached.
+     * Update progress for a user in a course and generate a certificate if threshold is reached.
      */
     public function updateProgress(User $user, Course $course): void
     {
@@ -60,9 +60,9 @@ class CourseProgressService
         // Update progress in pivot table course_user
         $user->courses()->updateExistingPivot($course->id, ['progress_percent' => $progress]);
 
-        // if 100% — generate certificate
+        // if progress >= 90% — generate certificate
         if ($progress >= 90) {
-            Certificate::generate($user, $course);
+            $this->completeCourse($user, $course);
         }
     }
 }

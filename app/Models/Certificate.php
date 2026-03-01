@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\SendCertificateNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -99,6 +100,15 @@ class Certificate extends Model
 
     public static function generate(User $user, Course $course): self
     {
+        // Check if certificate already exists
+        $existing = self::where('user_id', $user->id)
+            ->where('course_id', $course->id)
+            ->first();
+
+        if ($existing) {
+            return $existing;
+        }
+
         // Generate unique certificate number
         $certificateNumber = self::generateCertificateNumber($user, $course);
 
@@ -144,7 +154,17 @@ class Certificate extends Model
         $certificate->certificate_path = $filename;
         $certificate->save();
 
+        // Dispatch Telegram notification
+        SendCertificateNotification::dispatch($certificate);
+
         return $certificate;
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'issued_at' => 'datetime',
+        ];
     }
 
     public function getUrlAttribute(): string

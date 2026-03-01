@@ -18,12 +18,21 @@ class SendCourseReminders extends Command
         $users = User::whereNotNull('telegram_chat_id')->get();
 
         foreach ($users as $user) {
-            $progress = $user->courses()->wherePivot('progress_percent', '<', 100)->count();
-            if ($progress > 0) {
-                $telegram->safeSend(
-                    $user->telegram_chat_id,
-                    "📚 Привіт, $user->name! У вас є незавершені курси на EduCore. Продовжуйте навчання сьогодні 💪",
-                );
+            $unfinishedCourses = $user->courses()
+                ->wherePivot('progress_percent', '<', 100)
+                ->get();
+
+            if ($unfinishedCourses->count() > 0) {
+                $message = "📚 Привіт, $user->name! У вас є незавершені курси на EduCore:\n\n";
+
+                foreach ($unfinishedCourses as $course) {
+                    $progress = $course->pivot->progress_percent ?? 0;
+                    $message .= "• $course->title ($progress%)\n";
+                }
+
+                $message .= "\nПродовжуйте навчання сьогодні 💪";
+
+                $telegram->safeSend($user->telegram_chat_id, $message);
             }
         }
 

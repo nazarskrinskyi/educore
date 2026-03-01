@@ -74,7 +74,17 @@ class TestController extends Controller
 
             $course = $test->course;
             $user = User::find(auth()->id());
-            app(CourseProgressService::class)->updateProgress($user, $course);
+            $progressService = app(CourseProgressService::class);
+            $progressService->updateProgress($user, $course);
+
+            // Check if course is completed and certificate was generated
+            $certificate = $progressService->completeCourse($user, $course);
+
+            if ($certificate) {
+                app(CourseProgressService::class)->updateProgress($user, $course);
+                sleep(3);
+                return redirect()->route('certificates.show', ['id' => $certificate->id]);
+            }
 
             return redirect()->route('tests.result', ['test' => $test->id]);
         } catch (Throwable $e) {

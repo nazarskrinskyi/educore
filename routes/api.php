@@ -12,11 +12,12 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// Public webhooks (no authentication required)
+Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
+Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('contact', [ContactMessageController::class, 'store'])->name('contact.store');
-
-    Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
-    Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
 
     Route::get('courses/{course}/progress', [CourseProgressController::class, 'show']);
 
