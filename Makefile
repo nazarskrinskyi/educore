@@ -1,4 +1,4 @@
-.PHONY: help install dev up down migrate migrate-fresh seed test cc shell cs-fix
+.PHONY: help install dev up down migrate migrate-fresh seed test cc shell cs-fix ngrok queue-telegram queue-certificates queue-all
 
 # Change 'app' to whatever your php service is named in docker-compose.yml
 CONTAINER=app
@@ -31,6 +31,7 @@ cc:
 	docker compose exec $(CONTAINER) php artisan view:clear
 	docker compose exec $(CONTAINER) php artisan route:clear
 
-# Helper to get into the container shell
-shell:
-	docker compose exec $(CONTAINER) bash
+# Ngrok & Queue Workers
+ngrok:
+	npx ngrok http 8000
+	php artisan queue:work --tries=3 --timeout=90
